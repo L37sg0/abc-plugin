@@ -1,0 +1,17 @@
+{
+    "name": "petar/abc-plugin",
+    "description": "Job organising tool",
+    "type": "project",
+    "license": "GPL",
+    "authors": [
+        {
+            "name": "Petar",
+            "email": "petar_1v@abv.bg"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {"Inc\\": "./inc"}
+    }
+}
