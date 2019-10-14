@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+                integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    </head>
+
+    <body>
+            <div class="container mt-5">
+                    <!-- heading -->
+                    <div class="row">
+                        <div class="col-sm">
+                            <h1>Добавяне на Турбина</h1>
+                        </div>
+                    </div>
+                    <!-- alert will be here -->
+                    <!-- table will be here -->
+                    <form action='#' method='post'>
+                        <table class='table table-hover'>
+                        
+                            <tr>
+                                <td>Име</td>
+                                <td><input type='text' name='name' class='form-control' required></td>
+                            </tr>
+                        
+                            <tr>
+                                <td>Собственик</td>
+                                <td><input type='text' name='contact_number' class='form-control' required></td>
+                            </tr>
+                        
+                            <tr>
+                                <td>Мощност</td>
+                                <td><textarea name='description' class='form-control'></textarea></td>
+                            </tr> 
+
+                            <tr>
+                                <td>Описание</td>
+                                <td><textarea name='description' class='form-control'></textarea></td>
+                            </tr> 
+            
+                            <tr>
+                                <td>Ветропарк</td>
+                                <td>
+                                    <select name='list_id' class='form-control'>
+                                        <option value='1'>Ветропарк 1</option>
+                                        <option value='2'>Ветропарк 2</option>
+                                        <option value='3'>Ветропарк 3</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        
+                            <tr>
+                                <td></td>
+                                <td>
+                                    <button type="submit" class="btn btn-primary">
+                                        <span class="glyphicon glyphicon-plus"></span> Запази
+                                    </button>
+                                </td>
+                            </tr>
+                        
+                        </table>
+                    </form>
+            </div>
+    </body>
+</html>

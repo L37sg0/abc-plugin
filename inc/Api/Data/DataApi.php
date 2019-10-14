@@ -20,7 +20,7 @@ class DataApi
 
         $charset_collate = $wpdb->get_charset_collate();
     
-        $sql = "CREATE TABLE $this->table_name" . $this->table_structure . "$charset_collate;";
+        $sql = "CREATE TABLE IF NOT EXISTS $this->table_name" . $this->table_structure . "$charset_collate;";
 
         $wpdb->query($sql);
 

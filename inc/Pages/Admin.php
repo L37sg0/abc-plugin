@@ -8,6 +8,7 @@ namespace Inc\Pages;
 use \Inc\Api\SettingsApi;
 use \Inc\Base\BaseController;
 use \Inc\Api\Callbacks\AdminCallbacks;
+use \Inc\Api\Callbacks\TurbinesCallbacks;
 
 class Admin extends BaseController
 {
@@ -15,6 +16,8 @@ class Admin extends BaseController
     public $settings;
 
     public $callbacks;
+
+    public $turbineCallbacks;
 
     public $pages = array();
 
@@ -25,6 +28,8 @@ class Admin extends BaseController
         $this->settings = new SettingsApi();   
         
         $this->callbacks = new AdminCallbacks();
+
+        $this->turbineCallbacks = new TurbinesCallbacks();
 
         $this->setPages();
 
@@ -46,9 +51,9 @@ class Admin extends BaseController
             array('page_title'=>'Ветропаркове',
                   'menu_title'=>'ВП Мениджър ',
                   'capability'=>'manage_options',
-                  'menu_slug' =>'abc_plugin',
+                  'menu_slug' =>'abc_windparks',
                   'callback'  => array( $this->callbacks, 'windparksDashboard' ),
-                  'icon_url'  =>'dashicons-hammer',
+                  'icon_url'  =>'dashicons-sos',
                   'position'  => 110
             ),
         );
@@ -59,29 +64,29 @@ class Admin extends BaseController
 
         $this->subpages = array(
             array(
-                'parent_slug'=> 'abc_plugin',
+                'parent_slug'=> 'abc_windparks',
+                'page_title' => 'Турбини',
+                'menu_title' => 'Турбини',
+                'capability' => 'manage_options',
+                'menu_slug'  => 'abc_turbines',
+                'callback'   => array( $this->callbacks, 'turbinesDashboard' ),
+            ),
+            array(
+                'parent_slug'=> 'abc_windparks',
+                'page_title' => 'Събития',
+                'menu_title' => 'Събития',
+                'capability' => 'manage_options',
+                'menu_slug'  => 'abc_events',
+                'callback'   => array( $this->callbacks, 'eventsDashboard' ),
+            ),
+            array(
+                'parent_slug'=> 'abc_windparks',
                 'page_title' => 'Настройки на ВП Мениджър',
                 'menu_title' => 'Настройки',
                 'capability' => 'manage_options',
                 'menu_slug'  => 'abc_settings',
                 'callback'   => array( $this->callbacks, 'abcSettings' ),
             ),
-            /*array(
-                'parent_slug'=> 'abc_plugin',
-                'page_title' => 'Турбини',
-                'menu_title' => 'списък с Турбини',
-                'capability' => 'manage_options',
-                'menu_slug'  => 'abc_taxonomies',
-                'callback'   => array( $this->callbacks, 'turbinesDashboard' ),
-            ),
-            array(
-                'parent_slug'=> 'abc_plugin',
-                'page_title' => 'Custom Widgets',
-                'menu_title' => 'Widgets',
-                'capability' => 'manage_options',
-                'menu_slug'  => 'abc_widgets',
-                'callback'   => array( $this->callbacks, 'turbineInfo' ),
-            ),*/
         );
 
     }
@@ -91,12 +96,20 @@ class Admin extends BaseController
         $args = array(
             array(
                 'option_group' => 'turbines_options_group',
-                'option_name'  => 'text_example',
-                'callback'     => array( $this->callbacks, 'turbinesOptionGroup' ),    
+                'option_name'  => 'turbine_name',
+                'callback'     => array( $this->turbineCallbacks, 'turbinesOptionGroup' ),    
             ),
             array(
                 'option_group' => 'turbines_options_group',
-                'option_name'  => 'turbine_name',
+                'option_name'  => 'turbine_owner',
+            ),
+            array(
+                'option_group' => 'turbines_options_group',
+                'option_name'  => 'turbine_power',
+            ),
+            array(
+                'option_group' => 'turbines_options_group',
+                'option_name'  => 'turbine_windpark',
             ),
         );
         
@@ -109,9 +122,9 @@ class Admin extends BaseController
         $args = array(
             array(
                 'id'        => 'turbines_admin_index',
-                'title'     => 'Settings',
-                'callback'  => array( $this->callbacks, 'turbinesAdminSection' ),
-                'page'      => 'abc_plugin',   
+                'title'     => 'Добавяне на Турбина',
+                'callback'  => array( $this->turbineCallbacks, 'turbinesAdminSection' ),
+                'page'      => 'abc_turbines',   
             ),
         );
         
@@ -123,24 +136,57 @@ class Admin extends BaseController
 
         $args = array(
             array(
-                'id'        => 'text_example',
-                'title'     => 'Text Example',
-                'callback'  => array( $this->callbacks, 'turbinesTextExample' ), 
-                'page'      => 'abc_plugin',
+                'id'        => 'turbine_name',
+                'title'     => 'Име',
+                'callback'  => array( $this->turbineCallbacks, 'turbinesTurbineName' ), 
+                'page'      => 'abc_turbines',
                 'section'   => 'turbines_admin_index', 
                 'args'      => array(
-                    'label_for' =>  'text_example',
+                    'label_for' =>  'turbine_name',
                     'class'     =>  'example-class',
                 ),  
             ),
             array(
-                'id'        => 'turbine_name',
-                'title'     => 'Turbine Name',
-                'callback'  => array( $this->callbacks, 'turbinesTurbineName' ), 
-                'page'      => 'abc_plugin',
+                'id'        => 'turbine_owner',
+                'title'     => 'Собственик',
+                'callback'  => array( $this->turbineCallbacks, 'turbinesTurbineOwner' ), 
+                'page'      => 'abc_turbines',
                 'section'   => 'turbines_admin_index', 
                 'args'      => array(
-                    'label_for' =>  'turbine_name',
+                    'label_for' =>  'turbine_owner',
+                    'class'     =>  'example-class',
+                ),  
+            ),
+            array(
+                'id'        => 'turbine_power',
+                'title'     => 'Мощност',
+                'callback'  => array( $this->turbineCallbacks, 'turbinesTurbinePower' ), 
+                'page'      => 'abc_turbines',
+                'section'   => 'turbines_admin_index', 
+                'args'      => array(
+                    'label_for' =>  'turbine_power',
+                    'class'     =>  'example-class',
+                ),  
+            ),
+            array(
+                'id'        => 'turbine_windpark',
+                'title'     => 'Ветропарк',
+                'callback'  => array( $this->turbineCallbacks, 'turbinesTurbineWindpark' ), 
+                'page'      => 'abc_turbines',
+                'section'   => 'turbines_admin_index', 
+                'args'      => array(
+                    'label_for' =>  'turbine_windpark',
+                    'class'     =>  'example-class',
+                ),  
+            ),
+            array(
+                'id'        => 'turbine_description',
+                'title'     => 'Описание',
+                'callback'  => array( $this->turbineCallbacks, 'turbinesTurbineDescription' ), 
+                'page'      => 'abc_turbines',
+                'section'   => 'turbines_admin_index', 
+                'args'      => array(
+                    'label_for' =>  'turbine_description',
                     'class'     =>  'example-class',
                 ),  
             ),

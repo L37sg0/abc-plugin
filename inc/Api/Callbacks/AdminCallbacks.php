@@ -42,16 +42,18 @@ class AdminCallbacks extends BaseController
         return require_once( "$this->plugin_path/templates/turbine_info.php" );
     
     }
+
+    public function eventsDashboard(){
+
+        return require_once( "$this->plugin_path/templates/events.php" );
+    
+    }
+
+
 /*
     public function turbinesOptionGroup( $input ){
 
         return $input;
-
-    }
-
-    public function turbinesAdminSection(){
-
-        echo 'Check this beautiful section!';
 
     }
 
@@ -60,14 +62,6 @@ class AdminCallbacks extends BaseController
         $value = esc_attr( get_option( 'text_example' ) );
         echo '<input type="text" class="regular-text" name="text_example" value="' . $value . '"placeholder="Write Something Here!">';
 
-    }
+    }*/
 
-    public function turbinesTurbineName(){
-
-        $value = esc_attr( get_option( 'turbine_name' ) );
-        echo '<input type="text" class="regular-text" name="turbine_name" value="' . $value . '"placeholder="Write Turbine Name">';
-
-
-    }
-*/
 }
