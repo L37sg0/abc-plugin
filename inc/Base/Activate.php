@@ -20,13 +20,27 @@ class Activate
         $dataApi->createTable('abc_windparks',"(
             id mediumint(9) NOT NULL AUTO_INCREMENT,
             name tinytext NOT NULL,
+            owner text NOT NULL,
             description text NOT NULL,
             PRIMARY KEY  (id)
         )");
         $dataApi->createTable('abc_turbines',"(
             id mediumint(9) NOT NULL AUTO_INCREMENT,
-            name tinytext NOT NULL,
-            technical_description text NOT NULL,
+            name text NOT NULL,
+            serial_number text NOT NULL,
+            vendor text NOT NULL,
+            model text NOT NULL,
+            power text NOT NULL,
+            owner text NOT NULL,
+            windpark text NOT NULL,
+            gearbox_vendor text NOT NULL,
+            gearbox_number text NOT NULL,
+            hydraulics_vendor text NOT NULL,
+            hydraulics_number text NOT NULL,
+            generator_vendor text NOT NULL,
+            generator_number text NOT NULL,
+            transformer_vendor text NOT NULL,
+            transformer_number text NOT NULL,
             PRIMARY KEY  (id)
         )");
         $dataApi->createTable('abc_events',"(

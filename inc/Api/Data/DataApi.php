@@ -52,7 +52,7 @@ class DataApi
 
         $this->data = $data;
         
-        $wpdb->insert( $table_name, $this->data );
+        $wpdb->insert( $this->table_name, $this->data );
 
     }
 

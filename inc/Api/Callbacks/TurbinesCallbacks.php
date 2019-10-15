@@ -10,6 +10,12 @@ use Inc\Base\BaseController;
 class TurbinesCallbacks extends BaseController
 {
 
+    public function turbinesGlobal(){
+
+        return require_once( "$this->plugin_path/templates/add_turbine.php" );
+
+    }
+
     public function turbinesAdminSection(){
 
         echo '';

@@ -96,10 +96,9 @@ class Admin extends BaseController
         $args = array(
             array(
                 'option_group' => 'turbines_options_group',
-                'option_name'  => 'turbine_name',
-                'callback'     => array( $this->turbineCallbacks, 'turbinesOptionGroup' ),    
+                'option_name'  => 'add_turbine_form',   
             ),
-            array(
+            /*array(
                 'option_group' => 'turbines_options_group',
                 'option_name'  => 'turbine_owner',
             ),
@@ -110,7 +109,7 @@ class Admin extends BaseController
             array(
                 'option_group' => 'turbines_options_group',
                 'option_name'  => 'turbine_windpark',
-            ),
+            ),*/
         );
         
         $this->settings->setSettings( $args );
@@ -123,7 +122,7 @@ class Admin extends BaseController
             array(
                 'id'        => 'turbines_admin_index',
                 'title'     => 'Добавяне на Турбина',
-                'callback'  => array( $this->turbineCallbacks, 'turbinesAdminSection' ),
+                //'callback'  => array( $this->turbineCallbacks, 'turbinesGlobal' ),
                 'page'      => 'abc_turbines',   
             ),
         );
@@ -136,17 +135,17 @@ class Admin extends BaseController
 
         $args = array(
             array(
-                'id'        => 'turbine_name',
+                'id'        => 'add_turbine_form',
                 'title'     => 'Име',
-                'callback'  => array( $this->turbineCallbacks, 'turbinesTurbineName' ), 
+                'callback'  => array( $this->turbineCallbacks, 'turbinesGlobal' ), 
                 'page'      => 'abc_turbines',
                 'section'   => 'turbines_admin_index', 
-                'args'      => array(
+                /*'args'      => array(
                     'label_for' =>  'turbine_name',
                     'class'     =>  'example-class',
-                ),  
+                ),*/  
             ),
-            array(
+            /*array(
                 'id'        => 'turbine_owner',
                 'title'     => 'Собственик',
                 'callback'  => array( $this->turbineCallbacks, 'turbinesTurbineOwner' ), 
@@ -189,7 +188,7 @@ class Admin extends BaseController
                     'label_for' =>  'turbine_description',
                     'class'     =>  'example-class',
                 ),  
-            ),
+            ),*/
         );
         
         $this->settings->setFields( $args );
