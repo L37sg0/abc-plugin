@@ -10,13 +10,19 @@ use Inc\Base\BaseController;
 class TurbinesCallbacks extends BaseController
 {
 
-    public function turbinesGlobal(){
+    public function turbinesDashboard(){
 
-        return require_once( "$this->plugin_path/templates/add_turbine.php" );
+        return require_once( "$this->plugin_path/templates/turbines/turbines.php" );
+        //return require_once( "$this->plugin_path/templates/turbines/add_turbine.php" );
+    
+    }
+    public function turbinesAddNew(){
 
+        return require_once( "$this->plugin_path/templates/turbines/add_turbine.php" );
+    
     }
 
-    public function turbinesAdminSection(){
+    /*public function turbinesAdminSection(){
 
         echo '';
 
@@ -51,7 +57,7 @@ class TurbinesCallbacks extends BaseController
         $value = esc_attr( get_option( 'turbine_description' ) );
         echo '<textarea type="input" class="regular-text" name="turbine_description" value="' . $value . '"placeholder="Въведи Описание към Турбина"></textarea>';
 
-    }
+    }*/
 
 }
 ?>

@@ -56,6 +56,52 @@ class DataApi
 
     }
 
+    // read table
+    public function readTable( string $table_name=null, string $result_columns=null, string $search_category=null, string $search_word=null ){
+        global $wpdb;
+
+        $this->table_name = $wpdb->prefix . $table_name;
+
+        $this->result_columns = $result_columns;
+
+        $this->search_category = $search_category;
+
+        $this->search_word = $search_word;
+
+        if( $this->search_word && $this->search_category ){
+        
+            $this->result = $wpdb->get_results(
+                "
+                SELECT id, "    . $this->result_columns .   "
+                FROM "          . $this->table_name .       "
+                WHERE "         . $this->search_category .  "
+                = '"            . $this->search_word .      "'"
+            );
+        }else{
+            $this->result = $wpdb->get_results(
+                "
+                SELECT id, "    . $this->result_columns . "
+                FROM "          . $this->table_name 
+            );
+        }
+
+        
+
+        //echo "<script>console.log(" . array_keys ( $this->result_columns )[1] . ");</script>";
+        return $this->result;
+        
+        /*foreach( $this->result as $res ){
+            echo "<script>console.log('" . $res->name . "');</script>";
+        }*/
+
+
+
+    }
+
+    // read row
+
+
+
     // edit data
     public function editData(){
         

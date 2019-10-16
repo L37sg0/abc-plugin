@@ -13,11 +13,11 @@ class Deactivate
 
         flush_rewrite_rules();
 
-        $dataApi = new DataApi;
+        //$dataApi = new DataApi;
 
-        $dataApi->dropTable( 'abc_turbines' );
-        $dataApi->dropTable( 'abc_windparks' );
-        $dataApi->dropTable( 'abc_events' );
+        //$dataApi->dropTable( 'abc_turbines' );
+        //$dataApi->dropTable( 'abc_windparks' );
+        //$dataApi->dropTable( 'abc_events' );
 
     }// handling plugin deactivation
 }

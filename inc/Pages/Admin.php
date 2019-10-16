@@ -9,6 +9,8 @@ use \Inc\Api\SettingsApi;
 use \Inc\Base\BaseController;
 use \Inc\Api\Callbacks\AdminCallbacks;
 use \Inc\Api\Callbacks\TurbinesCallbacks;
+use \Inc\Api\Callbacks\WindparksCallbacks;
+use \Inc\Api\Callbacks\EventsCallbacks;
 
 class Admin extends BaseController
 {
@@ -29,7 +31,11 @@ class Admin extends BaseController
         
         $this->callbacks = new AdminCallbacks();
 
-        $this->turbineCallbacks = new TurbinesCallbacks();
+        $this->turbinesCallbacks = new TurbinesCallbacks();
+
+        $this->windparksCallbacks = new WindparksCallbacks();
+
+        $this->eventsCallbacks = new EventsCallbacks();
 
         $this->setPages();
 
@@ -52,7 +58,7 @@ class Admin extends BaseController
                   'menu_title'=>'ВП Мениджър ',
                   'capability'=>'manage_options',
                   'menu_slug' =>'abc_windparks',
-                  'callback'  => array( $this->callbacks, 'windparksDashboard' ),
+                  'callback'  => array( $this->windparksCallbacks, 'windparksDashboard' ),
                   'icon_url'  =>'dashicons-sos',
                   'position'  => 110
             ),
@@ -69,7 +75,7 @@ class Admin extends BaseController
                 'menu_title' => 'Турбини',
                 'capability' => 'manage_options',
                 'menu_slug'  => 'abc_turbines',
-                'callback'   => array( $this->callbacks, 'turbinesDashboard' ),
+                'callback'   => array( $this->turbinesCallbacks, 'turbinesDashboard' ),
             ),
             array(
                 'parent_slug'=> 'abc_windparks',
@@ -77,7 +83,7 @@ class Admin extends BaseController
                 'menu_title' => 'Събития',
                 'capability' => 'manage_options',
                 'menu_slug'  => 'abc_events',
-                'callback'   => array( $this->callbacks, 'eventsDashboard' ),
+                'callback'   => array( $this->eventsCallbacks, 'eventsDashboard' ),
             ),
             array(
                 'parent_slug'=> 'abc_windparks',
@@ -137,7 +143,7 @@ class Admin extends BaseController
             array(
                 'id'        => 'add_turbine_form',
                 'title'     => 'Име',
-                'callback'  => array( $this->turbineCallbacks, 'turbinesGlobal' ), 
+                'callback'  => array( $this->turbinesCallbacks, 'turbinesGlobal' ), 
                 'page'      => 'abc_turbines',
                 'section'   => 'turbines_admin_index', 
                 /*'args'      => array(

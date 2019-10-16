@@ -31,11 +31,6 @@ class AdminCallbacks extends BaseController
     
     }
 
-    public function turbinesDashboard(){
-
-        return require_once( "$this->plugin_path/templates/turbines/add_turbine.php" );
-    
-    }
     
     public function turbineInfo(){
 

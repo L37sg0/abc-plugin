@@ -45,9 +45,10 @@ class Activate
         )");
         $dataApi->createTable('abc_events',"(
             id mediumint(9) NOT NULL AUTO_INCREMENT,
-            time datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-            name tinytext NOT NULL,
-            paired_to_turbine text NOT NULL,
+            date datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+            title tinytext NOT NULL,
+            description tinytext NOT NULL,
+            place text NOT NULL,
             writen_by varchar(55) DEFAULT '' NOT NULL,
             PRIMARY KEY  (id)
         )");
