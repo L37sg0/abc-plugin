@@ -42,7 +42,7 @@
                             <tr>
                                 <td></td>
                                 <td>
-                                    <button type="submit" name="submit" class="btn btn-primary">
+                                    <button type="submit" name="save" class="btn btn-primary">
                                         <span class="glyphicon glyphicon-plus"></span> Запази
                                     </button>
                                 </td>
@@ -50,23 +50,6 @@
                         
                         </table>
                     </form>
-                    <?php 
-                                
-                        use Inc\Api\Data\DataApi;
-                        //settings_errors();
-                        if( isset( $_POST["submit"] ) ){
-                            $dataApi = new DataApi;
-                            $data = array(
-                                "name"                  => $_POST["windpark_name"],
-                                "owner"                 => $_POST["windpark_owner"],
-                                "description"           => $_POST["windpark_description"],
-                            );
-                            //echo $data["name"];
-                            $dataApi->writeData( "abc_windparks", $data );
-
-                        }
-                                
-                    ?>
             </div>
     </body>
 </html>

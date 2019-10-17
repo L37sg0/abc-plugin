@@ -57,12 +57,13 @@ class DataApi
     }
 
     // read table
-    public function readTable( string $table_name=null, string $result_columns=null, string $search_category=null, string $search_word=null ){
+    public function readTable( string $table_name=null, array $result_columns=null, string $search_category=null, string $search_word=null ){
         global $wpdb;
 
         $this->table_name = $wpdb->prefix . $table_name;
 
-        $this->result_columns = $result_columns;
+        $this->result_columns = implode(",",$result_columns);
+        //echo "<script>console.log('" . $this->result_columns . "');</script>";
 
         $this->search_category = $search_category;
 
@@ -72,7 +73,7 @@ class DataApi
         
             $this->result = $wpdb->get_results(
                 "
-                SELECT id, "    . $this->result_columns .   "
+                SELECT "        . $this->result_columns .   "
                 FROM "          . $this->table_name .       "
                 WHERE "         . $this->search_category .  "
                 = '"            . $this->search_word .      "'"

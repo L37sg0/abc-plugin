@@ -64,9 +64,13 @@
                                 <td>
                                     <select name='turbine_windpark' class='form-control'>
                                         <!--Трябва да показва списък с въведените обекти ветропаркове-->
-                                        <option value='Ветропарк 1'>Ветропарк 1</option>
+                                        <option value='Друг'>Друг</option>
+                                        <?php
+                                        $handler->showList("abc_windparks", array("name"));
+                                        ?>
+                        <               <!-- <option value='Ветропарк 1'>Ветропарк 1</option>
                                         <option value='Ветропарк 2'>Ветропарк 2</option>
-                                        <option value='Ветропарк 3'>Ветропарк 3</option>
+                                        <option value='Ветропарк 3'>Ветропарк 3</option> -->
                                     </select>
                                 </td>
                             </tr> 
@@ -105,7 +109,7 @@
                             <tr>
                                 <td></td>
                                 <td>
-                                    <button type="submit" name="submit" class="btn btn-primary">
+                                    <button type="submit" name="save" class="btn btn-primary">
                                         <span class="glyphicon glyphicon-plus"></span> Запази
                                     </button>
                                 </td>
@@ -113,35 +117,6 @@
                         
                         </table>
                     </form>
-
-                    <?php 
-                                
-                        use Inc\Api\Data\DataApi;
-                        //settings_errors();
-                        if( isset( $_POST["submit"] ) ){
-                            $dataApi = new DataApi;
-                            $data = array(
-                                "name"                  => $_POST["turbine_name"],
-                                "serial_number"         => $_POST["turbine_serial_number"],
-                                "vendor"                => $_POST["turbine_vendor"],
-                                "model"                 => $_POST["turbine_model"],
-                                "power"                 => $_POST["turbine_power"],
-                                "owner"                 => $_POST["turbine_owner"],
-                                "windpark"              => $_POST["turbine_windpark"],
-                                "gearbox_vendor"        => $_POST["gearbox_vendor"],
-                                "gearbox_number"        => $_POST["gearbox_number"],
-                                "hydraulics_vendor"     => $_POST["hydraulics_vendor"],
-                                "hydraulics_number"     => $_POST["hydraulics_number"],
-                                "generator_vendor"      => $_POST["generator_vendor"],
-                                "generator_number"      => $_POST["generator_number"],
-                                "transformer_vendor"    => $_POST["transformer_vendor"],
-                                "transformer_number"    => $_POST["transformer_number"],
-                            );
-                            $dataApi->writeData( "abc_turbines", $data );
-
-                        }
-                                
-                    ?>
             </div>
     </body>
 </html>

@@ -44,7 +44,18 @@
                 <?php 
                 use Inc\Api\Handlers\TemplateHandler;
                 $handler = new TemplateHandler;
+                $data = array(
+                    "date"                  => current_time( 'mysql' ),
+                    "title"                 => $_POST["event_title"],
+                    "description"           => $_POST["event_description"],
+                    "place"                 => $_POST["event_place"],
+                    "writen_by"             => wp_get_current_user()->user_login,
+                );
+                $result_columns = array("id", "date", "title", "description", "place", "writen_by");
+                $table_name = "abc_events";
+                $callback = "eventsAddNew";
                 $handler->register();
+                $handler->handle( $table_name, $data, $result_columns, $callback );
                 ?>
             </table>
         </div>

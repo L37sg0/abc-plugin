@@ -16,7 +16,13 @@
             <!-- heading -->
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <div class="col-sm">
-                    <h1>Списък с Ветропаркове</h1>
+                    <h1>Ветропаркове</h1>
+                </div>
+                <!-- button for add new -->
+                <div class="col-sm">
+                    <form class="form-inline my-2 my-lg-0" action="#" method="post">
+                        <button name="add_new" class="btn btn-primary my-2 my-sm-0" type="submit">Добави</button>
+                    </form>
                 </div>
                 <!-- search form -->
                 <form class="form-inline my-2 my-lg-0" action="#" method="post">
@@ -27,32 +33,25 @@
                         <option value="name"                >Име</option>
                         <option value="owner"               >Собственик</option>
                     </select>
-                    <button name="submit" class="btn btn-primary my-2 my-sm-0" type="submit">Търси</button>
+                    <button name="search" class="btn btn-primary my-2 my-sm-0" type="submit">Търси</button>
                 </form>
             </div>
         </nav>
         <div class="container mt-5">
             <table class='table table-hover'>
                 <?php 
-                            
-                    use Inc\Api\Data\DataApi;
-                    settings_errors();
-                    if( isset( $_POST["submit"] ) ){
-                        $dataApi = new DataApi;
-                        $this->table = "abc_windparks";
-                        $this->result_columns = "name, owner";
-                        $this->search_word = $_POST["search_word"];
-                        $this->search_category = $_POST["search_category"];
-                        $this->results = (array) $dataApi->readTable( $this->table, $this->result_columns, $this->search_category, $this->search_word );
-                        
-                        foreach( $this->results as $result ){
-                            echo"<tr><td>" .
-                            $result->id .               "</td><td>" .
-                            $result->name .               "</td><td>" .
-                            $result->owner .         "</td></tr>";
-                            //echo "<script>console.log('" . $result->id, $result->serial_number . "');</script>";
-                        }
-                    }     
+                use Inc\Api\Handlers\TemplateHandler;
+                $handler = new TemplateHandler;
+                $data = array(
+                    "name"                  => $_POST["windpark_name"],
+                    "owner"                 => $_POST["windpark_owner"],
+                    "description"           => $_POST["windpark_description"],
+                );
+                $result_columns = array("id","name","owner");
+                $table_name = "abc_windparks";
+                $callback = "windparksAddNew";
+                $handler->register();
+                $handler->handle( $table_name, $data, $result_columns, $callback );
                 ?>
             </table>
         </div>

@@ -8,9 +8,7 @@ namespace Inc\Pages;
 use \Inc\Api\SettingsApi;
 use \Inc\Base\BaseController;
 use \Inc\Api\Callbacks\AdminCallbacks;
-use \Inc\Api\Callbacks\TurbinesCallbacks;
-use \Inc\Api\Callbacks\WindparksCallbacks;
-use \Inc\Api\Callbacks\EventsCallbacks;
+use \Inc\Api\Callbacks\TemplatesCallbacks;
 
 class Admin extends BaseController
 {
@@ -27,25 +25,21 @@ class Admin extends BaseController
 
     public function register(){        
 
-        $this->settings = new SettingsApi();   
+        $this->settings             = new SettingsApi();   
         
-        $this->callbacks = new AdminCallbacks();
+        $this->callbacks            = new AdminCallbacks();
 
-        $this->turbinesCallbacks = new TurbinesCallbacks();
-
-        $this->windparksCallbacks = new WindparksCallbacks();
-
-        $this->eventsCallbacks = new EventsCallbacks();
+        $this->templatesCallbacks   = new TemplatesCallbacks();
 
         $this->setPages();
 
         $this->setSubpages();
 
-        $this->setSettings();
+        /* $this->setSettings();
 
         $this->setSections();
 
-        $this->setFields();
+        $this->setFields(); */
         
         $this->settings->addPages( $this->pages )->withSubPage( 'Ветропаркове' )->
         addSubPages( $this->subpages )->register();
@@ -58,7 +52,7 @@ class Admin extends BaseController
                   'menu_title'=>'ВП Мениджър ',
                   'capability'=>'manage_options',
                   'menu_slug' =>'abc_windparks',
-                  'callback'  => array( $this->windparksCallbacks, 'windparksDashboard' ),
+                  'callback'  => array( $this->templatesCallbacks, 'windparksDashboard' ),
                   'icon_url'  =>'dashicons-sos',
                   'position'  => 110
             ),
@@ -75,7 +69,7 @@ class Admin extends BaseController
                 'menu_title' => 'Турбини',
                 'capability' => 'manage_options',
                 'menu_slug'  => 'abc_turbines',
-                'callback'   => array( $this->turbinesCallbacks, 'turbinesDashboard' ),
+                'callback'   => array( $this->templatesCallbacks, 'turbinesDashboard' ),
             ),
             array(
                 'parent_slug'=> 'abc_windparks',
@@ -83,7 +77,7 @@ class Admin extends BaseController
                 'menu_title' => 'Събития',
                 'capability' => 'manage_options',
                 'menu_slug'  => 'abc_events',
-                'callback'   => array( $this->eventsCallbacks, 'eventsDashboard' ),
+                'callback'   => array( $this->templatesCallbacks, 'eventsDashboard' ),
             ),
             array(
                 'parent_slug'=> 'abc_windparks',
@@ -96,7 +90,7 @@ class Admin extends BaseController
         );
 
     }
-
+/* 
     public function setSettings(){
 
         $args = array(
@@ -104,7 +98,7 @@ class Admin extends BaseController
                 'option_group' => 'turbines_options_group',
                 'option_name'  => 'add_turbine_form',   
             ),
-            /*array(
+            array(
                 'option_group' => 'turbines_options_group',
                 'option_name'  => 'turbine_owner',
             ),
@@ -115,13 +109,13 @@ class Admin extends BaseController
             array(
                 'option_group' => 'turbines_options_group',
                 'option_name'  => 'turbine_windpark',
-            ),*/
+            ),
         );
         
         $this->settings->setSettings( $args );
 
-    }
-
+    } */
+/* 
     public function setSections(){
 
         $args = array(
@@ -135,23 +129,23 @@ class Admin extends BaseController
         
         $this->settings->setSections( $args );
 
-    }
+    } */
 
-    public function setFields(){
+   /*  public function setFields(){
 
-        $args = array(
+         $args = array(
             array(
                 'id'        => 'add_turbine_form',
                 'title'     => 'Име',
                 'callback'  => array( $this->turbinesCallbacks, 'turbinesGlobal' ), 
                 'page'      => 'abc_turbines',
-                'section'   => 'turbines_admin_index', 
-                /*'args'      => array(
+                'section'   => 'turbines_admin_index',  
+                'args'      => array(
                     'label_for' =>  'turbine_name',
                     'class'     =>  'example-class',
-                ),*/  
+                ),  
             ),
-            /*array(
+            array(
                 'id'        => 'turbine_owner',
                 'title'     => 'Собственик',
                 'callback'  => array( $this->turbineCallbacks, 'turbinesTurbineOwner' ), 
@@ -194,12 +188,12 @@ class Admin extends BaseController
                     'label_for' =>  'turbine_description',
                     'class'     =>  'example-class',
                 ),  
-            ),*/
+            ),
         );
         
         $this->settings->setFields( $args );
 
-    }
+    } */
 
 }
 

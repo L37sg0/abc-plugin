@@ -7,7 +7,7 @@
 namespace Inc\Api\Handlers;
 
 use Inc\Api\Data\DataApi;
-use \Inc\Api\Callbacks\EventsCallbacks;
+use \Inc\Api\Callbacks\TemplatesCallbacks;
 
 class TemplateHandler
 {
@@ -16,49 +16,78 @@ class TemplateHandler
     public function register()
     {
         $this->dataApi = new DataApi;
-        $this->handleEvents();
+        $this->templatesCallbacks      = new TemplatesCallbacks();
     }
-    //method for handling windpark templates
-    public function handleEvents()
+
+    //method for handling templates $_POST
+    public function handle( string $table_name="", array $data=[], array $result_columns=[], $callback=null )
     {
+        $this->showContent( $table_name, $result_columns );
+    
         if( isset( $_POST["search"] ) ){
-            
-            $this->table = "abc_events";
-            $this->result_columns = "date, title, description, place, writen_by";
-            $this->search_word = $_POST["search_word"];
-            $this->search_category = $_POST["search_category"];
-            $this->results = (array) $this->dataApi->readTable( $this->table, $this->result_columns, $this->search_category, $this->search_word );
-            
-            foreach( $this->results as $result ){
-                echo"<tr><td>" .
-                $result->id .               "</td><td>" .
-                $result->date .             "</td><td>" .
-                $result->title .            "</td><td>" .
-                $result->description .      "</td><td>" .
-                $result->place .            "</td><td>" .
-                $result->writen_by .        "</td></tr>";
-            }
-        }
-        if( isset( $_POST["add_new"] ) ){
-            $this->eventsCallbacks = new EventsCallbacks();
-            $this->eventsCallbacks->eventsAddNew();
-        }  
-        if( isset( $_POST["save"] ) ){
-            $data = array(
-                "date"                  => current_time( 'mysql' ),
-                "title"                 => $_POST["event_title"],
-                "description"           => $_POST["event_description"],
-                "place"                 => $_POST["event_place"],
-                "writen_by"             => wp_get_current_user()->user_login,
-            );
-            //echo $data["name"];
-            $this->dataApi->writeData( "abc_events", $data );
 
+            ob_get_clean();                
+            $search_word = $_POST["search_word"];
+            $search_category = $_POST["search_category"];
+            $this->showContent( $table_name, $result_columns, $search_category, $search_word );
+            
+        }
+
+        if( isset( $_POST["add_new"] ) ){
+
+            ob_get_clean();
+            $this->templatesCallbacks->$callback();
+
+        }  
+
+        if( isset( $_POST["save"] ) ){
+            $this->dataApi->writeData( $table_name, $data );
+            ob_get_clean();
+            $this->showContent( $table_name, $result_columns );
+
+        }
+            
+    }       
+
+    // method for handling data visualization
+    public function showContent( string $table_name="", array $result_columns=[], string $search_category=null, string $search_word=null )
+    {
+        ob_start(); 
+        $results = $this->dataApi->readTable( $table_name, $result_columns, $search_category, $search_word );
+        foreach( $results as $result ){
+
+            $result = (array) $result;
+            echo "<tr>";
+
+            for($i=0;$i<count($result);$i++){
+                
+                echo"<td>" . $result[$result_columns[$i]] . "</td>";
+
+            }
+
+            echo "</tr>";
         }
     }
-    //method for handling turbine templates
 
-    //method for handling events templates
+    // method showing list from data column
+    public function showList( string $table_name="", array $columns=[])
+    {
+        //ob_start(); 
+        $results = $this->dataApi->readTable( $table_name, $columns );
+        foreach( $results as $result ){
+
+            $result = (array) $result;
+            echo "<script>console.log('" . $table_name . "');</script>";
+
+            for($i=0;$i<count($result);$i++){
+                
+                //echo"<option value='" . $result[$columns[$i]] . "'>" . $result[$columns[$i]] . "</option>";
+                
+            }
+
+            //echo "</tr>";
+        }
+    }
 
 }
 ?>

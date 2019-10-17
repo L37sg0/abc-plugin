@@ -9,6 +9,10 @@
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
                 integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    
+        <?php
+        
+        ?>
     </head>
 
     <body>
@@ -16,7 +20,13 @@
             <!-- heading -->
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <div class="col-sm">
-                    <h1>Списък с Турбини</h1>
+                    <h1>Турбини</h1>
+                </div>
+                <!-- button for add new -->
+                <div class="col-sm">
+                    <form class="form-inline my-2 my-lg-0" action="#" method="post">
+                        <button name="add_new" class="btn btn-primary my-2 my-sm-0" type="submit">Добави</button>
+                    </form>
                 </div>
                 <!-- search form -->
                 <form class="form-inline my-2 my-lg-0" action="#" method="post">
@@ -40,37 +50,37 @@
                         <option value="transformer_vendor"  >Трансформатор</option>
                         <option value="transformer_number"  >Трансформатор Номер</option>
                     </select>
-                    <button name="submit" class="btn btn-primary my-2 my-sm-0" type="submit">Търси</button>
+                    <button name="search" class="btn btn-primary my-2 my-sm-0" type="submit">Търси</button>
                 </form>
             </div>
         </nav>
+        <!--container for the dinamic content-->
         <div class="container mt-5">
             <table class='table table-hover'>
-                <?php 
-                            
-                    use Inc\Api\Data\DataApi;
-                    settings_errors();
-                    if( isset( $_POST["submit"] ) ){
-                        $dataApi = new DataApi;
-                        $this->table = "abc_turbines";
-                        $this->result_columns = "name, serial_number, vendor, model, power, owner, windpark";//array(  );
-                        $this->search_word = $_POST["search_word"];
-                        $this->search_category = $_POST["search_category"];
-                        $this->results = (array) $dataApi->readTable( $this->table, $this->result_columns, $this->search_category, $this->search_word );
-                        
-                        foreach( $this->results as $result ){
-                            echo"<tr><td>" .
-                            $result->id .               "</td><td>" .
-                            $result->name .             "</td><td>" .
-                            $result->serial_number .    "</td><td>" .
-                            $result->vendor .           "</td><td>" .
-                            $result->model .            "</td><td>" .
-                            $result->power .            "</td><td>" .
-                            $result->owner .            "</td><td>" .
-                            $result->windpark .         "</td></tr>";
-                            //echo "<script>console.log('" . $result->id, $result->serial_number . "');</script>";
-                        }
-                    }     
+                <?php
+                use Inc\Api\Handlers\TemplateHandler;
+                $handler = new TemplateHandler;
+                $handler->register();$data = array(
+                    "name"                  => $_POST["turbine_name"],
+                    "serial_number"         => $_POST["turbine_serial_number"],
+                    "vendor"                => $_POST["turbine_vendor"],
+                    "model"                 => $_POST["turbine_model"],
+                    "power"                 => $_POST["turbine_power"],
+                    "owner"                 => $_POST["turbine_owner"],
+                    "windpark"              => $_POST["turbine_windpark"],
+                    "gearbox_vendor"        => $_POST["gearbox_vendor"],
+                    "gearbox_number"        => $_POST["gearbox_number"],
+                    "hydraulics_vendor"     => $_POST["hydraulics_vendor"],
+                    "hydraulics_number"     => $_POST["hydraulics_number"],
+                    "generator_vendor"      => $_POST["generator_vendor"],
+                    "generator_number"      => $_POST["generator_number"],
+                    "transformer_vendor"    => $_POST["transformer_vendor"],
+                    "transformer_number"    => $_POST["transformer_number"],
+                );
+                $result_columns = array("id","name","serial_number","vendor","model","power","owner","windpark");
+                $callback = "turbinesAddNew";
+                $table_name = "abc_turbines";
+                $handler->handle( $table_name, $data, $result_columns, $callback ); 
                 ?>
             </table>
         </div>
