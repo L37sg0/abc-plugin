@@ -14,13 +14,13 @@ class DataApi
 
         global $wpdb;
         
-        $this->table_name = $wpdb->prefix . $table_name;
+        $table_name = $wpdb->prefix . $table_name;
 
-        $this->table_structure = $table_structure;
+        $table_structure = $table_structure;
 
         $charset_collate = $wpdb->get_charset_collate();
     
-        $sql = "CREATE TABLE IF NOT EXISTS $this->table_name" . $this->table_structure . "$charset_collate;";
+        $sql = "CREATE TABLE IF NOT EXISTS $table_name" . $table_structure . "$charset_collate;";
 
         $wpdb->query($sql);
 
@@ -36,9 +36,9 @@ class DataApi
 
         global $wpdb;
                 
-        $this->table_name = $wpdb->prefix . $table_name;
+        $table_name = $wpdb->prefix . $table_name;
 
-        $sql = "DROP TABLE $this->table_name;";
+        $sql = "DROP TABLE $table_name;";
 
         $wpdb->query($sql); 
 
@@ -48,11 +48,11 @@ class DataApi
     public function writeData( string $table_name = null, array $data=[] ){
         global $wpdb;
 
-        $this->table_name = $wpdb->prefix . $table_name;
+        $table_name = $wpdb->prefix . $table_name;
 
-        $this->data = $data;
+        $data = $data;
         
-        $wpdb->insert( $this->table_name, $this->data );
+        $wpdb->insert( $table_name, $data );
 
     }
 
@@ -60,56 +60,54 @@ class DataApi
     public function readTable( string $table_name=null, array $result_columns=null, string $search_category=null, string $search_word=null ){
         global $wpdb;
 
-        $this->table_name = $wpdb->prefix . $table_name;
+        $table_name = $wpdb->prefix . $table_name;
 
-        $this->result_columns = implode(",",$result_columns);
-        //echo "<script>console.log('" . $this->result_columns . "');</script>";
+        $result_columns = implode(",",$result_columns);
+        //echo "<script>console.log('" . $result_columns . "');</script>";
 
-        $this->search_category = $search_category;
+        $search_category = $search_category;
 
-        $this->search_word = $search_word;
+        $search_word = $search_word;
 
-        if( $this->search_word && $this->search_category ){
+        if( $search_word && $search_category ){
         
-            $this->result = $wpdb->get_results(
+            $result = $wpdb->get_results(
                 "
-                SELECT "        . $this->result_columns .   "
-                FROM "          . $this->table_name .       "
-                WHERE "         . $this->search_category .  "
-                = '"            . $this->search_word .      "'"
+                SELECT "        . $result_columns .   "
+                FROM "          . $table_name .       "
+                WHERE "         . $search_category .  "
+                LIKE '%"        . $search_word .      "%'"
             );
         }else{
-            $this->result = $wpdb->get_results(
+            $result = $wpdb->get_results(
                 "
-                SELECT id, "    . $this->result_columns . "
-                FROM "          . $this->table_name 
+                SELECT id, "    . $result_columns . "
+                FROM "          . $table_name 
             );
         }
-
-        
-
-        //echo "<script>console.log(" . array_keys ( $this->result_columns )[1] . ");</script>";
-        return $this->result;
-        
-        /*foreach( $this->result as $res ){
-            echo "<script>console.log('" . $res->name . "');</script>";
-        }*/
-
-
-
+        return $result;
     }
 
     // read row
+    public function readRow( string $table_name, int $row_id=0 ){ 
+        
+        global $wpdb;
 
+        $table_name = $wpdb->prefix . $table_name;
+        
+        $result = $wpdb->get_row( "SELECT * FROM $table_name WHERE id = $row_id" );
 
+        return $result;
+        
+    }
 
     // edit data
-    public function editData(){
+    public function editRow(){
         
     }
 
     // delete data
-    public function deleteData(){
+    public function deleteRow(){
         
     }
 }

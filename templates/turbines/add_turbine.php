@@ -23,7 +23,6 @@
                     <!-- table will be here -->
                     <form action='#' method='post'>
                         <table class='table table-hover'>
-                        
                         <tr>
                                 <td>Име</td>
                                 <td><input type='text' name='turbine_name' value='' class='form-control' required></td>
@@ -66,7 +65,10 @@
                                         <!--Трябва да показва списък с въведените обекти ветропаркове-->
                                         <option value='Друг'>Друг</option>
                                         <?php
-                                        $handler->showList("abc_windparks", array("name"));
+                                        use Inc\Api\Handlers\TemplateHandler;
+                                        $handler = new TemplateHandler;
+                                        $handler->register();
+                                        $handler->showList("abc_windparks", array("id","name"));
                                         ?>
                         <               <!-- <option value='Ветропарк 1'>Ветропарк 1</option>
                                         <option value='Ветропарк 2'>Ветропарк 2</option>
@@ -114,7 +116,6 @@
                                     </button>
                                 </td>
                             </tr>
-                        
                         </table>
                     </form>
             </div>

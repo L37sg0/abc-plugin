@@ -15,14 +15,15 @@ class TemplateHandler
 
     public function register()
     {
-        $this->dataApi = new DataApi;
-        $this->templatesCallbacks      = new TemplatesCallbacks();
+        $this->dataApi              = new DataApi;
+        $this->templatesCallbacks   = new TemplatesCallbacks();
     }
 
     //method for handling templates $_POST
     public function handle( string $table_name="", array $data=[], array $result_columns=[], $callback=null )
     {
         $this->showContent( $table_name, $result_columns );
+        //$this->showRow( $table_name, 1 );
     
         if( isset( $_POST["search"] ) ){
 
@@ -46,6 +47,12 @@ class TemplateHandler
             $this->showContent( $table_name, $result_columns );
 
         }
+
+        if( isset( $_POST["1"] ) ){
+
+            $this->showRow( $table_name, 1 );
+
+        }  
             
     }       
 
@@ -57,6 +64,7 @@ class TemplateHandler
         foreach( $results as $result ){
 
             $result = (array) $result;
+            //echo "<tr type='submit' name='". $result["id"] ."'>";
             echo "<tr>";
 
             for($i=0;$i<count($result);$i++){
@@ -72,20 +80,31 @@ class TemplateHandler
     // method showing list from data column
     public function showList( string $table_name="", array $columns=[])
     {
-        //ob_start(); 
         $results = $this->dataApi->readTable( $table_name, $columns );
         foreach( $results as $result ){
 
             $result = (array) $result;
-            echo "<script>console.log('" . $table_name . "');</script>";
 
+            echo"<option value='" . $result["name"] . "'>" . $result["name"] . "</option>";
+
+        }
+    }
+
+    // method showing row from a table in preview form
+    public function showRow( string $table_name="", int $row_id=0)
+    {
+        //ob_start(); 
+        $results = (array) $this->dataApi->readRow( $table_name, $row_id );
+        //echo "<script>console.log('" . $results . "');</script>";
+        foreach( $results as $result ){
+
+            $result = (array) $result;
             for($i=0;$i<count($result);$i++){
-                
-                //echo"<option value='" . $result[$columns[$i]] . "'>" . $result[$columns[$i]] . "</option>";
-                
-            }
 
-            //echo "</tr>";
+                echo "<script>console.log('" . $result[$i] . "');</script>";
+                //echo"<td>" . $result[$result_columns[$i]] . "</td>";
+
+            }
         }
     }
 

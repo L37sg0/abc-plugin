@@ -60,7 +60,8 @@
                 <?php
                 use Inc\Api\Handlers\TemplateHandler;
                 $handler = new TemplateHandler;
-                $handler->register();$data = array(
+                $handler->register();
+                $data = array(
                     "name"                  => $_POST["turbine_name"],
                     "serial_number"         => $_POST["turbine_serial_number"],
                     "vendor"                => $_POST["turbine_vendor"],
@@ -82,7 +83,7 @@
                 $table_name = "abc_turbines";
                 $handler->handle( $table_name, $data, $result_columns, $callback ); 
                 ?>
-            </table>
+            </table> 
         </div>
     </body>
 </html>        
