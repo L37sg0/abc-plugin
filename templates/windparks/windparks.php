@@ -43,11 +43,11 @@
                 use Inc\Api\Handlers\TemplateHandler;
                 $handler = new TemplateHandler;
                 $data = array(
-                    "name"                  => $_POST["windpark_name"],
-                    "owner"                 => $_POST["windpark_owner"],
-                    "description"           => $_POST["windpark_description"],
+                    "name"                  => $_POST["name"],
+                    "owner"                 => $_POST["owner"],
+                    "description"           => $_POST["description"],
                 );
-                $result_columns = array("id","name","owner");
+                $result_columns = array("id","name","owner","description");
                 $table_name = "abc_windparks";
                 $callback = "windparksAddNew";
                 $handler->register();

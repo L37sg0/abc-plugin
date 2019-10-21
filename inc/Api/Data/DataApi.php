@@ -107,7 +107,16 @@ class DataApi
     }
 
     // delete data
-    public function deleteRow(){
+    public function deleteRow( string $table_name, int $row_id=0 ){
+
+        global $wpdb;
+
+        $table_name = $wpdb->prefix . $table_name;
+
+        $wpdb->delete( $table_name, array( 'id' => $row_id ) );
+
+        echo "<script>console.log('ROW DELETED.');</script>";
+        
         
     }
 }

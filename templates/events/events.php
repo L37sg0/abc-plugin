@@ -12,6 +12,19 @@
     </head>
 
     <body>
+
+        <?php
+
+            use Inc\Api\Handlers\TemplateHandler;
+            $handler = new TemplateHandler;
+            $result_columns = array("id", "date", "title", "description", "place", "writen_by");
+            $table_name = "abc_events";
+            $add_callback = "eventsAddNew";
+            $edit_callback = "eventsEdit";
+            $handler->register();
+
+        ?>
+
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <!-- heading -->
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -42,8 +55,6 @@
         <div class="container mt-5">
             <table class='table table-hover'>
                 <?php 
-                use Inc\Api\Handlers\TemplateHandler;
-                $handler = new TemplateHandler;
                 $data = array(
                     "date"                  => current_time( 'mysql' ),
                     "title"                 => $_POST["event_title"],
@@ -51,11 +62,8 @@
                     "place"                 => $_POST["event_place"],
                     "writen_by"             => wp_get_current_user()->user_login,
                 );
-                $result_columns = array("id", "date", "title", "description", "place", "writen_by");
-                $table_name = "abc_events";
-                $callback = "eventsAddNew";
-                $handler->register();
-                $handler->handle( $table_name, $data, $result_columns, $callback );
+                $handler->handle( $table_name, $data, $result_columns, $add_callback, $edit_callback );
+                
                 ?>
             </table>
         </div>

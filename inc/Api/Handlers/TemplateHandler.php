@@ -12,6 +12,7 @@ use \Inc\Api\Callbacks\TemplatesCallbacks;
 class TemplateHandler
 {
     public $dataApi;
+    public $data = [];
 
     public function register()
     {
@@ -20,10 +21,9 @@ class TemplateHandler
     }
 
     //method for handling templates $_POST
-    public function handle( string $table_name="", array $data=[], array $result_columns=[], $callback=null )
+    public function handle( string $table_name="", array $data=[], array $result_columns=[], $add_callback=null, $edit_callback=null )
     {
         $this->showContent( $table_name, $result_columns );
-        //$this->showRow( $table_name, 1 );
     
         if( isset( $_POST["search"] ) ){
 
@@ -37,7 +37,7 @@ class TemplateHandler
         if( isset( $_POST["add_new"] ) ){
 
             ob_get_clean();
-            $this->templatesCallbacks->$callback();
+            $this->templatesCallbacks->$add_callback();
 
         }  
 
@@ -47,10 +47,26 @@ class TemplateHandler
             $this->showContent( $table_name, $result_columns );
 
         }
+        if( isset( $_POST["save_edit"] ) ){
+            $this->dataApi->writeData( $table_name, $data );
+            ob_get_clean();
+            $this->showContent( $table_name, $result_columns );
 
-        if( isset( $_POST["1"] ) ){
+        }
 
-            $this->showRow( $table_name, 1 );
+        if( isset( $_POST["edit"] ) ){
+
+            ob_get_clean();
+            $this->showRow( $table_name, $_POST["row_id"], $result_columns, $result_titles );
+            //$this->templatesCallbacks->$edit_callback();
+
+        } 
+
+        if( isset( $_POST["delete"] ) ){
+
+            $this->removeRow( $table_name, $_POST["row_id"] );
+            ob_get_clean();
+            $this->showContent( $table_name, $result_columns );
 
         }  
             
@@ -59,20 +75,11 @@ class TemplateHandler
     // method for handling data visualization
     public function showContent( string $table_name="", array $result_columns=[], string $search_category=null, string $search_word=null )
     {
-        /* echo '<form method="post" action="options.php" class="inline-block">';
-        settings_fields( 'alecaddd_plugin_tax_settings' );
-        echo '<input type="hidden" name="remove" value="' . $option['taxonomy'] . '">';
-        submit_button( 'Delete', 'delete small', 'submit', false, array(
-            'onclick' => 'return confirm("Are you sure you want to delete this Custom Taxonomy? The data associated with it will not be deleted.");'
-        ));
-        echo '</form>'; */
-
         ob_start(); 
         $results = $this->dataApi->readTable( $table_name, $result_columns, $search_category, $search_word );
         foreach( $results as $result ){
 
             $result = (array) $result;
-            //echo "<tr type='submit' name='". $result["id"] ."'>";
             echo "<tr>";
 
             for($i=0;$i<count($result);$i++){
@@ -102,21 +109,33 @@ class TemplateHandler
     }
 
     // method showing row from a table in preview form
-    public function showRow( string $table_name="", int $row_id=0)
+    public function showRow( string $table_name="", $row_id=null, array $result_columns=[], array $result_titles=null )
     {
-        //ob_start(); 
-        $results = (array) $this->dataApi->readRow( $table_name, $row_id );
-        //echo "<script>console.log('" . $results . "');</script>";
-        foreach( $results as $result ){
+        ob_start(); 
+        $results =(array) $this->dataApi->readRow( $table_name, $row_id );
 
-            $result = (array) $result;
-            for($i=0;$i<count($result);$i++){
+        echo '<div class="container mt-5"><!-- heading --><div class="row">
+                <div class="col-sm"><h1>Промяна на ' . $result_titles["head"] . '</h1></div>
+            </div><form action="#" method="post"><table class="table table-hover">';
 
-                echo "<script>console.log('" . $result[$i] . "');</script>";
-                //echo"<td>" . $result[$result_columns[$i]] . "</td>";
+        for($i=1;$i<count($result_columns);$i++){
 
-            }
+            echo'<tr><td>' . $result_titles[$i] . '</td>
+            <td><input type="text" name="' . $result_columns[$i] . '" value="' . $results[$result_columns[$i]] .  '" class="form-control" required></td></tr>';
+
         }
+        echo '<tr><td></td><td>
+                            <button type="submit" name="save_edit" class="btn btn-primary">
+                                <span class="glyphicon glyphicon-plus"></span> Запази Промените
+                            </button>
+                        </td></tr></table></form></div>';
+    }
+
+    // Method for deleting row from given table.
+    public function removeRow(string $table_name="", int $row_id=null)
+    {
+        $this->dataApi->deleteRow( $table_name, $row_id );
+
     }
 
 }

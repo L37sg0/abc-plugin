@@ -26,17 +26,17 @@
                         
                             <tr>
                                 <td>Име</td>
-                                <td><input type='text' name='windpark_name' value='' class='form-control' required></td>
+                                <td><input type='text' name='name' value='' class='form-control' required></td>
                             </tr>
                         
                             <tr>
                                 <td>Собственик</td>
-                                <td><input type='text' name='windpark_owner' value='' class='form-control' required></td>
+                                <td><input type='text' name='owner' value='' class='form-control' required></td>
                             </tr>
                         
                             <tr>
                                 <td>Описание</td>
-                                <td><textarea name='windpark_description' value='' class='form-control'></textarea></td>
+                                <td><textarea name='description' value='' class='form-control'></textarea></td>
                             </tr>
                         
                             <tr>

@@ -70,9 +70,6 @@
                                         $handler->register();
                                         $handler->showList("abc_windparks", array("id","name"));
                                         ?>
-                        <               <!-- <option value='Ветропарк 1'>Ветропарк 1</option>
-                                        <option value='Ветропарк 2'>Ветропарк 2</option>
-                                        <option value='Ветропарк 3'>Ветропарк 3</option> -->
                                     </select>
                                 </td>
                             </tr> 

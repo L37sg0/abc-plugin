@@ -46,5 +46,10 @@ class TemplatesCallbacks extends BaseController
         return require_once( "$this->plugin_path/templates/events/add_event.php" );
     
     }
+    public function eventsEdit(){
+
+        return require_once( "$this->plugin_path/templates/events/edit_event.php" );
+    
+    }
 }
 ?>

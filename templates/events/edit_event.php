@@ -12,6 +12,7 @@
     </head>
 
     <body>
+
         <div class="container mt-5">
             <!-- heading -->
             <div class="row">
@@ -26,18 +27,18 @@
                 
                     <tr>
                         <td>Заглавие</td>
-                        <td><input type='text' name='event_title' value='' class='form-control' required></td>
+                        <td><input type='text' name='event_title' value="<?= $title ?>" class='form-control' required></td>
                     </tr>
                                     
                     <tr>
                         <td>Описание</td>
-                        <td><textarea name='event_description' value='' class='form-control'></textarea></td>
+                        <td><textarea name='event_description' value="$description" class='form-control'></textarea></td>
                     </tr>
                     <tr>
                         <td>Място</td>
                         <td>
-                            <select name='event_place' class='form-control'>
-                                <option value="База"    >База</option>
+                            <select name="event_place" class='form-control'>
+                                <option value="$place"  >База</option>
                                 <option value="Турбина" >Турбина</option>
                                 <option value="Друго"   >Друго</option>
                             </select>
