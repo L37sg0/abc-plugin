@@ -139,7 +139,7 @@ class SettingsApi
             register_setting(
                 $setting["option_group"],
                 $setting["option_name"],
-                ( isset( $setting["callback"] ) ? $setting["callback"] : '' ),
+                ( isset( $setting["callback"] ) ? $setting["callback"] : '' )
             );
 
         }
@@ -151,7 +151,7 @@ class SettingsApi
                 $section["id"],
                 $section["title"],
                 ( isset( $section["callback"] ) ? $section["callback"] : '' ),
-                $section["page"],
+                $section["page"]
             );
 
         }
@@ -165,7 +165,7 @@ class SettingsApi
                 ( isset( $field["callback"] ) ? $field["callback"] : '' ),
                 $field["page"],
                 $field["section"],
-                ( isset( $field["args"] ) ? $field["args"] : '' ),
+                ( isset( $field["args"] ) ? $field["args"] : '' )
             );
 
         }

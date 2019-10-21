@@ -59,6 +59,14 @@ class TemplateHandler
     // method for handling data visualization
     public function showContent( string $table_name="", array $result_columns=[], string $search_category=null, string $search_word=null )
     {
+        /* echo '<form method="post" action="options.php" class="inline-block">';
+        settings_fields( 'alecaddd_plugin_tax_settings' );
+        echo '<input type="hidden" name="remove" value="' . $option['taxonomy'] . '">';
+        submit_button( 'Delete', 'delete small', 'submit', false, array(
+            'onclick' => 'return confirm("Are you sure you want to delete this Custom Taxonomy? The data associated with it will not be deleted.");'
+        ));
+        echo '</form>'; */
+
         ob_start(); 
         $results = $this->dataApi->readTable( $table_name, $result_columns, $search_category, $search_word );
         foreach( $results as $result ){
@@ -69,11 +77,14 @@ class TemplateHandler
 
             for($i=0;$i<count($result);$i++){
                 
-                echo"<td>" . $result[$result_columns[$i]] . "</td>";
-
+                echo"<td>" . $result[$result_columns[$i]];
+                
             }
-
-            echo "</tr>";
+            echo '<form method="post" action="#">';
+            echo '<input type="hidden" name="row_id" value="' . $result["id"] . '"></td>';
+            echo '<td><button name="edit" class="btn btn-primary btn-sm" type="submit">Редакция</button>';
+            echo '<button name="delete" class="btn btn-danger btn-sm" type="submit">X</button></td>';
+            echo "</form></tr>";
         }
     }
 
