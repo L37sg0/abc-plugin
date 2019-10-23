@@ -48,10 +48,11 @@
                     "description"           => $_POST["description"],
                 );
                 $result_columns = array("id","name","owner","description");
+                $column_titles  = array("Име", "Собственик", "Описание");
                 $table_name = "abc_windparks";
                 $callback = "windparksAddNew";
                 $handler->register();
-                $handler->handle( $table_name, $data, $result_columns, $callback );
+                $handler->handle( $table_name, $data, $result_columns, $column_titles, $callback );
                 ?>
             </table>
         </div>

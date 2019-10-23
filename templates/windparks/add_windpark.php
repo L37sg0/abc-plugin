@@ -50,6 +50,10 @@
                         
                         </table>
                     </form>
+                    <form action='#' method='post'>
+                                    <button type="submit" name="search" class="btn btn-danger">
+                                        <span class="glyphicon glyphicon-plus"></span> Отказ
+                                    </button></form>
             </div>
     </body>
 </html>

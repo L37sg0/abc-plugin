@@ -25,16 +25,16 @@
                         <table class='table table-hover'>
                         <tr>
                                 <td>Име</td>
-                                <td><input type='text' name='turbine_name' value='' class='form-control' required></td>
+                                <td><input type='text' name='name' value='' class='form-control' required></td>
                             </tr>
                             <tr>
                                 <td>Сериен номер</td>
-                                <td><input type='text' name='turbine_serial_number' value='' class='form-control' required></td>
+                                <td><input type='text' name='serial_number' value='' class='form-control' required></td>
                             </tr>
                             <tr>
                                 <td>Производител</td>
                                 <td>
-                                    <select name='turbine_vendor' class='form-control'>
+                                    <select name='vendor' class='form-control'>
                                         <option value="Vestas"      >Vestas</option>
                                         <option value="Nordtank"    >Nordtank</option>
                                         <option value="Neg Micon"   >Neg Micon</option>
@@ -48,20 +48,20 @@
                             </tr> 
                             <tr>
                                 <td>Модел/Тип</td>
-                                <td><input type='text' name='turbine_model' value='' class='form-control' required></td>
+                                <td><input type='text' name='model' value='' class='form-control' required></td>
                             </tr> 
                             <tr>
                                 <td>Мощност в MW</td>
-                                <td><input type='text' name='turbine_power' value='' class='form-control' required></td>
+                                <td><input type='text' name='power' value='' class='form-control' required></td>
                             </tr> 
                             <tr>
                                 <td>Собственик</td>
-                                <td><input type='text' name='turbine_owner' value='' class='form-control' required></td>
+                                <td><input type='text' name='owner' value='' class='form-control' required></td>
                             </tr> 
                             <tr>
                                 <td>Ветропарк</td>
                                 <td>
-                                    <select name='turbine_windpark' class='form-control'>
+                                    <select name='windpark' class='form-control'>
                                         <!--Трябва да показва списък с въведените обекти ветропаркове-->
                                         <option value='Друг'>Друг</option>
                                         <?php
@@ -115,6 +115,10 @@
                             </tr>
                         </table>
                     </form>
+                    <form action='#' method='post'>
+                                    <button type="submit" name="search" class="btn btn-danger">
+                                        <span class="glyphicon glyphicon-plus"></span> Отказ
+                                    </button></form>
             </div>
     </body>
 </html>

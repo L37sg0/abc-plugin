@@ -102,7 +102,28 @@ class DataApi
     }
 
     // edit data
-    public function editRow(){
+    public function editRow( string $table_name='', array $result_columns=null ){
+
+        global $wpdb;
+
+        $table_name = $wpdb->prefix . $table_name;
+        
+        $data = [];
+
+        foreach( $result_columns as $column ){
+            $data[$column] = $_POST[$column];
+        }
+
+
+        $wpdb->update( 
+            $table_name, 
+            $data,
+            array( 'id' => $data["id"] ),
+        );/* 
+        echo "<script>console.log('". $data["id"] ."');</script>";
+        echo "<script>console.log('". $data["name"] ."');</script>";
+        echo "<script>console.log('". $data["owner"] ."');</script>";
+        echo "<script>console.log('". $data["description"] ."');</script>"; */
         
     }
 

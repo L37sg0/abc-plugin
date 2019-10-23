@@ -57,12 +57,14 @@
                 <?php 
                 $data = array(
                     "date"                  => current_time( 'mysql' ),
-                    "title"                 => $_POST["event_title"],
-                    "description"           => $_POST["event_description"],
-                    "place"                 => $_POST["event_place"],
+                    "title"                 => $_POST["title"],
+                    "description"           => $_POST["description"],
+                    "place"                 => $_POST["place"],
                     "writen_by"             => wp_get_current_user()->user_login,
                 );
-                $handler->handle( $table_name, $data, $result_columns, $add_callback, $edit_callback );
+                $column_titles  = array("Дата", "Заглавие", "Описание", "Място", "Добавено от");
+                
+                $handler->handle( $table_name, $data, $result_columns, $column_titles, $add_callback, $edit_callback );
                 
                 ?>
             </table>

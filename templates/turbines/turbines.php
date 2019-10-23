@@ -62,13 +62,13 @@
                 $handler = new TemplateHandler;
                 $handler->register();
                 $data = array(
-                    "name"                  => $_POST["turbine_name"],
-                    "serial_number"         => $_POST["turbine_serial_number"],
-                    "vendor"                => $_POST["turbine_vendor"],
-                    "model"                 => $_POST["turbine_model"],
-                    "power"                 => $_POST["turbine_power"],
-                    "owner"                 => $_POST["turbine_owner"],
-                    "windpark"              => $_POST["turbine_windpark"],
+                    "name"                  => $_POST["name"],
+                    "serial_number"         => $_POST["serial_number"],
+                    "vendor"                => $_POST["vendor"],
+                    "model"                 => $_POST["model"],
+                    "power"                 => $_POST["power"],
+                    "owner"                 => $_POST["owner"],
+                    "windpark"              => $_POST["windpark"],
                     "gearbox_vendor"        => $_POST["gearbox_vendor"],
                     "gearbox_number"        => $_POST["gearbox_number"],
                     "hydraulics_vendor"     => $_POST["hydraulics_vendor"],
@@ -79,9 +79,10 @@
                     "transformer_number"    => $_POST["transformer_number"],
                 );
                 $result_columns = array("id","name","serial_number","vendor","model","power","owner","windpark");
-                $callback = "turbinesAddNew";
-                $table_name = "abc_turbines";
-                $handler->handle( $table_name, $data, $result_columns, $callback ); 
+                $column_titles  = array("Име", "Сериен Номер", "Производител", "Модел", "Мощност", "Собственик", "Ветропарк");
+                $callback       = "turbinesAddNew";
+                $table_name     = "abc_turbines";
+                $handler->handle( $table_name, $data, $result_columns, $column_titles, $callback ); 
                 ?>
             </table> 
         </div>

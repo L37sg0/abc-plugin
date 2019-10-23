@@ -51,5 +51,10 @@ class TemplatesCallbacks extends BaseController
         return require_once( "$this->plugin_path/templates/events/edit_event.php" );
     
     }
+    
+    public function rtmDashboard()
+    {
+        return require_once( "$this->plugin_path/templates/rtm/rtm.php" );
+    }
 }
 ?>

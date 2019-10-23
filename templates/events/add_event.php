@@ -26,17 +26,17 @@
                         
                             <tr>
                                 <td>Заглавие</td>
-                                <td><input type='text' name='event_title' value='' class='form-control' required></td>
+                                <td><input type='text' name='title' value='' class='form-control' required></td>
                             </tr>
                                             
                             <tr>
                                 <td>Описание</td>
-                                <td><textarea name='event_description' value='' class='form-control'></textarea></td>
+                                <td><textarea name='description' value='' class='form-control'></textarea></td>
                             </tr>
                             <tr>
                                 <td>Място</td>
                                 <td>
-                                    <select name='event_place' class='form-control'>
+                                    <select name='place' class='form-control'>
                                         <option value="База"    >База</option>
                                         <option value="Турбина" >Турбина</option>
                                         <option value="Друго"   >Друго</option>
@@ -55,6 +55,10 @@
                         
                         </table>
                     </form>
+                    <form action='#' method='post'>
+                                    <button type="submit" name="search" class="btn btn-danger">
+                                        <span class="glyphicon glyphicon-plus"></span> Отказ
+                                    </button></form>
             </div>
     </body>
 </html>
