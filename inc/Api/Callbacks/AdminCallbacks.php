@@ -20,7 +20,7 @@ class AdminCallbacks extends BaseController
 
     public function abcSettings(){
 
-        return require_once( "$this->plugin_path/templates/settings.php" );
+        return require_once( "$this->plugin_path/templates/settings/settings.php" );
     
     }
     

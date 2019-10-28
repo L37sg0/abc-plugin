@@ -90,14 +90,14 @@ class SettingsApi
 
         } 
 
-        foreach( $this->admin_subpages as $subpage ){
+        foreach( $this->admin_subpages as $page ){
             add_submenu_page(
-                $subpage['parent_slug'],
-                $subpage['page_title'],
-                $subpage['menu_title'],
-                $subpage['capability'],
-                $subpage['menu_slug'],
-                $subpage['callback']
+                $page['parent_slug'],
+                $page['page_title'],
+                $page['menu_title'],
+                $page['capability'],
+                $page['menu_slug'],
+                $page['callback']
             );
     
         }

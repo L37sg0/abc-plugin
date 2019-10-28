@@ -99,6 +99,15 @@ class Admin extends BaseController
                 'menu_slug'  => 'abc_settings',
                 'callback'   => array( $this->callbacks, 'abcSettings' ),
             ),
+            array(
+                'parent_slug'=> 'abc_windparks',
+                'page_title' => 'Турбини TEst',
+                'menu_title' => 'Турбини TEst',
+                'capability'=>'manage_options',
+                //'capability'=>'read',
+                'menu_slug'  => 'abc_turbines_test',
+                'callback'   => array( $this->templatesCallbacks, 'testDashboard' ),
+            )
         );
 
     }

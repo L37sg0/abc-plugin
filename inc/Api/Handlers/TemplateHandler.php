@@ -6,17 +6,13 @@
 
 namespace Inc\Api\Handlers;
 
-use Inc\Api\Data\DataApi;
 use \Inc\Api\Callbacks\TemplatesCallbacks;
+use \Inc\Base\BaseController;
 
-class TemplateHandler
+class TemplateHandler extends BaseController
 {
-    public $dataApi;
-    public $data = [];
-
     public function register()
     {
-        $this->dataApi              = new DataApi;
         $this->templatesCallbacks   = new TemplatesCallbacks();
     }
 
@@ -38,6 +34,9 @@ class TemplateHandler
 
             ob_get_clean();
             $this->templatesCallbacks->$add_callback();
+/* 
+            $this->turbines_dd["name"] = "Turbinata 2 malelei";
+            echo '<script>console.log("'.$this->turbines_dd["name"].'");</script>'; */
 
         }  
 
@@ -96,8 +95,8 @@ class TemplateHandler
             }
             echo '<form method="post" action="#">';
             echo '<td><input type="hidden" name="row_id" value="' . $result["id"] . '"></td>';
-            echo '<td><button name="edit" class="btn btn-primary btn-sm" type="submit">Редакция</button>';
-            echo '<button name="delete" class="btn btn-danger btn-sm" type="submit">X</button></td>';
+            echo '<td><button name="edit" class="btn btn-primary btn-sm" type="submit"><span class="glyphicon glyphicon-open"></span></button>';
+            echo '<button name="delete" class="btn btn-danger btn-sm" type="submit"><span class="glyphicon glyphicon-remove-sign"></span></button></td>';
             echo "</form></tr>";
         }
     }

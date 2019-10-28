@@ -56,5 +56,39 @@ class TemplatesCallbacks extends BaseController
     {
         return require_once( "$this->plugin_path/templates/rtm/rtm.php" );
     }
+
+    public function testDashboard()
+    {
+        return require_once( "$this->plugin_path/templates/turbines/turbines_test.php" );
+    }
+    public function TextField( $args )
+    {
+        $name           =   $args["name"];
+        $value          =   $args["value"];
+        $placeholder    =   $args["placeholder"];
+        $required       =   $args["required"];
+        $type           =   $args["type"];
+        echo '<input    class="form-control"
+                        type="'.$type.'"
+                        value="'.$value.'"
+                        name="'.$name.'"
+                        placeholder="'.$placeholder.'"
+                        '.$required.'>';
+    }
+    public function DropDownMenu( $args )
+    {
+        $name       =   $args["name"];
+        $menu_items =   $args["menu_items"];
+        $value      =   $args["value"];
+
+        echo '<select name="'.$name.'" class="form-control">';
+        echo '<option value="'.$value.'" selected>'.$value.'</option>';
+        foreach($menu_items as $item){
+            if( $item != $value ){
+                echo '<option value="'.$item.'">'.$item.'</option>';
+            }
+        }
+        echo '</select>';
+    }
 }
 ?>
