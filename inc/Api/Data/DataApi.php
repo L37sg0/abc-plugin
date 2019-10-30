@@ -118,7 +118,7 @@ class DataApi
         $wpdb->update( 
             $table_name, 
             $data,
-            array( 'id' => $data["id"] ),
+            array( 'id' => $data["id"] )
         );/* 
         echo "<script>console.log('". $data["id"] ."');</script>";
         echo "<script>console.log('". $data["name"] ."');</script>";

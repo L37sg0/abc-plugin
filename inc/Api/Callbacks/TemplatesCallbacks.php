@@ -37,13 +37,13 @@ class TemplatesCallbacks extends BaseController
 
     public function eventsDashboard(){
 
-        return require_once( "$this->plugin_path/templates/events/events.php" );
+        return require_once( "$this->plugin_path/templates/events/events_test.php" );
         //return require_once( "$this->plugin_path/templates/events/add_event.php" );
     
     }
     public function eventsAddNew(){
 
-        return require_once( "$this->plugin_path/templates/events/events_test.php" );
+        return require_once( "$this->plugin_path/templates/events/add_event.php" );
     
     }
     public function eventsEdit(){
@@ -71,28 +71,25 @@ class TemplatesCallbacks extends BaseController
         $placeholder    =   $args["placeholder"];
         $required       =   $args["required"];
         $type           =   $args["type"];
-        echo '<tr>';
+        
         echo '<td><th><label for="'.$name.'">'.$title.'</th></td>';
-        echo '<td></td>';
+        //echo '<td></td>';
         echo '<td><input    class="form-control"
                         type="'.$type.'"
                         value="'.$value.'"
                         name="'.$name.'"
                         placeholder="'.$placeholder.'"
                         '.$required.'></td>';
-        echo '</tr>';
     }
     public function TextHiddenField( $args )
     {
         $name           =   $args["name"];
         $value          =   $args["value"];
-        echo '<tr>';
         echo '<td><input
                         class="form-control"
                         type="hidden"
                         value="'.$value.'"
                         name="'.$name.'"></td>';
-        echo '</tr>';
     }
     public function TextAreaField($args)
     {
@@ -101,7 +98,6 @@ class TemplatesCallbacks extends BaseController
         $value          =   $args["value"];
         $placeholder    =   $args["placeholder"];
         $required       =   $args["required"];
-        echo '<tr>';
         echo '<td><th><label for="'.$name.'">'.$title.'</th></td>';
         echo '<td></td>';
         echo '<td><input    class="form-control"
@@ -109,7 +105,6 @@ class TemplatesCallbacks extends BaseController
                         name="'.$name.'"
                         placeholder="'.$placeholder.'"
                         '.$required.'></td>';
-        echo '</tr>';
     }
     public function DropDownMenu( $args )
     {
@@ -118,9 +113,8 @@ class TemplatesCallbacks extends BaseController
         $menu_items =   $args["menu_items"];
         $value      =   $args["value"];
 
-        echo '<tr>';
         echo '<td><th><label for="'.$name.'">'.$title.'</th></td>';
-        echo '<td></td>';
+        //echo '<td></td>';
         echo '<td><select name="'.$name.'" class="form-control">';
         echo '<option value="'.$value.'" selected>'.$value.'</option>';
         foreach($menu_items as $item){
@@ -129,41 +123,64 @@ class TemplatesCallbacks extends BaseController
             }
         }
         echo '</select></td>';
-        echo '</tr>';
     }
     public function DatePicker($args)
     {
         $title      =   $args["title"];
         $name       =   $args["name"];
         $value      =   $args["value"];
-        echo '<tr>';
         echo '<td><th><label for="'.$name.'">'.$title.'</th></td>';
-        echo '<td></td>';
+        //echo '<td></td>';
         echo '<td>';
         echo '<input type="date" class="form-control" value="'.$value.'">';
         echo '</div></div></td>';
-        echo '</tr>';
     }
     public function TextHeader($args)
     {
         $name       =   $args["name"];
         $value      =   $args["value"];
         echo '<td><th name="'.$name.'">'.$value.'</th></td>';
-        # code...
     }
     public function TextPlane($args)
     {
         $name       =   $args["name"];
         $value      =   $args["value"];
-        echo '<p>'.$value.'</p>';
-        # code...
+        echo '<td><p name="'.$name.'">'.$value.'</p></td>';
+        
     }
     public function SubmitButton($args)
     {
         $name       =   $args["name"];
         $title      =   $args["title"];
-        $class      =   $args["class"];
-        echo '<button name="'.$name.'" class="'.$class.'" type="submit">'.$title.'</button>';
+        echo '
+        <td></td>
+        <td>
+        <button type="submit" name="'.$name.'" class="btn btn-primary">
+            <span class="glyphicon glyphicon-ok-sign"></span> '.$title.'
+        </button>
+        </td>';
+    }
+    public function EditButton($args)
+    {
+        $name       =   $args["name"];
+        $title      =   $args["title"];
+        echo '
+        <td>
+        <button type="submit" name="'.$name.'" class="btn btn-primary">
+            <span class="glyphicon glyphicon-open"></span> '.$title.'
+        </button>
+        </td>';
+    }
+    public function DeleteButton($args)
+    {
+        $name       =   $args["name"];
+        $title      =   $args["title"];
+        echo '
+        <td>
+        <button type="submit" name="'.$name.'" class="btn btn-danger">
+            <span class="glyphicon glyphicon-remove-sign"></span> '.$title.'
+        </button>
+        </td>';
     }
 }
 ?>
