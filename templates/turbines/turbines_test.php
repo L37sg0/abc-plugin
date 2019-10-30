@@ -32,7 +32,7 @@
 
                         <input class="form-control mr-sm-2" type="search" name="search_word" placeholder="Търси за..." aria-label="Search">
                         <!--Тук се избира категория за търсене-->
-                        <select name="search_category" class="form-control">
+                        <!-- <select name="search_category" class="form-control">
                             <option value="name"                >Име</option>
                             <option value="serial_number"       >Сериен Номер</option>
                             <option value="vendor"              >Производител</option>
@@ -48,7 +48,16 @@
                             <option value="generator_number"    >Генератор Номер</option>
                             <option value="transformer_vendor"  >Трансформатор</option>
                             <option value="transformer_number"  >Трансформатор Номер</option>
-                        </select>
+                        </select> -->
+                        <?php
+                            use Inc\Api\Callbacks\TemplatesCallbacks;
+                            $callback = new TemplatesCallbacks;
+                            $callback->DropDownMenu( array(
+                                "name"=>"search_category",
+                                "menu_items"=>array( "name","serial_number","vendor" )
+                            ));
+                            
+                        ?>
                         <button name="search" class="btn btn-primary my-2 my-sm-0" type="submit">Търси</button>
                     </form>
                 </div>
