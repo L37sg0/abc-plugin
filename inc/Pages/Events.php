@@ -19,36 +19,37 @@ class Events extends TemplatesCallbacks
     {
         
     }
-    public function AddNew()
+    public function AddNew($data)
     {
         echo '<form method="post" action="#">';
         echo '<table class="table table-hover">';
         echo '<tr>';
+
         $this->TextField(array(
             "name"      =>  "title",
             "title"     =>  "Заглавие",
-            "value"     =>  "",
+            "value"     =>  (isset($data["title"])?$data["title"]:""),
             "requred"   =>  "required"
         ));
         $this->TextField(array(
             "name"      =>  "description",
             "title"     =>  "Описание",
-            "value"     =>  "",
+            "value"     =>  (isset($data["title"])?$data["description"]:""),
             "requred"   =>  "required"
         ));
         echo '</tr>';
         echo '<tr>';
         $this->DropDownMenu(array(
             "name"      =>  "category",
-            "value"     =>  "",
             "title"     =>  "Категория",
+            "value"     =>  (isset($data["category"])?$data["category"]:""),
             "requred"   =>  "required",
             "menu_items"=>  array("Ремонт","Обслужване")
         ));
         $this->DropDownMenu(array(
             "name"      =>  "status",
-            "value"     =>  "",
             "title"     =>  "Статус",
+            "value"     =>  (isset($data["status"])?$data["status"]:""),
             "requred"   =>  "required",
             "menu_items"=>  array("Изпълнено","Чакащо","Започнато изпълнение")
         ));
@@ -56,15 +57,15 @@ class Events extends TemplatesCallbacks
         echo '<tr>';
         $this->DropDownMenu(array(
             "name"      =>  "place",
-            "value"     =>  "",
             "title"     =>  "Място",
+            "value"     =>  (isset($data["place"])?$data["place"]:""),
             "requred"   =>  "required",
             "menu_items"=>  array("База","Турбина","Обект")
         ));
         $this->DatePicker(array(
             "name"      =>  "date",
-            "value"      =>  "2012-05-12",
-            "title"     =>  "Дата"
+            "title"     =>  "Дата",
+            "value"      =>  (isset($data["date"])?$data["date"]:"2012-05-12")
         ));
         echo '</tr>';
         echo '<tr>';
@@ -72,17 +73,7 @@ class Events extends TemplatesCallbacks
             "name"      =>  "save",
             "title"     =>  "Запази"
         ));
-        echo '</tr>';/* 
-        echo '<tr>';
-        $this->EditButton(array(
-            "name"      =>  "save",
-            "title"     =>  "Редакция"
-        ));
-        $this->DeleteButton(array(
-            "name"      =>  "save",
-            //"title"     =>  "Запази"
-        ));
-        echo '</tr>'; */
+        echo '</tr>';
 
         echo '</table>';
         echo '</form>';
@@ -95,7 +86,7 @@ class Events extends TemplatesCallbacks
         $results = $this->dataApi->readTable( $table_name, $result_columns, $search_category, $search_word );
         
 
-        echo '<table class="table table-hover table-info">';
+        echo '<table class="table table-hover table-bordered">';
         echo "<tr>";
         for($i=0;$i<count($column_titles);$i++){
             
@@ -121,28 +112,89 @@ class Events extends TemplatesCallbacks
             echo '<form method="post" action="#">';
             
             $this->TextHiddenField(array(
-                "name"  =>  "",
+                "name"  =>  "row_id",
                 "value" =>  $result["id"]
             ));
             $this->EditButton(array(
                 "name"      =>  "edit",
-                "title"     =>  "Редакция"
+                //"title"     =>  "Редакция"
             ));
             $this->DeleteButton(array(
                 "name"      =>  "delete",
-                //"title"     =>  "Запази"
+                //"title"     =>  "Изтрий"
             ));
             echo "</form>";
             echo "</tr>";
-
+        }
         echo '</table>';
+        
+
+    }
+    public function EditForm($row_id)
+    {
+        $table_name = "abc_events";
+        $data = (array) $this->dataApi->readRow( $table_name, $row_id );
+        echo '<h3>Промяна на Събитие</h3>';
+        $this->AddNew($data);
+    }
+
+    ####################################33
+    //method for handling templates $_POST
+    public function handle()
+    {/* 
+        $this->showContent( $table_name, $result_columns, $column_titles );
+    
+        if( isset( $_POST["search"] ) ){
+
+            ob_get_clean();                
+            $search_word = $_POST["search_word"];
+            $search_category = $_POST["search_category"];
+            $this->showContent( $table_name, $result_columns, $column_titles, $search_category, $search_word );
+            
         }
 
-    }
-    public function EditForm()
-    {
-        # code...
-    }
+        if( isset( $_POST["add_new"] ) ){
+
+            ob_get_clean();
+            $this->templatesCallbacks->$add_callback();
+
+            $this->turbines_dd["name"] = "Turbinata 2 malelei";
+            echo '<script>console.log("'.$this->turbines_dd["name"].'");</script>';
+
+        }   */
+/* 
+        if( isset( $_POST["save"] ) ){
+            $this->dataApi->writeData( $table_name, $data );
+            ob_get_clean();
+            //$this->showContent( $table_name, $result_columns, $column_titles );
+
+        }
+        if( isset( $_POST["save_edit"] ) ){
+            $this->dataApi->editRow( $table_name, $result_columns );
+            ob_get_clean();
+            $this->showContent( $table_name, $result_columns, $column_titles );
+
+        } */
+
+        if( isset( $_POST["edit"] ) ){
+
+            
+            ob_start();
+            header('Location: #tab4');
+            ob_end_flush();
+            die();
+            $this->EditForm($_POST["row_id"]);
+        } 
+
+        if( isset( $_POST["delete"] ) ){
+/* 
+            $this->removeRow( $table_name, $_POST["row_id"] );
+            ob_get_clean();
+            $this->showContent( $table_name, $result_columns, $column_titles ); */
+
+        }  
+            
+    }       
 
 }
 ?>

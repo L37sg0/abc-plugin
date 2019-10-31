@@ -139,7 +139,7 @@ class TemplatesCallbacks extends BaseController
     {
         $name       =   $args["name"];
         $value      =   $args["value"];
-        echo '<td><th name="'.$name.'">'.$value.'</th></td>';
+        echo '<th name="'.$name.'">'.$value.'</th>';
     }
     public function TextPlane($args)
     {
@@ -166,7 +166,7 @@ class TemplatesCallbacks extends BaseController
         $title      =   $args["title"];
         echo '
         <td>
-        <button type="submit" name="'.$name.'" class="btn btn-primary">
+        <button type="submit" name="'.$name.'" class="btn btn-primary btn-sm">
             <span class="glyphicon glyphicon-open"></span> '.$title.'
         </button>
         </td>';
@@ -177,7 +177,7 @@ class TemplatesCallbacks extends BaseController
         $title      =   $args["title"];
         echo '
         <td>
-        <button type="submit" name="'.$name.'" class="btn btn-danger">
+        <button type="submit" name="'.$name.'" class="btn btn-danger btn-sm">
             <span class="glyphicon glyphicon-remove-sign"></span> '.$title.'
         </button>
         </td>';
