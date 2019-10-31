@@ -126,6 +126,19 @@ class DataApi
         echo "<script>console.log('". $data["description"] ."');</script>"; */
         
     }
+    public function updateRow( string $table_name='', array $data=null ){
+
+        global $wpdb;
+
+        $table_name = $wpdb->prefix . $table_name;
+
+        $wpdb->update( 
+            $table_name, 
+            $data,
+            array( 'id' => $data["id"] )
+        );
+        
+    }
 
     // delete data
     public function deleteRow( string $table_name, int $row_id=0 ){

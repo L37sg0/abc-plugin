@@ -70,6 +70,7 @@ class TemplatesCallbacks extends BaseController
         $value          =   $args["value"];
         $placeholder    =   $args["placeholder"];
         $required       =   $args["required"];
+        $disabled       =   $args["disabled"];
         $type           =   $args["type"];
         
         echo '<td><th><label for="'.$name.'">'.$title.'</th></td>';
@@ -79,7 +80,7 @@ class TemplatesCallbacks extends BaseController
                         value="'.$value.'"
                         name="'.$name.'"
                         placeholder="'.$placeholder.'"
-                        '.$required.'></td>';
+                        '.$required.' '.$disabled.'></td>';
     }
     public function TextHiddenField( $args )
     {

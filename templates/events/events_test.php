@@ -13,6 +13,7 @@
     use Inc\Pages\Events;
 
     $page = new Events;
+    $page->register();
     ?>
     <div class="container">
       <ul class="nav nav-tabs">
