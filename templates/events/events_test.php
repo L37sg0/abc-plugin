@@ -9,64 +9,79 @@
    --><script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </head>
   <body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <!-- heading -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div class="col-sm">
+          <h1>Събития</h1>
+      </div>
+      <!-- button for add new -->
+      <div class="col-sm">
+          <form class="form-inline my-2 my-lg-0" action="#" method="post">
+              <button name="add" class="btn btn-primary my-2 my-sm-0" type="submit">Добави</button>
+          </form>
+      </div>
+      <!-- search form -->
+      <form class="form-inline my-2 my-lg-0" action="#" method="post">
+
+        <input class="form-control mr-sm-2" type="search" name="search_word" placeholder="Търси за..." aria-label="Search">
+        <!--Тук се избира категория за търсене-->
+        <select name="search_category" class="form-control">
+            <option value="date"       >Дата</option>
+            <option value="title"      >Заглавие</option>
+            <option value="place"      >За Обект</option>
+            <option value="writen_by"  >Въведено от</option>
+        </select>
+        <button name="search" class="btn btn-primary my-2 my-sm-0" type="submit">Търси</button>
+      </form>
+    </div>
+  </nav>
+
+  <div class="container">
     <?php
     use Inc\Pages\Events;
 
     $page = new Events;
     $page->register();
-    ?>
-    <div class="container">
-      <ul class="nav nav-tabs">
-          <li class="active"><a data-toggle="tab" href="#tab1">Списък</a></li>
-          <li><a data-toggle="tab" href="#tab2">Добави</a></li>
-          <li><a data-toggle="tab" href="#tab3">Експорт</a></li>
-      </ul>
-
-      <div class="tab-content">
-          <div id="tab1" class="tab-pane fade in active">
-          
-            <h3>Събития</h3>
-              <?php
-                $page->ShowRows();
-              ?>
-          <!--container for the dinamic content-->
-          </div>
-          <div id="tab2" class="tab-pane fade">
-              <h3>Добавяне на Събитие</h3>
-              <?php
-                $page->AddNew(null);
-              ?>
-          </div>
-          <div id="tab3" class="tab-pane fade">
-              <h3>Експортиране</h3>
-              <p>Експортиране на резултат от търсене във формат по избор.</p>
-          </div>
-          <div id="tab4" class="tab-pane fade">
-          </div>
-      </div>
-    </div>
-    <?php
-    /* 
-      use Inc\Api\Handlers\TemplateHandler;
-      $handler = new TemplateHandler;
-      $result_columns = array("id", "date", "title", "description", "place", "writen_by");
-      $table_name = "abc_events";
-      $add_callback = "eventsAddNew";
-      $edit_callback = "eventsEdit";
-      $handler->register();
     
-      $data = array(
-        "date"                  => current_time( 'mysql' ),
-        "title"                 => $_POST["title"],
-        "description"           => $_POST["description"],
-        "place"                 => $_POST["place"],
-        "writen_by"             => wp_get_current_user()->user_login,
-      );
-      $column_titles  = array("Дата", "Заглавие", "Описание", "Място", "Добавено от");
+    $page->ShowRows(); 
+    //$page->AddNew(null);    
 
-      $handler->handle( $table_name, $data, $result_columns, $column_titles, $add_callback, $edit_callback );
-  */ 
-      $page->handle();
+    if( isset( $_POST["save"] ) ){
+        $this->dataApi->writeData( $page->table_name, $page->data );
+        ob_get_clean();
+        $page->ShowRows();
+
+    }
+    if( isset( $_POST["update"] ) ){
+        $this->dataApi->editRow( $page->table_name, $page->result_columns );
+        ob_get_clean();
+        $page->ShowRows();
+
+    }
+
+    if( isset( $_POST["edit"] ) ){
+
+        $this->row = (array) $this->dataApi->readRow( $page->table_name, $_POST["row_id"] );
+        ob_get_clean();
+        $page->EditForm($this->row);
+    } 
+
+    if( isset( $_POST["delete"] ) ){
+
+        $this->dataApi->deleteRow( $page->table_name, $_POST["row_id"] );
+        ob_get_clean();
+        $page->ShowRows();
+
+    }  
+    
+    if( isset( $_POST["add"] ) ){
+
+      ob_get_clean();
+      $page->AddNew(null);
+
+    }
     ?>
+  </div>
   </body>
 </html>

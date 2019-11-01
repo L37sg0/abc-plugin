@@ -73,7 +73,7 @@ class DataApi
         
             $result = $wpdb->get_results(
                 "
-                SELECT "        . $result_columns .   "
+                SELECT *
                 FROM "          . $table_name .       "
                 WHERE "         . $search_category .  "
                 LIKE '%"        . $search_word .      "%'"

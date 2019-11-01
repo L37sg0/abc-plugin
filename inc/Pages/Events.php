@@ -17,6 +17,9 @@ class Events extends TemplatesCallbacks
 
     public $table_name;
     public $data;
+    public $row;
+    public $result_columns;
+    public $column_titles;
 
     public function register()
     {
@@ -28,40 +31,49 @@ class Events extends TemplatesCallbacks
           "place"                 => $_POST["place"],
           "writen_by"             => wp_get_current_user()->user_login,
         );
+        $this->result_columns = array("id", "date", "title", "description", "place", "writen_by");
+        $this->column_titles  = array("Дата", "Заглавие", "Описание", "Място", "Добавено от");
         
     }
     public function AddNew($data)
     {
+        ob_start();
         echo '<form method="post" action="#">';
         echo '<table class="table table-hover">';
+        echo '<tr>';
+        $this->TextHeader(array(
+            "name"  =>  "",
+            "value" =>  "Добавяне на Събитие"
+        ));
+        echo '</tr>';
         echo '<tr>';
 
         $this->TextField(array(
             "name"      =>  "title",
             "title"     =>  "Заглавие",
             "value"     =>  (isset($data["title"])?$data["title"]:""),
-            "requred"   =>  "required"
+            "option"    =>  "required"
         ));
         $this->TextField(array(
             "name"      =>  "description",
             "title"     =>  "Описание",
-            "value"     =>  (isset($data["title"])?$data["description"]:""),
-            "requred"   =>  "required"
+            "value"     =>  (isset($data["title"])?$data["description"]:""),            
+            "option"    =>  "required"
         ));
         echo '</tr>';
         echo '<tr>';
         $this->DropDownMenu(array(
             "name"      =>  "category",
             "title"     =>  "Категория",
-            "value"     =>  (isset($data["category"])?$data["category"]:""),
-            "requred"   =>  "required",
+            "value"     =>  (isset($data["category"])?$data["category"]:""),            
+            "option"    =>  "required",
             "menu_items"=>  array("Ремонт","Обслужване")
         ));
         $this->DropDownMenu(array(
             "name"      =>  "status",
             "title"     =>  "Статус",
-            "value"     =>  (isset($data["status"])?$data["status"]:""),
-            "requred"   =>  "required",
+            "value"     =>  (isset($data["status"])?$data["status"]:""),            
+            "option"    =>  "required",
             "menu_items"=>  array("Изпълнено","Чакащо","Започнато изпълнение")
         ));
         echo '</tr>';
@@ -69,8 +81,8 @@ class Events extends TemplatesCallbacks
         $this->DropDownMenu(array(
             "name"      =>  "place",
             "title"     =>  "Място",
-            "value"     =>  (isset($data["place"])?$data["place"]:""),
-            "requred"   =>  "required",
+            "value"     =>  (isset($data["place"])?$data["place"]:""),            
+            "option"    =>  "required",
             "menu_items"=>  array("База","Турбина","Обект")
         ));
         $this->DatePicker(array(
@@ -80,29 +92,81 @@ class Events extends TemplatesCallbacks
         ));
         echo '</tr>';
         echo '<tr>';
+        $result_columns = array("id", "date", "title", "description", "place", "writen_by");
+        $column_titles  = array("Дата", "Заглавие", "Описание", "Място", "Добавено от");
         $this->SubmitButton(array(
             "name"      =>  "save",
-            "title"     =>  "Запази"
+            "title"     =>  "Запази",
+            "color"     =>  "primary",
+            "icon"      =>  "glyphicon glyphicon-ok-sign"
         ));
         echo '</tr>';
 
         echo '</table>';
         echo '</form>';
     }
+    public function ShowHeader(Type $var = null)
+    {
+        echo '<table>';
+        echo '<tr>';
+        echo '<form method="post" action="#">';
+        echo '<div class="col-sm">';
+        $this->TextHeader(array(
+            "name"  =>  "",
+            "value" =>  "Събития",
+            "size"  =>  3
+        ));
+        echo '</div>';
+        echo '<div class="col-sm">';
+        $this->SubmitButton(array(
+            "name"      =>  "add",
+            "color"     =>  "primary",
+            "icon"      =>  "glyphicon glyphicon-plus-sign",
+            "title"     =>  "Добави"
+        ));
+        echo '</div>';
+        echo '<div class="col-sm">';
+        $this->TextField(array(
+            "name"      =>  "search_word",
+            "value"     =>  "",  
+            "placeholder"   =>  "Търси за ..."
+        ));
+        echo '</div>';
+        echo '<div class="col-sm">';
+        $this->DropDownMenu(array(
+            "name"      =>  "search_category",
+            //"title"     =>  "Категория",
+            "value"     =>  "",            
+            //"option"    =>  "required",
+            "menu_items"=>  array("Заглавие","Дата")
+        ));
+        echo '</div>';
+        echo '<div class="col-sm">';
+        $this->SubmitButton(array(
+            "name"      =>  "search",
+            "color"     =>  "primary",
+            "icon"      =>  "glyphicon glyphicon-plus-sign",
+            "title"     =>  "Търси"
+        ));
+        echo '</div>';
+        echo '</form>';
+        echo '</tr>';
+        echo '</table>';
+    }
     public function ShowRows()
     {
-        $result_columns = array("id", "date", "title", "description", "place", "writen_by");
-        $column_titles  = array("Дата", "Заглавие", "Описание", "Място", "Добавено от");
-        $results = $this->dataApi->readTable( $this->table_name, $result_columns);
+        ob_start();
+        $results = $this->dataApi->readTable( $this->table_name, $this->result_columns);
         
 
         echo '<table class="table table-hover table-bordered">';
         echo "<tr>";
-        for($i=0;$i<count($column_titles);$i++){
+        for($i=0;$i<count($this->column_titles);$i++){
             
             $this->TextHeader(array(
                 "name"  =>  "",
-                "value" =>  $column_titles[$i]
+                "value" =>  $this->column_titles[$i],
+                "size"  =>  4
             ));
             
         }
@@ -115,7 +179,7 @@ class Events extends TemplatesCallbacks
 
                 $this->TextPlane(array(
                     "name"  =>  "",
-                    "value" =>  $result[$result_columns[$i]]
+                    "value" =>  $result[$this->result_columns[$i]]
                 ));
                 
             }
@@ -125,12 +189,16 @@ class Events extends TemplatesCallbacks
                 "name"  =>  "row_id",
                 "value" =>  $result["id"]
             ));
-            $this->EditButton(array(
+            $this->SubmitButton(array(
                 "name"      =>  "edit",
-                //"title"     =>  "Редакция"
+                "color"     =>  "primary",
+                "icon"      =>  "glyphicon glyphicon-open"
+                //"title"     =>  "Изтрий"
             ));
-            $this->DeleteButton(array(
+            $this->SubmitButton(array(
                 "name"      =>  "delete",
+                "color"     =>  "danger",
+                "icon"      =>  "glyphicon glyphicon-remove-sign"
                 //"title"     =>  "Изтрий"
             ));
             echo "</form>";
@@ -142,8 +210,7 @@ class Events extends TemplatesCallbacks
     }
     public function EditForm($data)
     {
-        echo '<h3>Промяна на Събитие</h3>';
-
+        ob_start();
         echo '<form method="post" action="#">';
         echo '<table class="table table-hover">';
         echo '<tr>';
@@ -158,13 +225,13 @@ class Events extends TemplatesCallbacks
             "name"      =>  "title",
             "title"     =>  "Заглавие",
             "value"     =>  $data["title"],
-            "disabled"  =>  "disabled"
+            "option"    =>  "readonly"
         ));
         $this->TextField(array(
             "name"      =>  "description",
             "title"     =>  "Описание",
             "value"     =>  $data["description"],
-            "disabled"  =>  "disabled"
+            //"disabled"  =>  "disabled"
         ));
         echo '</tr>';
         echo '<tr>';
@@ -198,54 +265,14 @@ class Events extends TemplatesCallbacks
         echo '<tr>';
         $this->SubmitButton(array(
             "name"      =>  "update",
-            "title"     =>  "Обнови"
+            "title"     =>  "Обнови",
+            "color"     =>  "primary",
+            "icon"      =>  "glyphicon glyphicon-ok-sign"
         ));
         echo '</tr>';
 
         echo '</table>';
         echo '</form>';
     }
-
-    ####################################33
-    //method for handling templates $_POST
-    public function handle()
-    {/* 
-        $this->showContent( $table_name, $result_columns, $column_titles );
-    row
-        if( isset( $_POST["search"] ) ){
-
-            ob_get_clean();                
-            $search_word = $_POST["search_word"];
-            $search_category = $_POST["search_category"];
-            $this->showContent( $table_name, $result_columns, $column_titles, $search_category, $search_word );
-            
-        } */
-
-        if( isset( $_POST["save"] ) ){
-            $this->dataApi->writeData( $this->table_name, $this->data );
-            //header("Refresh:0");
-
-        }
-        if( isset( $_POST["update"] ) ){
-            $this->dataApi->updateRow( $this->table_name, $this->data );
-            //header("Refresh:0");
-
-        }
-
-        if( isset( $_POST["edit"] ) ){
-
-            $row = (array) $this->dataApi->readRow( $this->table_name, $_POST["row_id"] );
-            $this->EditForm($row);
-        } 
-
-        if( isset( $_POST["delete"] ) ){
-
-            $this->dataApi->deleteRow( $table_name, $_POST["row_id"] );
-            //header("Refresh:0");
-
-        }  
-            
-    }       
-
 }
 ?>

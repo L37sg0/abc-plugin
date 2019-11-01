@@ -69,18 +69,17 @@ class TemplatesCallbacks extends BaseController
         $name           =   $args["name"];
         $value          =   $args["value"];
         $placeholder    =   $args["placeholder"];
-        $required       =   $args["required"];
-        $disabled       =   $args["disabled"];
+        $option         =   $args["option"];// required/ disabled/ readonly
         $type           =   $args["type"];
-        
-        echo '<td><th><label for="'.$name.'">'.$title.'</th></td>';
-        //echo '<td></td>';
+        if($title){
+            echo '<th><label for="'.$name.'">'.$title.'</th>';
+        }
         echo '<td><input    class="form-control"
                         type="'.$type.'"
                         value="'.$value.'"
                         name="'.$name.'"
                         placeholder="'.$placeholder.'"
-                        '.$required.' '.$disabled.'></td>';
+                        '.$option.'></td>';
     }
     public function TextHiddenField( $args )
     {
@@ -99,8 +98,9 @@ class TemplatesCallbacks extends BaseController
         $value          =   $args["value"];
         $placeholder    =   $args["placeholder"];
         $required       =   $args["required"];
-        echo '<td><th><label for="'.$name.'">'.$title.'</th></td>';
-        echo '<td></td>';
+        if($title){
+            echo '<th><label for="'.$name.'">'.$title.'</th>';
+        }
         echo '<td><input    class="form-control"
                         value="'.$value.'"
                         name="'.$name.'"
@@ -113,9 +113,9 @@ class TemplatesCallbacks extends BaseController
         $name       =   $args["name"];
         $menu_items =   $args["menu_items"];
         $value      =   $args["value"];
-
-        echo '<td><th><label for="'.$name.'">'.$title.'</th></td>';
-        //echo '<td></td>';
+        if($title){
+            echo '<th><label for="'.$name.'">'.$title.'</th>';
+        }
         echo '<td><select name="'.$name.'" class="form-control">';
         echo '<option value="'.$value.'" selected>'.$value.'</option>';
         foreach($menu_items as $item){
@@ -130,8 +130,9 @@ class TemplatesCallbacks extends BaseController
         $title      =   $args["title"];
         $name       =   $args["name"];
         $value      =   $args["value"];
-        echo '<td><th><label for="'.$name.'">'.$title.'</th></td>';
-        //echo '<td></td>';
+        if($title){
+            echo '<th><label for="'.$name.'">'.$title.'</th>';
+        }
         echo '<td>';
         echo '<input type="date" class="form-control" value="'.$value.'">';
         echo '</div></div></td>';
@@ -140,6 +141,7 @@ class TemplatesCallbacks extends BaseController
     {
         $name       =   $args["name"];
         $value      =   $args["value"];
+        //$size       =   ( isset( $args["size"] ) ? $args["size"] : 3);
         echo '<th name="'.$name.'">'.$value.'</th>';
     }
     public function TextPlane($args)
@@ -153,34 +155,25 @@ class TemplatesCallbacks extends BaseController
     {
         $name       =   $args["name"];
         $title      =   $args["title"];
+        $icon       =   $args["icon"];
+        $color       =   $args["color"];
         echo '
-        <td></td>
         <td>
-        <button type="submit" name="'.$name.'" class="btn btn-primary">
-            <span class="glyphicon glyphicon-ok-sign"></span> '.$title.'
+        <button type="submit" name="'.$name.'" class="btn btn-'.$color.' btn-sm">
+            <span class="'.$icon.'"></span> '.$title.'
         </button>
         </td>';
     }
-    public function EditButton($args)
+    public function LinkButton($args)
     {
         $name       =   $args["name"];
         $title      =   $args["title"];
+        $target     =   $args["target"];
+        $icon       =   $args["icon"];
         echo '
         <td>
-        <button type="submit" name="'.$name.'" class="btn btn-primary btn-sm">
-            <span class="glyphicon glyphicon-open"></span> '.$title.'
-        </button>
-        </td>';
-    }
-    public function DeleteButton($args)
-    {
-        $name       =   $args["name"];
-        $title      =   $args["title"];
-        echo '
-        <td>
-        <button type="submit" name="'.$name.'" class="btn btn-danger btn-sm">
-            <span class="glyphicon glyphicon-remove-sign"></span> '.$title.'
-        </button>
+        <a name="'.$name.'" type="submit" href="" class="btn btn-primary btn-sm" data-toggle="modal" data-target="'.$target.'">
+        <span class="'.$icon.'"></span>'.$title.'</a>
         </td>';
     }
 }
