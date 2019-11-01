@@ -61,6 +61,10 @@ class TemplatesCallbacks extends BaseController
     {
         return require_once( "$this->plugin_path/templates/turbines/turbines_test.php" );
     }
+    public function logerrDashboard()
+    {
+        return require_once( "$this->plugin_path/templates/logerr/logerr.php" );
+    }
 
     #============================================
     public function TextField( $args )

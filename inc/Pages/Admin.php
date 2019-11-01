@@ -107,6 +107,15 @@ class Admin extends BaseController
                 //'capability'=>'read',
                 'menu_slug'  => 'abc_turbines_test',
                 'callback'   => array( $this->templatesCallbacks, 'testDashboard' ),
+            ),
+            array(
+                'parent_slug'=> 'abc_windparks',
+                'page_title' => 'LogErr',
+                'menu_title' => 'LogErr',
+                'capability'=>'manage_options',
+                //'capability'=>'read',
+                'menu_slug'  => 'abc_logerr',
+                'callback'   => array( $this->templatesCallbacks, 'logerrDashboard' ),
             )
         );
 
