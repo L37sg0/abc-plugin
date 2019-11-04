@@ -112,8 +112,8 @@ class Admin extends BaseController
                 'parent_slug'=> 'abc_windparks',
                 'page_title' => 'LogErr',
                 'menu_title' => 'LogErr',
-                'capability'=>'manage_options',
-                //'capability'=>'read',
+                //'capability'=>'manage_options',
+                'capability'=>'read',
                 'menu_slug'  => 'abc_logerr',
                 'callback'   => array( $this->templatesCallbacks, 'logerrDashboard' ),
             )

@@ -27,10 +27,17 @@
         <input class="form-control mr-sm-2" type="search" name="search_word" placeholder="Търси за..." aria-label="Search">
         <!--Тук се избира категория за търсене-->
         <select name="search_category" class="form-control">
-            <option value="date"       >Дата</option>
-            <option value="title"      >Заглавие</option>
-            <option value="place"      >За Обект</option>
-            <option value="writen_by"  >Въведено от</option>
+            <option value="start_date"                  >Начало</option>
+            <option value="end_date"                    >Край</option>
+            <option value="stay_time"                   >Престой</option>
+            <option value="windpark"                    >Ветропарк</option>
+            <option value="turbine_serial_number"       >Турбина</option>
+            <option value="event_title"                 >Събитие </option>
+            <option value="working_team"                >Екип</option>
+            <option value="description"                 >Описание</option>
+            <option value="team_arrive_date"            >Пристигане на Екип</option>
+            <option value="changed_parts"               >Сменени части</option>
+            <option value="dispatcher_name"             >Диспечер</option>
         </select>
         <button name="search" class="btn btn-primary my-2 my-sm-0" type="submit">Търси</button>
       </form>
@@ -40,17 +47,23 @@
   <div class="container">
     <?php
     use Inc\Pages\Logerr;
+    use Inc\Api\Pagination\PageController;
 
     $page = new Logerr;
+    $pageController = new PageController;
     $page->register();
+    $pageController->register( $page->table_name, $page->result_columns );
     
-    $page->ShowRows(); 
+    $page->ShowRows($pageController->get_first_page()); 
     //$page->AddNew(null);    
 
     if( isset( $_POST["save"] ) ){
-        $this->dataApi->writeData( $page->table_name, $page->data );
+        $this->dataApi->writeData( $page->table_name, $page->data );   
         ob_get_clean();
-        $page->ShowRows();
+        $page->ShowRows();     
+        foreach($page->data as $cell){
+            echo '<script>console.log("'.$cell.'");</script>';
+        }
 
     }
     if( isset( $_POST["update"] ) ){
@@ -78,8 +91,15 @@
     if( isset( $_POST["add"] ) ){
 
       ob_get_clean();
-      $page->AddNew(null);
+      $page->AddNew();
 
+    }
+    if( isset( $_POST["search"] ) ){
+
+        ob_get_clean();                
+        $search_word = $_POST["search_word"];
+        $search_category = $_POST["search_category"];
+        $page->ShowRows($search_category, $search_word); 
     }
     ?>
   </div>

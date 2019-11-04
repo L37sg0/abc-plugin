@@ -20,12 +20,13 @@ class Logerr extends TemplatesCallbacks
     public $row;
     public $result_columns;
     public $column_titles;
+    public $windpark_names;
 
     public function register()
     {
         $this->table_name = "abc_logerr";
         $this->data = array(
-            "start_date"            =>  current_time( 'mysql' ),
+            "start_date"            =>  $_POST["start_date"],//current_time( 'mysql' ),
             "end_date"              =>  $_POST["end_date"],
             "stay_time"             =>  $_POST["stay_time"],
             "windpark"              =>  $_POST["windpark"],
@@ -38,75 +39,107 @@ class Logerr extends TemplatesCallbacks
             "dispatcher_name"       =>  wp_get_current_user()->user_login,
         );
         $this->result_columns = array(
-            "start_date", "end_date", "stay_time", "windpark", "turbine_serial_number",
-            "event_title", "working_team", "description", "team_arrive_date", "changed_parts",
+            "id","start_date","end_date","stay_time","windpark",
+            "turbine_serial_number","event_title","working_team",//"description",
+            "team_arrive_date","changed_parts",
             "dispatcher_name");
         $this->column_titles  = array(
             "Начало", "Край", "Престой", "Ветропарк", "Турбина",
-            "Събитие", "Екип", "Описание", "Начало на Работа", "Подменени компоненти",
+            "Събитие", "Екип", //"Описание",
+            "Начало на Работа", "Подменени компоненти",
             "Диспечер"
         );
+        $this->windpark_names = [];
+        $results = $this->dataApi->readTable("abc_windparks", array("id","name"));
+        foreach($results as $result){
+            $result = (array) $result;
+            array_push( $this->windpark_names, $result["name"] );
+        }
         
     }
-    public function AddNew($data)
+    public function AddNew()
     {
+        $clock = $this->ClockCalendar();
+
         ob_start();
         echo '<form method="post" action="#">';
         echo '<table class="table table-hover">';
         echo '<tr>';
         $this->TextHeader(array(
             "name"  =>  "",
-            "value" =>  "Добавяне на Събитие"
+            "value" =>  "Добавяне на Log"
         ));
         echo '</tr>';
         echo '<tr>';
 
-        $this->TextField(array(
-            "name"      =>  "title",
-            "title"     =>  "Заглавие",
-            "value"     =>  (isset($data["title"])?$data["title"]:""),
-            "option"    =>  "required"
-        ));
-        $this->TextField(array(
-            "name"      =>  "description",
-            "title"     =>  "Описание",
-            "value"     =>  (isset($data["title"])?$data["description"]:""),            
-            "option"    =>  "required"
-        ));
-        echo '</tr>';
-        echo '<tr>';
-        $this->DropDownMenu(array(
-            "name"      =>  "category",
-            "title"     =>  "Категория",
-            "value"     =>  (isset($data["category"])?$data["category"]:""),            
-            "option"    =>  "required",
-            "menu_items"=>  array("Ремонт","Обслужване")
-        ));
-        $this->DropDownMenu(array(
-            "name"      =>  "status",
-            "title"     =>  "Статус",
-            "value"     =>  (isset($data["status"])?$data["status"]:""),            
-            "option"    =>  "required",
-            "menu_items"=>  array("Изпълнено","Чакащо","Започнато изпълнение")
-        ));
-        echo '</tr>';
-        echo '<tr>';
-        $this->DropDownMenu(array(
-            "name"      =>  "place",
-            "title"     =>  "Място",
-            "value"     =>  (isset($data["place"])?$data["place"]:""),            
-            "option"    =>  "required",
-            "menu_items"=>  array("База","Турбина","Обект")
+        $this->DatePicker(array(
+            "name"      =>  "start_date",
+            "title"     =>  "Начало",
+            "date"     =>  $clock["year"]."-".$clock["month"]."-".$clock["day"],
+            "time"     =>  $clock["hour"].":".$clock["minute"],
         ));
         $this->DatePicker(array(
-            "name"      =>  "date",
-            "title"     =>  "Дата",
-            "value"      =>  (isset($data["date"])?$data["date"]:"2012-05-12")
+            "name"      =>  "end_date",
+            "title"     =>  "Край",
+            "date"     =>  $clock["year"]."-".$clock["month"]."-".$clock["day"],
+            "time"     =>  $clock["hour"].":".$clock["minute"],
         ));
         echo '</tr>';
         echo '<tr>';
-        $result_columns = array("id", "date", "title", "description", "place", "writen_by");
-        $column_titles  = array("Дата", "Заглавие", "Описание", "Място", "Добавено от");
+        $this->TextField(array(
+            "name"      =>  "stay_time",
+            "title"     =>  "Престой",
+            "value"     =>  ""
+        ));
+        $this->DropDownMenu(array(
+            "name"      =>  "windpark",
+            "title"     =>  "Ветропарк",
+            "value"     =>  "",            
+            "option"    =>  "required",
+            "menu_items"=>  $this->windpark_names
+        ));
+        echo '</tr>';
+        echo '<tr>';
+        $this->TextField(array(
+            "name"      =>  "turbine_serial_number",
+            "title"     =>  "Турбина",
+            "value"     =>  ""
+        ));
+        $this->TextField(array(
+            "name"      =>  "event_title",
+            "title"     =>  "Събитие",
+            "value"     =>  ""
+        ));
+        echo '</tr>';
+        echo '<tr>';
+        $this->DropDownMenu(array(
+            "name"      =>  "working_team",
+            "title"     =>  "Екип",
+            "value"     =>  "",            
+            "option"    =>  "required",
+            "menu_items"=>  array("ABC","Vestas","Е-Про")
+        ));
+        $this->TextAreaField(array(
+            "name"      =>  "description",
+            "title"     =>  "Описание",
+            "value"     =>  "",
+            "option"    =>  "required"
+        ));
+        echo '</tr>';
+        echo '<tr>';
+        $this->DatePicker(array(
+            "name"      =>  "team_arrive_date",
+            "title"     =>  "Начало на работа",
+            "date"     =>  $clock["year"]."-".$clock["month"]."-".$clock["day"],
+            "time"     =>  $clock["hour"].":".$clock["minute"],
+        ));
+        $this->TextAreaField(array(
+            "name"      =>  "changed_parts",
+            "title"     =>  "Подменени компоненти",
+            "value"     =>  ""
+        ));
+        echo '</tr>';
+        echo '<tr>';
         $this->SubmitButton(array(
             "name"      =>  "save",
             "title"     =>  "Запази",
@@ -166,11 +199,9 @@ class Logerr extends TemplatesCallbacks
         echo '</tr>';
         echo '</table>';
     }
-    public function ShowRows()
+    public function ShowRows($results)
     {
         ob_start();
-        $results = $this->dataApi->readTable( $this->table_name, $this->result_columns);
-        
 
         echo '<table class="table table-hover table-bordered">';
         echo "<tr>";
@@ -230,52 +261,79 @@ class Logerr extends TemplatesCallbacks
         echo '<form method="post" action="#">';
         echo '<table class="table table-hover">';
         echo '<tr>';
-        $this->TextHiddenField(array(
-            "name"  =>  "id",
-            "value" =>  $data["id"]
+        $this->TextHeader(array(
+            "name"  =>  "",
+            "value" =>  "Редакция на Log"
         ));
         echo '</tr>';
         echo '<tr>';
 
+        $this->DatePicker(array(
+            "name"      =>  "start_date",
+            "title"     =>  "Начало",
+            //"option"    =>  "readonly",
+            "date"     =>  $data["start_date"]//$clock["year"]."-".$clock["month"]."-".$clock["day"],
+            //"time"     =>  $clock["hour"].":".$clock["minute"],
+        ));
+        $this->DatePicker(array(
+            "name"      =>  "end_date",
+            "title"     =>  "Край",
+            "date"     =>  $data["end_date"]/* $clock["year"]."-".$clock["month"]."-".$clock["day"],
+            "time"     =>  $clock["hour"].":".$clock["minute"], */
+        ));
+        echo '</tr>';
+        echo '<tr>';
         $this->TextField(array(
-            "name"      =>  "title",
-            "title"     =>  "Заглавие",
-            "value"     =>  $data["title"],
-            "option"    =>  "readonly"
+            "name"      =>  "stay_time",
+            "title"     =>  "Престой",
+            "value"     =>  $data["stay_time"]
+        ));
+        $this->DropDownMenu(array(
+            "name"      =>  "windpark",
+            "title"     =>  "Ветропарк",
+            "value"     =>  $data["windpark"],            
+            "option"    =>  "required",
+            "menu_items"=>  $this->windpark_names
+        ));
+        echo '</tr>';
+        echo '<tr>';
+        $this->TextField(array(
+            "name"      =>  "turbine_serial_number",
+            "title"     =>  "Турбина",
+            "value"     =>  $data["turbine_serial_number"]
         ));
         $this->TextField(array(
+            "name"      =>  "event_title",
+            "title"     =>  "Събитие",
+            "value"     =>  $data["event_title"]
+        ));
+        echo '</tr>';
+        echo '<tr>';
+        $this->DropDownMenu(array(
+            "name"      =>  "working_team",
+            "title"     =>  "Екип",
+            "value"     =>  $data["working_team"],            
+            "option"    =>  "required",
+            "menu_items"=>  array("ABC","Vestas","Е-Про")
+        ));
+        $this->TextAreaField(array(
             "name"      =>  "description",
             "title"     =>  "Описание",
             "value"     =>  $data["description"],
-            //"disabled"  =>  "disabled"
+            "option"    =>  "required"
         ));
         echo '</tr>';
         echo '<tr>';
-        $this->DropDownMenu(array(
-            "name"      =>  "category",
-            "title"     =>  "Категория",
-            "value"     =>  $data["category"],
-            "menu_items"=>  array("Ремонт","Обслужване")
-        ));
-        $this->DropDownMenu(array(
-            "name"      =>  "status",
-            "title"     =>  "Статус",
-            "value"     =>  $data["status"],
-            "menu_items"=>  array("Изпълнено","Чакащо","Започнато изпълнение")
-        ));
-        echo '</tr>';
-        echo '<tr>';
-        $this->DropDownMenu(array(
-            "name"      =>  "place",
-            "title"     =>  "Място",
-            "value"     =>  $data["place"],
-            "disabled"  =>  "disabled",
-            "menu_items"=>  array("База","Турбина","Обект")
-        ));
         $this->DatePicker(array(
-            "name"      =>  "date",
-            "title"     =>  "Дата",
-            "value"      =>  (isset($data["date"])?$data["date"]:"2012-05-12")
+            "name"      =>  "team_arrive_date",
+            "title"     =>  "Начало на работа",
+            "date"     =>  $data["team_arrive_date"]/* $clock["year"]."-".$clock["month"]."-".$clock["day"],
+            "time"     =>  $clock["hour"].":".$clock["minute"], */
+        ));
+        $this->TextAreaField(array(
+            "name"      =>  "changed_parts",
+            "title"     =>  "Подменени компоненти",
+            "value"     =>  $data["changed_parts"]
         ));
         echo '</tr>';
         echo '<tr>';

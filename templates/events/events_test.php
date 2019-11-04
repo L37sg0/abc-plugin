@@ -48,7 +48,7 @@
     //$page->AddNew(null);    
 
     if( isset( $_POST["save"] ) ){
-        $this->dataApi->writeData( $page->table_name, $page->data );
+        $this->dataApi->writeData( $page->table_name, $page->data ); 
         ob_get_clean();
         $page->ShowRows();
 

@@ -52,6 +52,21 @@ class Activate
             writen_by varchar(55) DEFAULT '' NOT NULL,
             PRIMARY KEY  (id)
         )");
+        $dataApi->createTable('abc_logerr',"(
+            id mediumint(9) NOT NULL AUTO_INCREMENT,
+            start_date text NOT NULL,
+            end_date text NOT NULL,
+            stay_time text NOT NULL,
+            windpark text NOT NULL,
+            turbine_serial_number text NOT NULL,
+            event_title text NOT NULL,
+            working_team text NOT NULL,
+            description text NOT NULL,
+            team_arrive_date text NOT NULL,
+            changed_parts text NOT NULL,
+            dispatcher_name text NOT NULL,
+            PRIMARY KEY  (id)
+        )");
 
     }
 }

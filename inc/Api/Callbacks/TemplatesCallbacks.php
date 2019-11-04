@@ -101,15 +101,15 @@ class TemplatesCallbacks extends BaseController
         $name           =   $args["name"];
         $value          =   $args["value"];
         $placeholder    =   $args["placeholder"];
-        $required       =   $args["required"];
+        $option         =   $args["required"];
         if($title){
             echo '<th><label for="'.$name.'">'.$title.'</th>';
         }
-        echo '<td><input    class="form-control"
+        echo '<td><textarea    class="form-control"
                         value="'.$value.'"
                         name="'.$name.'"
                         placeholder="'.$placeholder.'"
-                        '.$required.'></td>';
+                        '.$option.'></textarea></td>';
     }
     public function DropDownMenu( $args )
     {
@@ -133,12 +133,15 @@ class TemplatesCallbacks extends BaseController
     {
         $title      =   $args["title"];
         $name       =   $args["name"];
-        $value      =   $args["value"];
+        $date       =   $args["date"];
+        $time       =   $args["time"];
         if($title){
             echo '<th><label for="'.$name.'">'.$title.'</th>';
         }
         echo '<td>';
-        echo '<input type="date" class="form-control" value="'.$value.'">';
+        echo '<input type="date" name="'.$name.'" class="form-control" value="'.$date.'">';
+        echo '<input type="time" name="time_'.$name.'" class="form-control" value="'.$time.'">';
+        //echo '<date-input date="{{date}}" timezone="[[timezone]]"></date-input>';
         echo '</div></div></td>';
     }
     public function TextHeader($args)
@@ -160,7 +163,8 @@ class TemplatesCallbacks extends BaseController
         $name       =   $args["name"];
         $title      =   $args["title"];
         $icon       =   $args["icon"];
-        $color       =   $args["color"];
+        $color      =   $args["color"];
+        $data       =   $args["data"];
         echo '
         <td>
         <button type="submit" name="'.$name.'" class="btn btn-'.$color.' btn-sm">
@@ -179,6 +183,22 @@ class TemplatesCallbacks extends BaseController
         <a name="'.$name.'" type="submit" href="" class="btn btn-primary btn-sm" data-toggle="modal" data-target="'.$target.'">
         <span class="'.$icon.'"></span>'.$title.'</a>
         </td>';
+    }
+
+    ####################################################3
+    public function ClockCalendar()
+    {
+        $clockcalendar = current_time( 'mysql' );
+        list( $year, $month, $day, $hour, $minute, $second ) = preg_split( "([^0-9])", $clockcalendar );
+        $clockcalendar = array(
+            "year"      =>  $year,
+            "month"     =>  $month,
+            "day"       =>  $day,
+            "hour"      =>  $hour,
+            "minute"    =>  $minute,
+            "second"    =>  $second
+        );
+        return $clockcalendar;
     }
 }
 ?>
