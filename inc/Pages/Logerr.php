@@ -17,13 +17,18 @@ class Logerr extends TemplatesCallbacks
 
     public $table_name;
     public $data;
-    public $row;
     public $result_columns;
     public $column_titles;
     public $windpark_names;
+    public $pageController;
+    public $perPageLimit;
+    public $result_data;
+    public $page;
+    public $search_word;
+    public $search_category;
 
     public function register()
-    {
+    {        
         $this->table_name = "abc_logerr";
         $this->data = array(
             "start_date"            =>  $_POST["start_date"],//current_time( 'mysql' ),
@@ -49,12 +54,22 @@ class Logerr extends TemplatesCallbacks
             "Начало на Работа", "Подменени компоненти",
             "Диспечер"
         );
+        $this->search_word = null;
+        $this->search_category=null;
+
         $this->windpark_names = [];
         $results = $this->dataApi->readTable("abc_windparks", array("id","name"));
         foreach($results as $result){
             $result = (array) $result;
             array_push( $this->windpark_names, $result["name"] );
         }
+
+        $this->perPageLimit = 20;
+        $this->page = 1;
+
+        $this->result_data = $this->cutDataOnPages( $this->table_name, $this->result_columns, $this->perPageLimit, $this->search_category, $this->search_word );
+        //$this->ShowPageNavigator();
+        $this->ShowPages($this->result_data,$this->page);
         
     }
     public function AddNew()
@@ -151,7 +166,7 @@ class Logerr extends TemplatesCallbacks
         echo '</table>';
         echo '</form>';
     }
-    public function ShowHeader(Type $var = null)
+    /* public function ShowHeader()
     {
         echo '<table>';
         echo '<tr>';
@@ -164,14 +179,6 @@ class Logerr extends TemplatesCallbacks
         ));
         echo '</div>';
         echo '<div class="col-sm">';
-        $this->SubmitButton(array(
-            "name"      =>  "add",
-            "color"     =>  "primary",
-            "icon"      =>  "glyphicon glyphicon-plus-sign",
-            "title"     =>  "Добави"
-        ));
-        echo '</div>';
-        echo '<div class="col-sm">';
         $this->TextField(array(
             "name"      =>  "search_word",
             "value"     =>  "",  
@@ -181,9 +188,7 @@ class Logerr extends TemplatesCallbacks
         echo '<div class="col-sm">';
         $this->DropDownMenu(array(
             "name"      =>  "search_category",
-            //"title"     =>  "Категория",
             "value"     =>  "",            
-            //"option"    =>  "required",
             "menu_items"=>  array("Заглавие","Дата")
         ));
         echo '</div>';
@@ -198,10 +203,12 @@ class Logerr extends TemplatesCallbacks
         echo '</form>';
         echo '</tr>';
         echo '</table>';
-    }
-    public function ShowRows($results)
+    } */
+    public function ShowPages($data,$page)
     {
         ob_start();
+
+        $this->ShowPageNavigator();
 
         echo '<table class="table table-hover table-bordered">';
         echo "<tr>";
@@ -215,18 +222,14 @@ class Logerr extends TemplatesCallbacks
             
         }
         echo "</tr>";
-        foreach( $results as $result ){
-        //for($j=0;$j<20;$j++){
+        foreach( $data[$page-1] as $result ){
             $result = (array) $result;
-            //$result[$j] = (array) $result[$j];
             echo "<tr>";
             for($i=1;$i<count($result);$i++){
-            //for($i=1;$i<count($result[$j]);$i++){
 
                 $this->TextPlane(array(
                     "name"  =>  "",
                     "value" =>  $result[$this->result_columns[$i]]
-                    //"value" =>  $result[$j][$this->result_columns[$i]]
                 ));
                 
             }
@@ -252,8 +255,9 @@ class Logerr extends TemplatesCallbacks
             echo "</tr>";
         }
         echo '</table>';
-        
 
+        $this->ShowPageNavigator();
+        
     }
     public function EditForm($data)
     {
@@ -347,6 +351,69 @@ class Logerr extends TemplatesCallbacks
 
         echo '</table>';
         echo '</form>';
+    }
+    public function ShowPageNavigator()
+    {
+        echo '<nav class="navbar navbar-expand-lg navbar-light bg-light">';
+        echo '<div class="collapse navbar-collapse" id="navbarSupportedContent">';
+        echo '<div class="col-sm">';
+        echo '<table class="table table-bordered">';
+        echo '<tr>';
+        echo '<form class="form-inline my-2 my-lg-0" action="#" method="post"';
+        $this->SubmitButton(array(
+            "name"      =>  "add",
+            "color"     =>  "primary",
+            "icon"      =>  "glyphicon glyphicon-plus-sign",
+            "title"     =>  "Добави"
+        ));
+        $this->TextHeader(array(
+            "name"  =>  "",
+            "value" =>  "Брой резултати на страница: "
+        ));
+        $this->DropDownMenu(array(
+            "name"      =>  "page_results",
+            //"title"     =>  "Категория",
+            "value"     =>  $this->perPageLimit,            
+            //"option"    =>  "required",
+            "menu_items"=>  range(10,50,10)
+        ));
+        $this->SubmitButton(array(
+            "name"      =>  "reload",
+            "color"     =>  "primary",
+            //"icon"      =>  "glyphicon glyphicon-plus-sign",
+            "title"     =>  "Обнови"
+        ));
+        $this->TextHeader(array(
+            "name"  =>  "",
+            "value" =>  "Брой страници: ".count($this->result_data)." "
+        ));
+        $this->SubmitButton(array(
+            "name"      =>  "go_to",
+            "color"     =>  "primary",
+            //"icon"      =>  "glyphicon glyphicon-plus-sign",
+            "title"     =>  "Отиди на:"
+        ));    
+        $this->DropDownMenu(array(
+            "name"      =>  "page_number",
+            //"title"     =>  "Категория",
+            "value"     =>  $this->page,            
+            //"option"    =>  "required",
+            "menu_items"=>  range(1,count($this->result_data),1)
+        ));
+        echo '</form>';
+        echo '</tr>';
+        echo '</table>';
+        echo '</div>';
+        echo '</div>';
+        echo '</nav>';
+        # code...
+    }
+
+    public function cutDataOnPages( $table_name, $result_columns, $perPageLimit, $search_category=null, $search_word=null  )
+    {
+        $this->data = $this->dataApi->readTable( $table_name, $result_columns, $search_category, $search_word );
+        $this->data = array_chunk($this->data, $perPageLimit);
+        return $this->data;
     }
 }
 ?>

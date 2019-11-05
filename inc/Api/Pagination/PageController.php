@@ -12,14 +12,13 @@ use Inc\Base\BaseController;
 
 class PageController extends BaseController
 {
-    public $perPageLimit;
     public $pages;
     public $data;
-    public function register( $table_name, $result_columns )
+    public function register( $table_name, $result_columns, $perPageLimit, $search_category=null, $search_word=null  )
     {
-        $this->perPageLimit=10;
-        $this->data = $this->dataApi->readTable( $table_name, $result_columns );
-        $this->data = array_chunk($this->data, $this->perPageLimit);
+        $this->data = $this->dataApi->readTable( $table_name, $result_columns, $search_category, $search_word );
+        $this->data = array_chunk($this->data, $perPageLimit);
+        return $this->data;
     }
     public function get_first_page()
     {
@@ -33,9 +32,10 @@ class PageController extends BaseController
     }
     public function get_page_number($page)
     {
-        if( isset( $page ) && $page <= count( $this->data ) ){
+        if( $page AND $page-1 < count( $this->data) 
+        AND $page > 0 ) {
 
-            return $this->data[$page];
+            return $this->data[$page-1];
 
         }
         else{
@@ -45,6 +45,10 @@ class PageController extends BaseController
     public function get_number_of_pages()
     {
         return count($this->data);
+    }
+    public function get_all_pages()
+    {
+        return $this->data;
     }
 }
 

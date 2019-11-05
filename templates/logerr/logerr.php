@@ -13,16 +13,9 @@
       <!-- heading -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <div class="col-sm">
-          <h1>Събития</h1>
-      </div>
-      <!-- button for add new -->
-      <div class="col-sm">
-          <form class="form-inline my-2 my-lg-0" action="#" method="post">
-              <button name="add" class="btn btn-primary my-2 my-sm-0" type="submit">Добави</button>
-          </form>
-      </div>
-      <!-- search form -->
       <form class="form-inline my-2 my-lg-0" action="#" method="post">
+        <h1>Събития</h1>
+      <!-- search form -->
 
         <input class="form-control mr-sm-2" type="search" name="search_word" placeholder="Търси за..." aria-label="Search">
         <!--Тук се избира категория за търсене-->
@@ -45,31 +38,32 @@
   </nav>
 
   <div class="container">
-    <?php
+  <?php
     use Inc\Pages\Logerr;
-    use Inc\Api\Pagination\PageController;
 
     $page = new Logerr;
-    $pageController = new PageController;
+/* 
+    // define the path and name of cached file
+    $cachefile = $this->plugin_path.'cached-files/'.date('M-d-Y').'.php';
+    // define how long we want to keep the file in seconds. I set mine to 5 hours.
+    $cachetime = 18000;
+    // Check if the cached file is still fresh. If it is, serve it up and exit.
+    if (file_exists($cachefile) && time() - $cachetime < filemtime($cachefile)) {
+      include($cachefile);
+        exit;
+    } */
     $page->register();
-    $pageController->register( $page->table_name, $page->result_columns );
-    
-    $page->ShowRows($pageController->get_first_page()); 
-    //$page->AddNew(null);    
 
     if( isset( $_POST["save"] ) ){
         $this->dataApi->writeData( $page->table_name, $page->data );   
         ob_get_clean();
-        $page->ShowRows();     
-        foreach($page->data as $cell){
-            echo '<script>console.log("'.$cell.'");</script>';
-        }
+        $page->ShowPages($page->result_data,$page->page); 
 
     }
     if( isset( $_POST["update"] ) ){
         $this->dataApi->editRow( $page->table_name, $page->result_columns );
         ob_get_clean();
-        $page->ShowRows();
+        $page->ShowPages($page->result_data,$page->page);
 
     }
 
@@ -84,7 +78,7 @@
 
         $this->dataApi->deleteRow( $page->table_name, $_POST["row_id"] );
         ob_get_clean();
-        $page->ShowRows();
+        $page->ShowPages($page->result_data,$page->page);
 
     }  
     
@@ -94,12 +88,37 @@
       $page->AddNew();
 
     }
-    if( isset( $_POST["search"] ) ){
+    if( isset( $_POST["go_to"] ) ){
+      $page->page = $_POST["page_number"];
+      $page->perPageLimit = $_POST["page_results"];
+      $page->search_word = $_POST["search_word"];
+      $page->search_category = $_POST["search_category"];
+      $page->result_data = $page->cutDataOnPages( $page->table_name, $page->result_columns, $page->perPageLimit, $page->search_category, $page->search_word );
+      ob_get_clean();
+      $page->ShowPages($page->result_data,$page->page);
+      
 
-        ob_get_clean();                
-        $search_word = $_POST["search_word"];
-        $search_category = $_POST["search_category"];
-        $page->ShowRows($search_category, $search_word); 
+    }
+    if( isset( $_POST["reload"] ) ){
+      $page->page = 1;//$_POST["page_number"];
+      $page->perPageLimit = $_POST["page_results"];
+      $page->search_word = $_POST["search_word"];
+      $page->search_category = $_POST["search_category"];
+      $page->result_data = $page->cutDataOnPages( $page->table_name, $page->result_columns, $page->perPageLimit, $page->search_category, $page->search_word );
+      ob_get_clean();
+      $page->ShowPages($page->result_data,$page->page);
+
+    }
+    if( isset( $_POST["search"] ) ){
+      ob_get_clean();
+      $page->page = 1;//$_POST["page_number"];
+      $page->perPageLimit = 20;//$_POST["page_results"];
+      $page->search_word = $_POST["search_word"];
+      $page->search_category = $_POST["search_category"];
+      $page->result_data = $page->cutDataOnPages( $page->table_name, $page->result_columns, $page->perPageLimit, $page->search_category, $page->search_word );
+      
+      $page->ShowPages($page->result_data,$page->page);              
+        
     }
     ?>
   </div>
