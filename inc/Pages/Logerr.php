@@ -357,9 +357,29 @@ class Logerr extends TemplatesCallbacks
         echo '<nav class="navbar navbar-expand-lg navbar-light bg-light">';
         echo '<div class="collapse navbar-collapse" id="navbarSupportedContent">';
         echo '<div class="col-sm">';
+        echo '<form class="form-inline my-2 my-lg-0" action="#" method="post"';
         echo '<table class="table table-bordered">';
         echo '<tr>';
-        echo '<form class="form-inline my-2 my-lg-0" action="#" method="post"';
+        $this->TextField(array(
+            "name"      =>  "search_word",
+            "value"     =>  "",
+            "placeholder"=> "Търси за..."
+        ));
+        $this->DropDownMenu(array(
+            "name"      =>  "search_category",
+            //"title"     =>  "Категория",
+            "value"     =>  "",            
+            //"option"    =>  "required",
+            "menu_items"=>  $this->result_columns
+        ));
+        $this->SubmitButton(array(
+            "name"      =>  "search",
+            "color"     =>  "primary",
+            "icon"      =>  "glyphicon glyphicon-search",
+            "title"     =>  "Търси"
+        ));
+        echo '</tr>';
+        echo '<tr>';
         $this->SubmitButton(array(
             "name"      =>  "add",
             "color"     =>  "primary",
@@ -400,9 +420,9 @@ class Logerr extends TemplatesCallbacks
             //"option"    =>  "required",
             "menu_items"=>  range(1,count($this->result_data),1)
         ));
-        echo '</form>';
         echo '</tr>';
         echo '</table>';
+        echo '</form>';
         echo '</div>';
         echo '</div>';
         echo '</nav>';
