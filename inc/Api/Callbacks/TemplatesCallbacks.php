@@ -101,17 +101,39 @@ class TemplatesCallbacks extends BaseController
         $name           =   $args["name"];
         $value          =   $args["value"];
         $placeholder    =   $args["placeholder"];
-        $option         =   $args["required"];
+        $option         =   $args["option"];
+        $type           =   "text";
         if($title){
             echo '<th><label for="'.$name.'">'.$title.'</th>';
         }
         echo '<td><textarea    class="form-control"
-                        value="'.$value.'"
-                        name="'.$name.'"
-                        placeholder="'.$placeholder.'"
-                        '.$option.'></textarea></td>';
+            rows="5"
+            cols="40"
+            type="'.$type.'"
+            name="'.$name.'"
+            placeholder="'.$placeholder.'"
+            '.$option.'>'.$value.'</textarea></td>';
     }
     public function DropDownMenu( $args )
+    {
+        $title      =   $args["title"];
+        $name       =   $args["name"];
+        $menu_items =   $args["menu_items"];
+        $value      =   $args["value"];
+        $option     =   $args["option"];
+        if($title){
+            echo '<th><label for="'.$name.'">'.$title.'</th>';
+        }
+        echo '<td><select name="'.$name.'" class="form-control" '.$option.'>';
+        echo '<option value="'.$value.'" selected>'.$value.'</option>';
+        foreach($menu_items as $item){
+            if( $item != $value ){
+                echo '<option value="'.$item.'">'.$item.'</option>';
+            }
+        }
+        echo '</select></td>';
+    }
+    public function MultiSelectMenu( $args )
     {
         $title      =   $args["title"];
         $name       =   $args["name"];
@@ -120,14 +142,16 @@ class TemplatesCallbacks extends BaseController
         if($title){
             echo '<th><label for="'.$name.'">'.$title.'</th>';
         }
-        echo '<td><select name="'.$name.'" class="form-control">';
-        echo '<option value="'.$value.'" selected>'.$value.'</option>';
-        foreach($menu_items as $item){
-            if( $item != $value ){
-                echo '<option value="'.$item.'">'.$item.'</option>';
+        echo '      
+          <td><select class="mdb-select colorful-select dropdown-primary md-form" multiple searchable="Search here..">
+            <option value="" disabled selected>Избери екип</option>';
+            foreach($menu_items as $item){
+                if( $item != $value ){
+                    echo '<option value="'.$item.'">'.$item.'</option>';
+                }
             }
-        }
-        echo '</select></td>';
+          echo '</select></td>
+      ';
     }
     public function DatePicker($args)
     {
@@ -140,8 +164,7 @@ class TemplatesCallbacks extends BaseController
         }
         echo '<td>';
         echo '<input type="date" name="'.$name.'" class="form-control" value="'.$date.'">';
-        echo '<input type="time" name="time_'.$name.'" class="form-control" value="'.$time.'">';
-        //echo '<date-input date="{{date}}" timezone="[[timezone]]"></date-input>';
+        //echo '<input type="time" name="time_'.$name.'" class="form-control" value="'.$time.'">';
         echo '</div></div></td>';
     }
     public function TextHeader($args)
@@ -185,6 +208,19 @@ class TemplatesCallbacks extends BaseController
         </td>';
     }
 
+    public function PrintButton($args)
+    {
+        $name       =   $args["name"];
+        $title      =   $args["title"];
+        $icon       =   $args["icon"];
+        $color      =   $args["color"];
+        $data       =   $args["data"];
+        echo '
+        <button onClick="window.print()" type="submit" name="'.$name.'" class="btn btn-'.$color.' btn-sm">
+            <span class="'.$icon.'"></span> '.$title.'
+        </button>
+        </td>';
+    }
     ####################################################3
     public function ClockCalendar()
     {

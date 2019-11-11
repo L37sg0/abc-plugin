@@ -9,6 +9,7 @@ namespace Inc\Pages;
 //use \Inc\Base\BaseController;
 //use \Inc\Api\Callbacks\AdminCallbacks;
 use \Inc\Api\Callbacks\TemplatesCallbacks;
+use \Inc\Api\Pagination\PageController;
 
 
 class Logerr extends TemplatesCallbacks
@@ -31,6 +32,7 @@ class Logerr extends TemplatesCallbacks
     {        
         $this->table_name = "abc_logerr";
         $this->data = array(
+            "id"                    =>  (isset($_POST["id"])?$_POST["id"]: ""),
             "start_date"            =>  $_POST["start_date"],//current_time( 'mysql' ),
             "end_date"              =>  $_POST["end_date"],
             "stay_time"             =>  $_POST["stay_time"],
@@ -45,12 +47,12 @@ class Logerr extends TemplatesCallbacks
         );
         $this->result_columns = array(
             "id","start_date","end_date","stay_time","windpark",
-            "turbine_serial_number","event_title","working_team",//"description",
+            "turbine_serial_number","event_title","working_team","description",
             "team_arrive_date","changed_parts",
             "dispatcher_name");
         $this->column_titles  = array(
             "Начало", "Край", "Престой", "Ветропарк", "Турбина",
-            "Събитие", "Екип", //"Описание",
+            "Събитие", "Екип", "Описание",
             "Начало на Работа", "Подменени компоненти",
             "Диспечер"
         );
@@ -64,12 +66,19 @@ class Logerr extends TemplatesCallbacks
             array_push( $this->windpark_names, $result["name"] );
         }
 
-        $this->perPageLimit = 20;
-        $this->page = 1;
 
-        $this->result_data = $this->cutDataOnPages( $this->table_name, $this->result_columns, $this->perPageLimit, $this->search_category, $this->search_word );
-        //$this->ShowPageNavigator();
-        $this->ShowPages($this->result_data,$this->page);
+        $this->pageController = new PageController;
+        $this->pageController->register();
+        $this->pageController->table_name       = $this->table_name;
+        $this->pageController->result_columns   = $this->result_columns;
+        $this->pageController->perPageLimit     = 20;
+        $this->pageController->page_number      = 1;
+        $this->pageController->search_category  = null;
+        $this->pageController->search_word      = null;
+        
+        $this->pageController->load();
+
+        $this->ShowPages($this->pageController->get_page());
         
     }
     public function AddNew()
@@ -86,7 +95,7 @@ class Logerr extends TemplatesCallbacks
         ));
         echo '</tr>';
         echo '<tr>';
-
+/* 
         $this->DatePicker(array(
             "name"      =>  "start_date",
             "title"     =>  "Начало",
@@ -98,6 +107,16 @@ class Logerr extends TemplatesCallbacks
             "title"     =>  "Край",
             "date"     =>  $clock["year"]."-".$clock["month"]."-".$clock["day"],
             "time"     =>  $clock["hour"].":".$clock["minute"],
+        )); */
+        $this->TextField(array(
+            "name"      =>  "start_date",
+            "title"     =>  "Начало",
+            "value"     =>  ""
+        ));
+        $this->TextField(array(
+            "name"      =>  "end_date",
+            "title"     =>  "Край",
+            "value"     =>  ""
         ));
         echo '</tr>';
         echo '<tr>';
@@ -127,13 +146,18 @@ class Logerr extends TemplatesCallbacks
         ));
         echo '</tr>';
         echo '<tr>';
-        $this->DropDownMenu(array(
+        $this->MultiSelectMenu(array(
             "name"      =>  "working_team",
             "title"     =>  "Екип",
             "value"     =>  "",            
-            "option"    =>  "required",
+            //"option"    =>  "required",
             "menu_items"=>  array("ABC","Vestas","Е-Про")
-        ));
+        ));/* 
+        $this->TextField(array(
+            "name"      =>  "working_team",
+            "title"     =>  "Екип",
+            "value"     =>  ""
+        )); */
         $this->TextAreaField(array(
             "name"      =>  "description",
             "title"     =>  "Описание",
@@ -141,12 +165,17 @@ class Logerr extends TemplatesCallbacks
             "option"    =>  "required"
         ));
         echo '</tr>';
-        echo '<tr>';
+        echo '<tr>';/* 
         $this->DatePicker(array(
             "name"      =>  "team_arrive_date",
             "title"     =>  "Начало на работа",
             "date"     =>  $clock["year"]."-".$clock["month"]."-".$clock["day"],
             "time"     =>  $clock["hour"].":".$clock["minute"],
+        )); */
+        $this->TextField(array(
+            "name"      =>  "team_arrive_date",
+            "title"     =>  "Начало на работа",
+            "value"     =>  ""
         ));
         $this->TextAreaField(array(
             "name"      =>  "changed_parts",
@@ -166,45 +195,8 @@ class Logerr extends TemplatesCallbacks
         echo '</table>';
         echo '</form>';
     }
-    /* public function ShowHeader()
-    {
-        echo '<table>';
-        echo '<tr>';
-        echo '<form method="post" action="#">';
-        echo '<div class="col-sm">';
-        $this->TextHeader(array(
-            "name"  =>  "",
-            "value" =>  "Събития",
-            "size"  =>  3
-        ));
-        echo '</div>';
-        echo '<div class="col-sm">';
-        $this->TextField(array(
-            "name"      =>  "search_word",
-            "value"     =>  "",  
-            "placeholder"   =>  "Търси за ..."
-        ));
-        echo '</div>';
-        echo '<div class="col-sm">';
-        $this->DropDownMenu(array(
-            "name"      =>  "search_category",
-            "value"     =>  "",            
-            "menu_items"=>  array("Заглавие","Дата")
-        ));
-        echo '</div>';
-        echo '<div class="col-sm">';
-        $this->SubmitButton(array(
-            "name"      =>  "search",
-            "color"     =>  "primary",
-            "icon"      =>  "glyphicon glyphicon-plus-sign",
-            "title"     =>  "Търси"
-        ));
-        echo '</div>';
-        echo '</form>';
-        echo '</tr>';
-        echo '</table>';
-    } */
-    public function ShowPages($data,$page)
+
+    public function ShowPages($data)
     {
         ob_start();
 
@@ -222,41 +214,46 @@ class Logerr extends TemplatesCallbacks
             
         }
         echo "</tr>";
-        foreach( $data[$page-1] as $result ){
-            $result = (array) $result;
-            echo "<tr>";
-            for($i=1;$i<count($result);$i++){
-
-                $this->TextPlane(array(
-                    "name"  =>  "",
-                    "value" =>  $result[$this->result_columns[$i]]
-                ));
+        if ($data) {
+            foreach( $data as $result ){
+                $result = (array) $result;
+                echo "<tr>";
+                for($i=1;$i<count($result);$i++){
+    
+                    $this->TextPlane(array(
+                        "name"  =>  "",
+                        "value" =>  $result[$this->result_columns[$i]]
+                    ));
+                    
+                }
+                echo '<form method="post" action="#">';
                 
+                $this->TextHiddenField(array(
+                    "name"  =>  "row_id",
+                    "value" =>  $result["id"]
+                ));
+                $this->SubmitButton(array(
+                    "name"      =>  "edit",
+                    "color"     =>  "primary",
+                    "icon"      =>  "glyphicon glyphicon-pencil"
+                    //"title"     =>  "Изтрий"
+                ));
+                $this->SubmitButton(array(
+                    "name"      =>  "delete",
+                    "color"     =>  "danger",
+                    "icon"      =>  "glyphicon glyphicon-trash"
+                    //"title"     =>  "Изтрий"
+                ));
+                echo "</form>";
+                echo "</tr>";
             }
-            echo '<form method="post" action="#">';
-            
-            $this->TextHiddenField(array(
-                "name"  =>  "row_id",
-                "value" =>  $result["id"]
-            ));
-            $this->SubmitButton(array(
-                "name"      =>  "edit",
-                "color"     =>  "primary",
-                "icon"      =>  "glyphicon glyphicon-open"
-                //"title"     =>  "Изтрий"
-            ));
-            $this->SubmitButton(array(
-                "name"      =>  "delete",
-                "color"     =>  "danger",
-                "icon"      =>  "glyphicon glyphicon-remove-sign"
-                //"title"     =>  "Изтрий"
-            ));
-            echo "</form>";
-            echo "</tr>";
+
+        }else{
+            echo '<tr><td colspan="10">Няма намерени резултати</td></tr>';
         }
         echo '</table>';
 
-        $this->ShowPageNavigator();
+        //$this->ShowPageNavigator();
         
     }
     public function EditForm($data)
@@ -269,9 +266,13 @@ class Logerr extends TemplatesCallbacks
             "name"  =>  "",
             "value" =>  "Редакция на Log"
         ));
+        $this->TextHiddenField(array(
+            "name"  =>  "id",
+            "value" =>  $data["id"],
+        ));
         echo '</tr>';
         echo '<tr>';
-
+/* 
         $this->DatePicker(array(
             "name"      =>  "start_date",
             "title"     =>  "Начало",
@@ -283,7 +284,17 @@ class Logerr extends TemplatesCallbacks
             "name"      =>  "end_date",
             "title"     =>  "Край",
             "date"     =>  $data["end_date"]/* $clock["year"]."-".$clock["month"]."-".$clock["day"],
-            "time"     =>  $clock["hour"].":".$clock["minute"], */
+            "time"     =>  $clock["hour"].":".$clock["minute"], 
+        )); */
+        $this->TextField(array(
+            "name"      =>  "start_date",
+            "title"     =>  "Начало",
+            "value"     =>  $data["start_date"]
+        ));
+        $this->TextField(array(
+            "name"      =>  "end_date",
+            "title"     =>  "Край",
+            "value"     =>  $data["end_date"]
         ));
         echo '</tr>';
         echo '<tr>';
@@ -316,23 +327,27 @@ class Logerr extends TemplatesCallbacks
         $this->DropDownMenu(array(
             "name"      =>  "working_team",
             "title"     =>  "Екип",
-            "value"     =>  $data["working_team"],            
-            "option"    =>  "required",
-            "menu_items"=>  array("ABC","Vestas","Е-Про")
+            "value"     =>  $data["working_team"],  
+            "menu_items"=>  array("ABC","Vestas","Е-Про"),
+            "option"    =>  "multiple",
         ));
         $this->TextAreaField(array(
             "name"      =>  "description",
             "title"     =>  "Описание",
-            "value"     =>  $data["description"],
-            "option"    =>  "required"
+            "value"     =>  $data["description"]
         ));
         echo '</tr>';
         echo '<tr>';
-        $this->DatePicker(array(
+        /* $this->DatePicker(array(
             "name"      =>  "team_arrive_date",
             "title"     =>  "Начало на работа",
             "date"     =>  $data["team_arrive_date"]/* $clock["year"]."-".$clock["month"]."-".$clock["day"],
-            "time"     =>  $clock["hour"].":".$clock["minute"], */
+            "time"     =>  $clock["hour"].":".$clock["minute"], 
+        )); */
+        $this->TextField(array(
+            "name"      =>  "team_arrive_date",
+            "title"     =>  "Начало на работа",
+            "value"     =>  $data["team_arrive_date"]
         ));
         $this->TextAreaField(array(
             "name"      =>  "changed_parts",
@@ -360,40 +375,37 @@ class Logerr extends TemplatesCallbacks
         echo '<form class="form-inline my-2 my-lg-0" action="#" method="post"';
         echo '<table class="table table-bordered">';
         echo '<tr>';
-        $this->TextField(array(
-            "name"      =>  "search_word",
-            "value"     =>  "",
-            "placeholder"=> "Търси за..."
+        $this->PrintButton(array(
+            "name"      =>  "print",
+            "color"     =>  "success",
+            "icon"      =>  "glyphicon glyphicon-print",
+            "title"     =>  "Принтирай"
         ));
-        $this->DropDownMenu(array(
-            "name"      =>  "search_category",
-            //"title"     =>  "Категория",
-            "value"     =>  "",            
-            //"option"    =>  "required",
-            "menu_items"=>  $this->result_columns
-        ));
-        $this->SubmitButton(array(
-            "name"      =>  "search",
-            "color"     =>  "primary",
-            "icon"      =>  "glyphicon glyphicon-search",
-            "title"     =>  "Търси"
-        ));
-        echo '</tr>';
-        echo '<tr>';
         $this->SubmitButton(array(
             "name"      =>  "add",
             "color"     =>  "primary",
             "icon"      =>  "glyphicon glyphicon-plus-sign",
             "title"     =>  "Добави"
         ));
-        $this->TextHeader(array(
-            "name"  =>  "",
-            "value" =>  "Брой резултати на страница: "
+        $this->TextField(array(
+            "name"      =>  "search_word",
+            "value"     =>  $this->pageController->search_word,  
+            "placeholder"=> "Търси за..."
         ));
         $this->DropDownMenu(array(
+            "name"      =>  "search_category",
+            "title"     =>  "в",
+            "value"     =>  $this->pageController->search_category,            
+            //"option"    =>  "required",
+            "menu_items"=>  $this->result_columns
+        ));
+
+        echo '</tr>';
+        echo '<tr>';
+        $this->DropDownMenu(array(
             "name"      =>  "page_results",
-            //"title"     =>  "Категория",
-            "value"     =>  $this->perPageLimit,            
+            "title"     =>  "Брой резултати на страница: ",
+            "value"     =>  $this->pageController->perPageLimit,            
             //"option"    =>  "required",
             "menu_items"=>  range(10,50,10)
         ));
@@ -403,22 +415,22 @@ class Logerr extends TemplatesCallbacks
             //"icon"      =>  "glyphicon glyphicon-plus-sign",
             "title"     =>  "Обнови"
         ));
-        $this->TextHeader(array(
-            "name"  =>  "",
-            "value" =>  "Брой страници: ".count($this->result_data)." "
-        ));
         $this->SubmitButton(array(
             "name"      =>  "go_to",
             "color"     =>  "primary",
             //"icon"      =>  "glyphicon glyphicon-plus-sign",
-            "title"     =>  "Отиди на:"
-        ));    
+            "title"     =>  "Отиди на "
+        ));
         $this->DropDownMenu(array(
             "name"      =>  "page_number",
-            //"title"     =>  "Категория",
-            "value"     =>  $this->page,            
+            "title"     =>  "Страница",
+            "value"     =>  $this->pageController->page_number,            
             //"option"    =>  "required",
-            "menu_items"=>  range(1,count($this->result_data),1)
+            "menu_items"=>  range(1,$this->pageController->number_of_pages,1)
+        ));
+        $this->TextHeader(array(
+            "name"  =>  "",
+            "value" =>  "от: ".$this->pageController->number_of_pages." "
         ));
         echo '</tr>';
         echo '</table>';
@@ -429,11 +441,5 @@ class Logerr extends TemplatesCallbacks
         # code...
     }
 
-    public function cutDataOnPages( $table_name, $result_columns, $perPageLimit, $search_category=null, $search_word=null  )
-    {
-        $this->data = $this->dataApi->readTable( $table_name, $result_columns, $search_category, $search_word );
-        $this->data = array_chunk($this->data, $perPageLimit);
-        return $this->data;
-    }
 }
 ?>

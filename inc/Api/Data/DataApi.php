@@ -102,17 +102,17 @@ class DataApi
     }
 
     // edit data
-    public function editRow( string $table_name='', array $result_columns=null ){
+    public function editRow( string $table_name='', array $data=null ){
 
         global $wpdb;
 
         $table_name = $wpdb->prefix . $table_name;
-        
+        /* 
         $data = [];
 
         foreach( $result_columns as $column ){
             $data[$column] = $_POST[$column];
-        }
+        } */
 
 
         $wpdb->update( 

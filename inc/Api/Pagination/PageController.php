@@ -7,18 +7,35 @@
  */
 namespace Inc\Api\Pagination;
 
-use Inc\Base\BaseController;
+use \Inc\Base\BaseController;
 
 
 class PageController extends BaseController
 {
-    public $pages;
+    public $table_name;
+    public $result_columns;
     public $data;
-    public function register( $table_name, $result_columns, $perPageLimit, $search_category=null, $search_word=null  )
+    public $number_of_pages;
+    public $page_number;
+    public $perPageLimit;
+    public $search_category;
+    public $search_word;
+
+    public function register()
     {
-        $this->data = $this->dataApi->readTable( $table_name, $result_columns, $search_category, $search_word );
-        $this->data = array_chunk($this->data, $perPageLimit);
-        return $this->data;
+        $this->table_name       =   null;
+        $this->result_columns   =   null;
+        $this->page_number      =   1;
+        $this->perPageLimit     =   10;
+        $this->search_category  =   null;
+        $this->search_word      =   null;
+    }
+    public function load()
+    {
+        $this->data = $this->dataApi->readTable( $this->table_name, $this->result_columns, $this->search_category, $this->search_word );
+        $this->data = array_chunk($this->data, $this->perPageLimit);
+        $this->number_of_pages = count($this->data);
+        //return $this->data;
     }
     public function get_first_page()
     {
@@ -30,17 +47,13 @@ class PageController extends BaseController
         return end($this->data);
         # code...
     }
-    public function get_page_number($page)
+    public function get_page()
     {
-        if( $page AND $page-1 < count( $this->data) 
-        AND $page > 0 ) {
-
-            return $this->data[$page-1];
-
-        }
-        else{
-            $this->get_last_page();
-        }
+        return $this->data[$this->page_number-1];
+    }
+    public function get_page_number()
+    {
+        return $this->page_number;
     }
     public function get_number_of_pages()
     {
