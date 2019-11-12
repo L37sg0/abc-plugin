@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
+  <title>Logerr</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -13,7 +13,7 @@
       <!-- heading -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <div class="col-sm">
-        <h1>Събития</h1>
+        <h1>Logerr</h1>
     </div>
   </nav>
 
@@ -29,29 +29,32 @@
       ob_get_clean();
       $page->pageController->load();
       $page->ShowPages($page->pageController->get_last_page());
+      echo '<script>console.log("saved!");</script>';
 
     }
     if( isset( $_POST["update"] ) ){
-        $this->dataApi->editRow( $page->table_name, $page->data );
-        ob_get_clean();
-        $page->pageController->load();
-        $page->ShowPages($page->pageController->get_page());
+      $this->dataApi->editRow( $page->table_name, $page->data );
+      ob_get_clean();
+      $page->pageController->load();
+      $page->ShowPages($page->pageController->get_page());
 
     }
 
     if( isset( $_POST["edit"] ) ){
 
-        $this->row = (array) $this->dataApi->readRow( $page->table_name, $_POST["row_id"] );
-        ob_get_clean();
-        $page->EditForm($this->row);
+      $row_id = $page->pageController->test_input($_POST["row_id"]);
+      $this->row = (array) $this->dataApi->readRow( $page->table_name, $row_id );
+      ob_get_clean();
+      $page->EditForm($this->row);
     } 
 
     if( isset( $_POST["delete"] ) ){
 
-        $this->dataApi->deleteRow( $page->table_name, $_POST["row_id"] );
-        ob_get_clean();
-        $page->pageController->load();
-        $page->ShowPages($page->pageController->get_page());
+      $row_id = $page->pageController->test_input($_POST["row_id"]);
+      $this->dataApi->deleteRow( $page->table_name, $row_id );
+      ob_get_clean();
+      $page->pageController->load();
+      $page->ShowPages($page->pageController->get_page());
 
     }  
     
@@ -62,10 +65,10 @@
 
     }
     if( isset( $_POST["go_to"] ) ){
-      $page->pageController->search_category = $_POST["search_category"];
-      $page->pageController->search_word = $_POST["search_word"];
-      $page->pageController->page_number = $_POST["page_number"];
-      $page->pageController->perPageLimit = $_POST["page_results"];
+      $page->pageController->search_category = $page->pageController->test_input($_POST["search_category"]);
+      $page->pageController->search_word = $page->pageController->test_input($_POST["search_word"]);
+      $page->pageController->page_number = $page->pageController->test_input($_POST["page_number"]);
+      $page->pageController->perPageLimit = $page->pageController->test_input($_POST["page_results"]);
       ob_get_clean();
       $page->pageController->load();
       $page->ShowPages($page->pageController->get_page());
@@ -73,10 +76,10 @@
 
     }
     if( isset( $_POST["reload"] ) ){
-      $page->pageController->search_category = $_POST["search_category"];
-      $page->pageController->search_word = $_POST["search_word"];
+      $page->pageController->search_category = $page->pageController->test_input($_POST["search_category"]);
+      $page->pageController->search_word = $page->pageController->test_input($_POST["search_word"]);
       $page->pageController->page_number = 1;
-      $page->pageController->perPageLimit = $_POST["page_results"];
+      $page->pageController->perPageLimit = $page->pageController->test_input($_POST["page_results"]);
       ob_get_clean();
       $page->pageController->load();
       $page->ShowPages($page->pageController->get_page());

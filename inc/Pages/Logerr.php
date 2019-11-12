@@ -5,17 +5,12 @@
 
 namespace Inc\Pages;
 
-//use \Inc\Api\SettingsApi;
-//use \Inc\Base\BaseController;
-//use \Inc\Api\Callbacks\AdminCallbacks;
 use \Inc\Api\Callbacks\TemplatesCallbacks;
 use \Inc\Api\Pagination\PageController;
 
 
 class Logerr extends TemplatesCallbacks
 {
-    //public $callbacks;
-
     public $table_name;
     public $data;
     public $result_columns;
@@ -30,19 +25,22 @@ class Logerr extends TemplatesCallbacks
 
     public function register()
     {        
+
+        $this->pageController = new PageController;
+        $this->pageController->register();
         $this->table_name = "abc_logerr";
         $this->data = array(
-            "id"                    =>  (isset($_POST["id"])?$_POST["id"]: ""),
-            "start_date"            =>  $_POST["start_date"],//current_time( 'mysql' ),
-            "end_date"              =>  $_POST["end_date"],
-            "stay_time"             =>  $_POST["stay_time"],
-            "windpark"              =>  $_POST["windpark"],
-            "turbine_serial_number" =>  $_POST["turbine_serial_number"],
-            "event_title"           =>  $_POST["event_title"],
-            "working_team"          =>  $_POST["working_team"],
-            "description"           =>  $_POST["description"],
-            "team_arrive_date"      =>  $_POST["team_arrive_date"],
-            "changed_parts"         =>  $_POST["changed_parts"],
+            "id"                    =>  (isset($_POST["id"])?$this->pageController->test_input($_POST["id"]): ""),
+            "start_date"            =>  $this->pageController->test_input($_POST["start_date"]),//current_time( 'mysql' ),
+            "end_date"              =>  $this->pageController->test_input($_POST["end_date"]),
+            "stay_time"             =>  $this->pageController->test_input($_POST["stay_time"]),
+            "windpark"              =>  $this->pageController->test_input($_POST["windpark"]),
+            "turbine_serial_number" =>  $this->pageController->test_input($_POST["turbine_serial_number"]),
+            "event_title"           =>  $this->pageController->test_input($_POST["event_title"]),
+            "working_team"          =>  $this->pageController->test_input($_POST["working_team"]),
+            "description"           =>  $this->pageController->test_input($_POST["description"]),
+            "team_arrive_date"      =>  $this->pageController->test_input($_POST["team_arrive_date"]),
+            "changed_parts"         =>  $this->pageController->test_input($_POST["changed_parts"]),
             "dispatcher_name"       =>  wp_get_current_user()->user_login,
         );
         $this->result_columns = array(
@@ -67,8 +65,6 @@ class Logerr extends TemplatesCallbacks
         }
 
 
-        $this->pageController = new PageController;
-        $this->pageController->register();
         $this->pageController->table_name       = $this->table_name;
         $this->pageController->result_columns   = $this->result_columns;
         $this->pageController->perPageLimit     = 20;
@@ -95,19 +91,6 @@ class Logerr extends TemplatesCallbacks
         ));
         echo '</tr>';
         echo '<tr>';
-/* 
-        $this->DatePicker(array(
-            "name"      =>  "start_date",
-            "title"     =>  "Начало",
-            "date"     =>  $clock["year"]."-".$clock["month"]."-".$clock["day"],
-            "time"     =>  $clock["hour"].":".$clock["minute"],
-        ));
-        $this->DatePicker(array(
-            "name"      =>  "end_date",
-            "title"     =>  "Край",
-            "date"     =>  $clock["year"]."-".$clock["month"]."-".$clock["day"],
-            "time"     =>  $clock["hour"].":".$clock["minute"],
-        )); */
         $this->TextField(array(
             "name"      =>  "start_date",
             "title"     =>  "Начало",
@@ -149,15 +132,9 @@ class Logerr extends TemplatesCallbacks
         $this->MultiSelectMenu(array(
             "name"      =>  "working_team",
             "title"     =>  "Екип",
-            "value"     =>  "",            
-            //"option"    =>  "required",
+            "value"     =>  "",
             "menu_items"=>  array("ABC","Vestas","Е-Про")
-        ));/* 
-        $this->TextField(array(
-            "name"      =>  "working_team",
-            "title"     =>  "Екип",
-            "value"     =>  ""
-        )); */
+        ));
         $this->TextAreaField(array(
             "name"      =>  "description",
             "title"     =>  "Описание",
@@ -165,13 +142,7 @@ class Logerr extends TemplatesCallbacks
             "option"    =>  "required"
         ));
         echo '</tr>';
-        echo '<tr>';/* 
-        $this->DatePicker(array(
-            "name"      =>  "team_arrive_date",
-            "title"     =>  "Начало на работа",
-            "date"     =>  $clock["year"]."-".$clock["month"]."-".$clock["day"],
-            "time"     =>  $clock["hour"].":".$clock["minute"],
-        )); */
+        echo '<tr>';
         $this->TextField(array(
             "name"      =>  "team_arrive_date",
             "title"     =>  "Начало на работа",
@@ -202,22 +173,23 @@ class Logerr extends TemplatesCallbacks
 
         $this->ShowPageNavigator();
 
-        echo '<table class="table table-hover table-bordered">';
-        echo "<tr>";
+        echo '<table id="logs" class="table table-hover table-bordered">';
+        echo '<thead><tr>';
         for($i=0;$i<count($this->column_titles);$i++){
             
             $this->TextHeader(array(
                 "name"  =>  "",
                 "value" =>  $this->column_titles[$i],
-                //"size"  =>  4
             ));
             
         }
-        echo "</tr>";
+        echo '<th colspan=3>Действия</th>';
+        echo '</tr></thead>';
+        echo '<tbody>';
         if ($data) {
             foreach( $data as $result ){
                 $result = (array) $result;
-                echo "<tr>";
+                echo '<tr>';
                 for($i=1;$i<count($result);$i++){
     
                     $this->TextPlane(array(
@@ -236,24 +208,32 @@ class Logerr extends TemplatesCallbacks
                     "name"      =>  "edit",
                     "color"     =>  "primary",
                     "icon"      =>  "glyphicon glyphicon-pencil"
-                    //"title"     =>  "Изтрий"
                 ));
                 $this->SubmitButton(array(
                     "name"      =>  "delete",
                     "color"     =>  "danger",
                     "icon"      =>  "glyphicon glyphicon-trash"
-                    //"title"     =>  "Изтрий"
                 ));
-                echo "</form>";
-                echo "</tr>";
+                echo '</form>';
+                echo '</tr>';
             }
 
         }else{
             echo '<tr><td colspan="10">Няма намерени резултати</td></tr>';
         }
+        echo '</tbody>';
+        echo '<tfoot><tr>';
+        for($i=0;$i<count($this->column_titles);$i++){
+            
+            $this->TextHeader(array(
+                "name"  =>  "",
+                "value" =>  $this->column_titles[$i],
+            ));
+            
+        }
+        echo '<th colspan=3>Действия</th>';
+        echo '</tr></tfoot>';
         echo '</table>';
-
-        //$this->ShowPageNavigator();
         
     }
     public function EditForm($data)
@@ -272,20 +252,6 @@ class Logerr extends TemplatesCallbacks
         ));
         echo '</tr>';
         echo '<tr>';
-/* 
-        $this->DatePicker(array(
-            "name"      =>  "start_date",
-            "title"     =>  "Начало",
-            //"option"    =>  "readonly",
-            "date"     =>  $data["start_date"]//$clock["year"]."-".$clock["month"]."-".$clock["day"],
-            //"time"     =>  $clock["hour"].":".$clock["minute"],
-        ));
-        $this->DatePicker(array(
-            "name"      =>  "end_date",
-            "title"     =>  "Край",
-            "date"     =>  $data["end_date"]/* $clock["year"]."-".$clock["month"]."-".$clock["day"],
-            "time"     =>  $clock["hour"].":".$clock["minute"], 
-        )); */
         $this->TextField(array(
             "name"      =>  "start_date",
             "title"     =>  "Начало",
@@ -338,12 +304,6 @@ class Logerr extends TemplatesCallbacks
         ));
         echo '</tr>';
         echo '<tr>';
-        /* $this->DatePicker(array(
-            "name"      =>  "team_arrive_date",
-            "title"     =>  "Начало на работа",
-            "date"     =>  $data["team_arrive_date"]/* $clock["year"]."-".$clock["month"]."-".$clock["day"],
-            "time"     =>  $clock["hour"].":".$clock["minute"], 
-        )); */
         $this->TextField(array(
             "name"      =>  "team_arrive_date",
             "title"     =>  "Начало на работа",
@@ -395,8 +355,7 @@ class Logerr extends TemplatesCallbacks
         $this->DropDownMenu(array(
             "name"      =>  "search_category",
             "title"     =>  "в",
-            "value"     =>  $this->pageController->search_category,            
-            //"option"    =>  "required",
+            "value"     =>  $this->pageController->search_category,  
             "menu_items"=>  $this->result_columns
         ));
 
@@ -405,27 +364,23 @@ class Logerr extends TemplatesCallbacks
         $this->DropDownMenu(array(
             "name"      =>  "page_results",
             "title"     =>  "Брой резултати на страница: ",
-            "value"     =>  $this->pageController->perPageLimit,            
-            //"option"    =>  "required",
+            "value"     =>  $this->pageController->perPageLimit,  
             "menu_items"=>  range(10,50,10)
         ));
         $this->SubmitButton(array(
             "name"      =>  "reload",
             "color"     =>  "primary",
-            //"icon"      =>  "glyphicon glyphicon-plus-sign",
             "title"     =>  "Обнови"
         ));
         $this->SubmitButton(array(
             "name"      =>  "go_to",
             "color"     =>  "primary",
-            //"icon"      =>  "glyphicon glyphicon-plus-sign",
             "title"     =>  "Отиди на "
         ));
         $this->DropDownMenu(array(
             "name"      =>  "page_number",
             "title"     =>  "Страница",
-            "value"     =>  $this->pageController->page_number,            
-            //"option"    =>  "required",
+            "value"     =>  $this->pageController->page_number,  
             "menu_items"=>  range(1,$this->pageController->number_of_pages,1)
         ));
         $this->TextHeader(array(
@@ -438,7 +393,6 @@ class Logerr extends TemplatesCallbacks
         echo '</div>';
         echo '</div>';
         echo '</nav>';
-        # code...
     }
 
 }

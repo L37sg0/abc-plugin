@@ -14,7 +14,6 @@ final class Init
 	{
 		return [
             Pages\Admin::class,
-            Pages\Turbines::class,
             Base\Enqueue::class,
 			Base\SettingsLinks::class,
 		];

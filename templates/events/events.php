@@ -1,73 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
+<head>
+  <title>Събития</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+  <!-- <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script> -->
+</head>
+  <body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <!-- heading -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <div class="col-sm">
+        <h1>Събития</h1>
+    </div>
+  </nav>
+
+  <div class="container">
+  <?php
+    use Inc\Pages\Events;
+
+    $page = new Events;
+    $page->register();
+
+    if( isset( $_POST["save"] ) ){
+      $this->dataApi->writeData( $page->table_name, $page->data );
+      ob_get_clean();
+      $page->pageController->load();
+      $page->ShowPages($page->pageController->get_last_page());
+      echo '<script>console.log("saved!");</script>';
+
+    }
+    if( isset( $_POST["update"] ) ){
+      $this->dataApi->editRow( $page->table_name, $page->data );
+      ob_get_clean();
+      $page->pageController->load();
+      $page->ShowPages($page->pageController->get_page());
+
+    }
+
+    if( isset( $_POST["edit"] ) ){
+
+      $row_id = $page->pageController->test_input($_POST["row_id"]);
+      $this->row = (array) $this->dataApi->readRow( $page->table_name, $row_id );
+      ob_get_clean();
+      $page->EditForm($this->row);
+    } 
+
+    if( isset( $_POST["delete"] ) ){
+
+      $row_id = $page->pageController->test_input($_POST["row_id"]);
+      $this->dataApi->deleteRow( $page->table_name, $row_id );
+      ob_get_clean();
+      $page->pageController->load();
+      $page->ShowPages($page->pageController->get_page());
+
+    }  
     
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+    if( isset( $_POST["add"] ) ){
+
+      ob_get_clean();
+      $page->AddNew();
+
+    }
+    if( isset( $_POST["go_to"] ) ){
+      $page->pageController->search_category = $page->pageController->test_input($_POST["search_category"]);
+      $page->pageController->search_word = $page->pageController->test_input($_POST["search_word"]);
+      $page->pageController->page_number = $page->pageController->test_input($_POST["page_number"]);
+      $page->pageController->perPageLimit = $page->pageController->test_input($_POST["page_results"]);
+      ob_get_clean();
+      $page->pageController->load();
+      $page->ShowPages($page->pageController->get_page());
+      
+
+    }
+    if( isset( $_POST["reload"] ) ){
+      $page->pageController->search_category = $page->pageController->test_input($_POST["search_category"]);
+      $page->pageController->search_word = $page->pageController->test_input($_POST["search_word"]);
+      $page->pageController->page_number = 1;
+      $page->pageController->perPageLimit = $page->pageController->test_input($_POST["page_results"]);
+      ob_get_clean();
+      $page->pageController->load();
+      $page->ShowPages($page->pageController->get_page());
+
+    }              
+        
     
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-                integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-    </head>
-
-    <body>
-
-        <?php
-
-            use Inc\Api\Handlers\TemplateHandler;
-            $handler = new TemplateHandler;
-            $result_columns = array("id", "date", "title", "description", "place", "writen_by");
-            $table_name = "abc_events";
-            $add_callback = "eventsAddNew";
-            $edit_callback = "eventsEdit";
-            $handler->register();
-
-        ?>
-
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <!-- heading -->
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <div class="col-sm">
-                    <h1>Събития</h1>
-                </div>
-                <!-- button for add new -->
-                <div class="col-sm">
-                    <form class="form-inline my-2 my-lg-0" action="#" method="post">
-                        <button name="add_new" class="btn btn-primary my-2 my-sm-0" type="submit">Добави</button>
-                    </form>
-                </div>
-                <!-- search form -->
-                <form class="form-inline my-2 my-lg-0" action="#" method="post">
-
-                    <input class="form-control mr-sm-2" type="search" name="search_word" placeholder="Търси за..." aria-label="Search">
-                    <!--Тук се избира категория за търсене-->
-                    <select name="search_category" class="form-control">
-                        <option value="date"       >Дата</option>
-                        <option value="title"      >Заглавие</option>
-                        <option value="place"      >За Обект</option>
-                        <option value="writen_by"  >Въведено от</option>
-                    </select>
-                    <button name="search" class="btn btn-primary my-2 my-sm-0" type="submit">Търси</button>
-                </form>
-            </div>
-        </nav>
-        <div class="container mt-5">
-            <table class='table table-hover'>
-                <?php 
-                $data = array(
-                    "date"                  => current_time( 'mysql' ),
-                    "title"                 => $_POST["title"],
-                    "description"           => $_POST["description"],
-                    "place"                 => $_POST["place"],
-                    "writen_by"             => wp_get_current_user()->user_login,
-                );
-                $column_titles  = array("Дата", "Заглавие", "Описание", "Място", "Добавено от");
-                
-                $handler->handle( $table_name, $data, $result_columns, $column_titles, $add_callback, $edit_callback );
-                
-                ?>
-            </table>
-        </div>
-    </body>
-</html>        
+    ?>
+  </div>
+  </body>
+</html>

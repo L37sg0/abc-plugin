@@ -37,7 +37,7 @@ class TemplatesCallbacks extends BaseController
 
     public function eventsDashboard(){
 
-        return require_once( "$this->plugin_path/templates/events/events_test.php" );
+        return require_once( "$this->plugin_path/templates/events/events.php" );
         //return require_once( "$this->plugin_path/templates/events/add_event.php" );
     
     }
@@ -215,11 +215,13 @@ class TemplatesCallbacks extends BaseController
         $icon       =   $args["icon"];
         $color      =   $args["color"];
         $data       =   $args["data"];
-        echo '
-        <button onClick="window.print()" type="submit" name="'.$name.'" class="btn btn-'.$color.' btn-sm">
-            <span class="'.$icon.'"></span> '.$title.'
+        ?> 
+        <td>
+        <button onClick="PrintElem('logs');" type="submit" name="<?php echo $name; ?>" class="btn btn-<?php echo $color; ?> btn-sm">
+            <span class="<?php echo $icon; ?>"></span> <?php echo $title; ?>
         </button>
-        </td>';
+        </td>
+    <?php
     }
     ####################################################3
     public function ClockCalendar()

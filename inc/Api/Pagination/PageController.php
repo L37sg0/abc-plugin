@@ -63,6 +63,13 @@ class PageController extends BaseController
     {
         return $this->data;
     }
+
+    public function test_input($data) {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
+    }
 }
 
 ?>
