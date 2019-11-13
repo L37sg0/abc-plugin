@@ -75,6 +75,15 @@ class Admin extends BaseController
             ),
             array(
                 'parent_slug'=> 'abc_windparks',
+                'page_title' => 'LogErr',
+                'menu_title' => 'LogErr',
+                //'capability'=>'manage_options',
+                'capability'=>'read',
+                'menu_slug'  => 'abc_logerr',
+                'callback'   => array( $this->templatesCallbacks, 'logerrDashboard' ),
+            ),
+            array(
+                'parent_slug'=> 'abc_windparks',
                 'page_title' => 'Събития',
                 'menu_title' => 'Събития',
                 //'capability'=>'manage_options',
@@ -98,24 +107,6 @@ class Admin extends BaseController
                 'capability' => 'manage_options',
                 'menu_slug'  => 'abc_settings',
                 'callback'   => array( $this->callbacks, 'abcSettings' ),
-            ),
-            array(
-                'parent_slug'=> 'abc_windparks',
-                'page_title' => 'Турбини TEst',
-                'menu_title' => 'Турбини TEst',
-                'capability'=>'manage_options',
-                //'capability'=>'read',
-                'menu_slug'  => 'abc_turbines_test',
-                'callback'   => array( $this->templatesCallbacks, 'testDashboard' ),
-            ),
-            array(
-                'parent_slug'=> 'abc_windparks',
-                'page_title' => 'LogErr',
-                'menu_title' => 'LogErr',
-                //'capability'=>'manage_options',
-                'capability'=>'read',
-                'menu_slug'  => 'abc_logerr',
-                'callback'   => array( $this->templatesCallbacks, 'logerrDashboard' ),
             )
         );
 
