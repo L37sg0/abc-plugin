@@ -280,6 +280,10 @@ class Turbines extends TemplatesCallbacks
             "name"  =>  "",
             "value" =>  "Редакция на Турбина"
         ));
+        $this->TextHiddenField(array(
+            "name"  =>  "id",
+            "value" =>  $data["id"],
+        ));
         echo '</tr>';
         echo '<tr>';
         $this->TextField(array(
@@ -379,8 +383,9 @@ class Turbines extends TemplatesCallbacks
             "value"     =>  $data["transformer_number"]
         ));
         echo '</tr>';
+        echo '<tr>';
         $this->SubmitButton(array(
-            "name"      =>  "save",
+            "name"      =>  "update",
             "title"     =>  "Запази",
             "color"     =>  "primary",
             "icon"      =>  "glyphicon glyphicon-ok-sign"

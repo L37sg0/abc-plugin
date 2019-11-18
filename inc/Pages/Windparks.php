@@ -188,6 +188,10 @@ class Windparks extends TemplatesCallbacks
             "name"  =>  "",
             "value" =>  "Редакция на Ветропарк"
         ));
+        $this->TextHiddenField(array(
+            "name"  =>  "id",
+            "value" =>  $data["id"],
+        ));
         echo '</tr>';
         echo '<tr>';
         $this->TextField(array(

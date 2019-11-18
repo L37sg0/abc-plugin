@@ -6,7 +6,7 @@
 Plugin Name: ABC Plugin
 Plugin URI: 
 Description: Job organising tool
-Version: 1.0.0
+Version: 1.0.1
 Author: Petar Ivanov
 Author URI: http://github.com/l37sg0
 License: GPLv2 or later
