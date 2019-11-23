@@ -3,19 +3,19 @@
 * @package ABC Plugin
 */
 
-namespace Inc\Pages;
+namespace Inc\Pages\Management;
 
 use \Inc\Api\Callbacks\TemplatesCallbacks;
 use \Inc\Api\Pagination\PageController;
 
 
-class Windparks extends TemplatesCallbacks
+class Interruptions extends TemplatesCallbacks
 {
     public $table_name;
     public $data;
     public $result_columns;
     public $column_titles;
-    public $windpark_names;
+    public $switchgears_names;
     public $pageController;
     public $perPageLimit;
     public $result_data;
@@ -28,28 +28,37 @@ class Windparks extends TemplatesCallbacks
 
         $this->pageController = new PageController;
         $this->pageController->register();
-        $this->table_name = "abc_windparks";
+        $this->table_name = "abc_interruptions";
         $this->data = array(
             "id"                    =>  (isset($_POST["id"])?$this->pageController->test_input($_POST["id"]): ""),
-            "name"                  => $this->pageController->test_input($_POST["name"]),
-            "owner"                 => $this->pageController->test_input($_POST["owner"]),
+            "date"                  => $this->pageController->test_input($_POST["date"]),//current_time( 'mysql' ),
+            "start"                 => $this->pageController->test_input($_POST["start"]),
+            "stop"                  => $this->pageController->test_input($_POST["stop"]),
+            "place"                 => $this->pageController->test_input($_POST["place"]),
+            "reason"                => $this->pageController->test_input($_POST["reason"]),
+            "contractor"            => $this->pageController->test_input($_POST["contractor"]),
             "description"           => $this->pageController->test_input($_POST["description"]),
+            "writen_by"             => $this->pageController->test_input($_POST["writen_by"]),//wp_get_current_user()->user_login,
         );
         $this->result_columns = array(
-            "id","name","owner","description"
+            "id", "date", "start", "stop",
+            "place","reason","contractor",
+            "description", "writen_by"
         );
         $this->column_titles  = array(
-            "Име", "Собственик", "Описание"
+            "Дата", "Начало", "Край",
+            "Място","Причина","Изпълнител",
+            "Описание", "Добавено от"
         );
         $this->search_word = null;
         $this->search_category=null;
 
-        /* $this->windpark_names = [];
-        $results = $this->dataApi->readTable("abc_windparks", array("id","name"));
+        $this->switchgears_names = [];
+        $results = $this->dataApi->readTable("abc_switchgears", array("id","name"));
         foreach($results as $result){
             $result = (array) $result;
-            array_push( $this->windpark_names, $result["name"] );
-        } */
+            array_push( $this->switchgears_names, $result["name"] );
+        }
 
 
         $this->pageController->table_name       = $this->table_name;
@@ -74,26 +83,65 @@ class Windparks extends TemplatesCallbacks
         echo '<tr>';
         $this->TextHeader(array(
             "name"  =>  "",
-            "value" =>  "Добавяне на Ветропарк"
+            "value" =>  "Добавяне на Мрежово Прекъсване"
         ));
         echo '</tr>';
         echo '<tr>';
         $this->TextField(array(
-            "name"      =>  "name",
-            "title"     =>  "Название",
-            "value"     =>  ""
-        ));
-        $this->TextField(array(
-            "name"      =>  "owner",
-            "title"     =>  "Собственик",
-            "value"     =>  ""
+            "name"      =>  "date",
+            "title"     =>  "Дата/Месец/Ден",
+            "value"     =>  "000-00-00",
         ));
         echo '</tr>';
         echo '<tr>';
+        $this->TextField(array(
+            "name"      =>  "start",
+            "title"     =>  "Начало",
+            "value"     =>  "00:00:00"
+        ));
+        $this->TextField(array(
+            "name"      =>  "stop",
+            "title"     =>  "Край",
+            "value"     =>  "00:00:00"
+        ));
+        echo '</tr>';
+        echo '<tr>';
+        $this->DropDownMenu(array(
+            "name"      =>  "place",
+            "title"     =>  "Обект",
+            "value"     =>  "",            
+            //"option"    =>  "required",
+            "menu_items"=>  $this->switchgears_names
+        ));
+        $this->DropDownMenu(array(
+            "name"      =>  "reason",
+            "title"     =>  "Причина",
+            "value"     =>  "",           
+            "menu_items"=>  array(
+                "Профилактика",
+                "Ремонт",
+                "Проверка"
+            )
+        ));
+        echo '</tr>';
+        echo '<tr>';
+        $this->TextField(array(
+            "name"      =>  "contractor",
+            "title"     =>  "Изпълнител",
+            "value"     =>  ""
+        ));
         $this->TextAreaField(array(
             "name"      =>  "description",
             "title"     =>  "Описание",
             "value"     =>  ""
+        ));
+        echo '</tr>';
+        echo '<tr>';
+        $this->TextField(array(
+            "name"      =>  "writen_by",
+            "title"     =>  "Въведено от",
+            "value"     =>  wp_get_current_user()->user_login,
+            "option"    =>  "readonly"
         ));
         echo '</tr>';
         echo '<tr>';
@@ -186,7 +234,7 @@ class Windparks extends TemplatesCallbacks
         echo '<tr>';
         $this->TextHeader(array(
             "name"  =>  "",
-            "value" =>  "Редакция на Ветропарк"
+            "value" =>  "Редакция на Мрежово Прекъсване"
         ));
         $this->TextHiddenField(array(
             "name"  =>  "id",
@@ -195,17 +243,48 @@ class Windparks extends TemplatesCallbacks
         echo '</tr>';
         echo '<tr>';
         $this->TextField(array(
-            "name"      =>  "name",
-            "title"     =>  "Название",
-            "value"     =>  $data["name"]
-        ));
-        $this->TextField(array(
-            "name"      =>  "owner",
-            "title"     =>  "Собственик",
-            "value"     =>  $data["owner"]
+            "name"      =>  "date",
+            "title"     =>  "Дата/Месец/Ден",
+            "value"     =>  $data["date"],
         ));
         echo '</tr>';
         echo '<tr>';
+        $this->TextField(array(
+            "name"      =>  "start",
+            "title"     =>  "Начало",
+            "value"     =>  $data["start"]
+        ));
+        $this->TextField(array(
+            "name"      =>  "stop",
+            "title"     =>  "Край",
+            "value"     =>  $data["stop"]
+        ));
+        echo '</tr>';
+        echo '<tr>';
+        $this->DropDownMenu(array(
+            "name"      =>  "place",
+            "title"     =>  "Обект",
+            "value"     =>  $data["place"],            
+            //"option"    =>  "required",
+            "menu_items"=>  $this->switchgears_names
+        ));
+        $this->DropDownMenu(array(
+            "name"      =>  "reason",
+            "title"     =>  "Причина",
+            "value"     =>  $data["reason"],           
+            "menu_items"=>  array(
+                "Профилактика",
+                "Ремонт",
+                "Проверка"
+            )
+        ));
+        echo '</tr>';
+        echo '<tr>';
+        $this->TextField(array(
+            "name"      =>  "contractor",
+            "title"     =>  "Изпълнител",
+            "value"     =>  $data["contractor"]
+        ));
         $this->TextAreaField(array(
             "name"      =>  "description",
             "title"     =>  "Описание",
@@ -213,9 +292,17 @@ class Windparks extends TemplatesCallbacks
         ));
         echo '</tr>';
         echo '<tr>';
+        $this->TextField(array(
+            "name"      =>  "writen_by",
+            "title"     =>  "Редактирано от",
+            "value"     =>  wp_get_current_user()->user_login,
+            "option"    =>  "readonly"
+        ));
+        echo '<tr>';
+        echo '</tr>';
         $this->SubmitButton(array(
             "name"      =>  "update",
-            "title"     =>  "Обнови",
+            "title"     =>  "Запази",
             "color"     =>  "primary",
             "icon"      =>  "glyphicon glyphicon-ok-sign"
         ));

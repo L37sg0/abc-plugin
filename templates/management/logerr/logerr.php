@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Събития</title>
+  <title>Logerr</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -13,15 +13,15 @@
       <!-- heading -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <div class="col-sm">
-        <h1>Събития</h1>
+        <h1>Logerr</h1>
     </div>
   </nav>
 
   <div class="container">
   <?php
-    use Inc\Pages\Events;
+    use Inc\Pages\Management\Logerr;
 
-    $page = new Events;
+    $page = new Logerr;
     $page->register();
 
     if( isset( $_POST["save"] ) ){

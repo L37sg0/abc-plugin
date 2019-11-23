@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Ветропаркове</title>
+  <title>Турбини</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
@@ -13,15 +13,15 @@
       <!-- heading -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <div class="col-sm">
-        <h1>Ветропаркове</h1>
+        <h1>Обекти</h1>
     </div>
   </nav>
 
   <div class="container">
   <?php
-    use Inc\Pages\Windparks;
+    use Inc\Pages\Objects\Others;
 
-    $page = new Windparks;
+    $page = new Others;
     $page->register();
 
     if( isset( $_POST["save"] ) ){

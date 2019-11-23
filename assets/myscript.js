@@ -16,3 +16,17 @@ function PrintElem(elem)
 
     return true;
 }
+
+function CalculateTime(first, second, target_id){
+
+    first      = document.getElementsByName(first).value;
+    second     = document.getElementsByName(second).value;
+
+    first      = new Date(first);
+    second     = new Date(second);
+    result     = second - first;
+
+    document.getElementsByName(target_id).value = result;
+    console.log(first, second, target_id, result);
+    //console.log("hello");
+}

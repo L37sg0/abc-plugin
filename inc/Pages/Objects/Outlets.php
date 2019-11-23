@@ -3,13 +3,13 @@
 * @package ABC Plugin
 */
 
-namespace Inc\Pages;
+namespace Inc\Pages\Objects;
 
 use \Inc\Api\Callbacks\TemplatesCallbacks;
 use \Inc\Api\Pagination\PageController;
 
 
-class Events extends TemplatesCallbacks
+class Outlets extends TemplatesCallbacks
 {
     public $table_name;
     public $data;
@@ -28,31 +28,28 @@ class Events extends TemplatesCallbacks
 
         $this->pageController = new PageController;
         $this->pageController->register();
-        $this->table_name = "abc_events";
+        $this->table_name = "abc_outlets";
         $this->data = array(
-            "id"                    =>  (isset($_POST["id"])?$this->pageController->test_input($_POST["id"]): ""),
-            "date"                  => $this->pageController->test_input($_POST["date"]),//current_time( 'mysql' ),
-            "title"                 => $this->pageController->test_input($_POST["title"]),
-            "description"           => $this->pageController->test_input($_POST["description"]),
-            "place"                 => $this->pageController->test_input($_POST["place"]),
-            "writen_by"             => $this->pageController->test_input($_POST["writen_by"]),//wp_get_current_user()->user_login,
+            "id"            =>  (isset($_POST["id"])?$this->pageController->test_input($_POST["id"]): ""),
+            "name"          => $this->pageController->test_input($_POST["name"]),
+            "substation"    => $this->pageController->test_input($_POST["substation"]),
+            "backup"    => $this->pageController->test_input($_POST["backup"]),
+            "description"   => $this->pageController->test_input($_POST["description"]),
         );
         $this->result_columns = array(
-            "id", "date", "title",
-            "description", "place", "writen_by"
+            "id","name","substation","backup","description"
         );
         $this->column_titles  = array(
-            "Дата", "Заглавие", "Описание",
-            "Място", "Добавено от"
+            "Име", "Подстанция","Бекъп","Описание"
         );
         $this->search_word = null;
         $this->search_category=null;
 
-        $this->windpark_names = [];
-        $results = $this->dataApi->readTable("abc_windparks", array("id","name"));
+        $this->substations_names = [];
+        $results = $this->dataApi->readTable("abc_substations", array("id","name"));
         foreach($results as $result){
             $result = (array) $result;
-            array_push( $this->windpark_names, $result["name"] );
+            array_push( $this->substations_names, $result["name"] );
         }
 
 
@@ -70,7 +67,7 @@ class Events extends TemplatesCallbacks
     }
     public function AddNew()
     {
-        $clock = $this->ClockCalendar();
+        //$clock = $this->ClockCalendar();
 
         ob_start();
         echo '<form method="post" action="#">';
@@ -78,42 +75,35 @@ class Events extends TemplatesCallbacks
         echo '<tr>';
         $this->TextHeader(array(
             "name"  =>  "",
-            "value" =>  "Добавяне на Събитие"
+            "value" =>  "Добавяне на Извод"
         ));
         echo '</tr>';
         echo '<tr>';
         $this->TextField(array(
-            "name"      =>  "date",
-            "title"     =>  "Дата",
-            "value"     =>  current_time( 'mysql' ),
-            "option"    =>  "readonly"
-        ));
-        $this->TextField(array(
-            "name"      =>  "title",
-            "title"     =>  "Заглавие",
+            "name"      =>  "name",
+            "title"     =>  "Име",
             "value"     =>  ""
         ));
+        $this->DropDownMenu(array(
+            "name"      =>  "substation",
+            "title"     =>  "Подстанция",
+            "value"     =>  "",            
+            "option"    =>  "required",
+            "menu_items"=>  $this->substations_names
+        ));
         echo '</tr>';
         echo '<tr>';
+        $this->DropDownMenu(array(
+            "name"      =>  "backup",
+            "title"     =>  "Бекъп",
+            "value"     =>  "",            
+            //"option"    =>  "required",
+            "menu_items"=>  $this->substations_names
+        ));
         $this->TextAreaField(array(
             "name"      =>  "description",
             "title"     =>  "Описание",
             "value"     =>  ""
-        ));
-        $this->DropDownMenu(array(
-            "name"      =>  "place",
-            "title"     =>  "Обект",
-            "value"     =>  "",            
-            //"option"    =>  "required",
-            "menu_items"=>  $this->windpark_names
-        ));
-        echo '</tr>';
-        echo '<tr>';
-        $this->TextField(array(
-            "name"      =>  "writen_by",
-            "title"     =>  "Въведено от",
-            "value"     =>  wp_get_current_user()->user_login,
-            "option"    =>  "readonly"
         ));
         echo '</tr>';
         echo '<tr>';
@@ -206,7 +196,7 @@ class Events extends TemplatesCallbacks
         echo '<tr>';
         $this->TextHeader(array(
             "name"  =>  "",
-            "value" =>  "Редакция на Събитие"
+            "value" =>  "Редактиране на Извод"
         ));
         $this->TextHiddenField(array(
             "name"  =>  "id",
@@ -214,46 +204,37 @@ class Events extends TemplatesCallbacks
         ));
         echo '</tr>';
         echo '<tr>';
+        $this->TextField(array(
+            "name"      =>  "name",
+            "title"     =>  "Име",
+            "value"     =>  $data["name"]
+        ));
+        $this->DropDownMenu(array(
+            "name"      =>  "substation",
+            "title"     =>  "Подстанция",
+            "value"     =>  $data["substation"],            
+            "option"    =>  "required",
+            "menu_items"=>  $this->substations_names
+        ));
         echo '</tr>';
         echo '<tr>';
-        $this->TextField(array(
-            "name"      =>  "date",
-            "title"     =>  "Дата",
-            "value"     =>  $data["date"],//current_time( 'mysql' ),
-            "option"    =>  "readonly"
+        $this->DropDownMenu(array(
+            "name"      =>  "backup",
+            "title"     =>  "Бекъп",
+            "value"     =>  $data["backup"],            
+            //"option"    =>  "required",
+            "menu_items"=>  $this->substations_names
         ));
-        $this->TextField(array(
-            "name"      =>  "title",
-            "title"     =>  "Заглавие",
-            "value"     =>  $data["title"]
-        ));
-        echo '</tr>';
-        echo '<tr>';
         $this->TextAreaField(array(
             "name"      =>  "description",
             "title"     =>  "Описание",
             "value"     =>  $data["description"]
         ));
-        $this->DropDownMenu(array(
-            "name"      =>  "place",
-            "title"     =>  "Обект",
-            "value"     =>  $data["place"],            
-            //"option"    =>  "required",
-            "menu_items"=>  $this->windpark_names
-        ));
         echo '</tr>';
         echo '<tr>';
-        $this->TextField(array(
-            "name"      =>  "writen_by",
-            "title"     =>  "Въведено от",
-            "value"     =>  $data["writen_by"],//wp_get_current_user()->user_login,
-            "option"    =>  "readonly"
-        ));
-        echo '<tr>';
-        echo '</tr>';
         $this->SubmitButton(array(
             "name"      =>  "update",
-            "title"     =>  "Запази",
+            "title"     =>  "Обнови",
             "color"     =>  "primary",
             "icon"      =>  "glyphicon glyphicon-ok-sign"
         ));

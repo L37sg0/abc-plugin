@@ -13,15 +13,15 @@
       <!-- heading -->
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <div class="col-sm">
-        <h1>Турбини</h1>
+        <h1>Подстанции</h1>
     </div>
   </nav>
 
   <div class="container">
   <?php
-    use Inc\Pages\Turbines;
+    use Inc\Pages\Objects\Substations;
 
-    $page = new Turbines;
+    $page = new Substations;
     $page->register();
 
     if( isset( $_POST["save"] ) ){

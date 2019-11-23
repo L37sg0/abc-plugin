@@ -13,57 +13,54 @@ class TemplatesCallbacks extends BaseController
 
     public function turbinesDashboard(){
 
-        return require_once( "$this->plugin_path/templates/turbines/turbines.php" );
-        //return require_once( "$this->plugin_path/templates/turbines/add_turbine.php" );
-    
-    }
-    public function turbinesAddNew(){
-
-        return require_once( "$this->plugin_path/templates/turbines/add_turbine.php" );
+        return require_once( "$this->plugin_path/templates/objects/turbines/turbines.php" );
     
     }
 
     public function windparksDashboard(){
 
-        return require_once( "$this->plugin_path/templates/windparks/windparks.php" );
-        //return require_once( "$this->plugin_path/templates/turbines/add_turbine.php" );
+        return require_once( "$this->plugin_path/templates/objects/windparks/windparks.php" );
     
     }
-    public function windparksAddNew(){
+    public function substationsDashboard(){
 
-        return require_once( "$this->plugin_path/templates/windparks/add_windpark.php" );
+        return require_once( "$this->plugin_path/templates/objects/substations/substations.php" );
+    
+    }
+    public function outletsDashboard(){
+
+        return require_once( "$this->plugin_path/templates/objects/outlets/outlets.php" );
+    
+    }
+    public function switchgearsDashboard(){
+
+        return require_once( "$this->plugin_path/templates/objects/switchgears/switchgears.php" );
+    
+    }
+    public function othersDashboard(){
+
+        return require_once( "$this->plugin_path/templates/objects/others/others.php" );
     
     }
 
     public function eventsDashboard(){
 
-        return require_once( "$this->plugin_path/templates/events/events.php" );
-        //return require_once( "$this->plugin_path/templates/events/add_event.php" );
-    
-    }
-    public function eventsAddNew(){
-
-        return require_once( "$this->plugin_path/templates/events/add_event.php" );
-    
-    }
-    public function eventsEdit(){
-
-        return require_once( "$this->plugin_path/templates/events/edit_event.php" );
+        return require_once( "$this->plugin_path/templates/management/events/events.php" );
     
     }
     
     public function rtmDashboard()
     {
-        return require_once( "$this->plugin_path/templates/rtm/rtm.php" );
+        return require_once( "$this->plugin_path/templates/management/rtm/rtm.php" );
     }
 
-    public function testDashboard()
-    {
-        return require_once( "$this->plugin_path/templates/turbines/turbines_test.php" );
-    }
     public function logerrDashboard()
     {
-        return require_once( "$this->plugin_path/templates/logerr/logerr.php" );
+        return require_once( "$this->plugin_path/templates/management/logerr/logerr.php" );
+    }
+    public function interruptionsDashboard()
+    {
+        return require_once( "$this->plugin_path/templates/management/interruptions/interruptions.php" );
     }
 
     #============================================
@@ -158,14 +155,25 @@ class TemplatesCallbacks extends BaseController
         $title      =   $args["title"];
         $name       =   $args["name"];
         $date       =   $args["date"];
-        $time       =   $args["time"];
         if($title){
             echo '<th><label for="'.$name.'">'.$title.'</th>';
         }
         echo '<td>';
         echo '<input type="date" name="'.$name.'" class="form-control" value="'.$date.'">';
-        //echo '<input type="time" name="time_'.$name.'" class="form-control" value="'.$time.'">';
-        echo '</div></div></td>';
+        echo '</td>';
+    }
+    public function TimeResult($args)
+    {
+        $title          =   $args["title"];
+        $name           =   $args["name"];
+        $first          =   $args["first"];
+        $second         =   $args["second"];
+        if($title){
+            echo '<th><label for="'.$name.'">'.$title.'</th>';
+        }
+        echo '<td>';
+        echo '<input type="text" onClick="CalculateTime('.$first.','.$second.','.$name.');" name="'.$name.'" class="form-control" value="">';
+        echo '</td>';
     }
     public function TextHeader($args)
     {
@@ -187,13 +195,18 @@ class TemplatesCallbacks extends BaseController
         $title      =   $args["title"];
         $icon       =   $args["icon"];
         $color      =   $args["color"];
-        $data       =   $args["data"];
         echo '
         <td>
         <button type="submit" name="'.$name.'" class="btn btn-'.$color.' btn-sm">
             <span class="'.$icon.'"></span> '.$title.'
         </button>
-        </td>';
+        </td>';/* 
+        echo '
+        <td>
+        <button type="submit" name="" class="btn btn-danger btn-sm">
+            <span class="'.$icon.'"></span> Отказ
+        </button>
+        </td>'; */
     }
     public function LinkButton($args)
     {

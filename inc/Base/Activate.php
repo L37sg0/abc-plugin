@@ -54,17 +54,58 @@ class Activate
         )");
         $dataApi->createTable('abc_logerr',"(
             id mediumint(9) NOT NULL AUTO_INCREMENT,
-            start_date text NOT NULL,
-            end_date text NOT NULL,
-            stay_time text NOT NULL,
-            windpark text NOT NULL,
-            turbine_serial_number text NOT NULL,
-            event_title text NOT NULL,
-            working_team text NOT NULL,
-            description text NOT NULL,
-            team_arrive_date text NOT NULL,
-            changed_parts text NOT NULL,
-            dispatcher_name text NOT NULL,
+            start_date timestamp NOT NULL,
+            end_date timestamp NOT NULL,
+            stay_time time NOT NULL,
+            windpark varchar(16) NOT NULL,
+            turbine_serial_number varchar(10) NOT NULL,
+            event_title varchar(50) NOT NULL,
+            working_team varchar(100) NOT NULL,
+            description varchar(200) NOT NULL,
+            team_arrive_date timestamp NOT NULL,
+            changed_parts varchar(200) NOT NULL,
+            dispatcher_name varchar(16) NOT NULL,
+            PRIMARY KEY  (id)
+        )");
+        $dataApi->createTable('abc_substations',"(
+            id mediumint(9) NOT NULL AUTO_INCREMENT,
+            name varchar(16) NOT NULL,
+            description varchar(200) NOT NULL,
+            PRIMARY KEY  (id)
+        )");
+        $dataApi->createTable('abc_outlets',"(
+            id mediumint(9) NOT NULL AUTO_INCREMENT,
+            name varchar(16) NOT NULL,
+            substation varchar(16) NOT NULL,
+            backup varchar(16) NOT NULL,
+            description varchar(200) NOT NULL,
+            PRIMARY KEY  (id)
+        )");
+        $dataApi->createTable('abc_switchgears',"(
+            id mediumint(9) NOT NULL AUTO_INCREMENT,
+            name varchar(16) NOT NULL,
+            substation varchar(16) NOT NULL,
+            outlet varchar(16) NOT NULL,
+            description varchar(200) NOT NULL,
+            PRIMARY KEY  (id)
+        )");
+        $dataApi->createTable('abc_others',"(
+            id mediumint(9) NOT NULL AUTO_INCREMENT,
+            name varchar(30) NOT NULL,
+            type varchar(30) NOT NULL,
+            description varchar(200) NOT NULL,
+            PRIMARY KEY  (id)
+        )");
+        $dataApi->createTable('abc_interruptions',"(
+            id mediumint(9) NOT NULL AUTO_INCREMENT,
+            date date NOT NULL,
+            start time NOT NULL,
+            stop time NOT NULL,
+            place varchar(30) NOT NULL,
+            reason varchar(30) NOT NULL,
+            contractor varchar(30) NOT NULL,
+            description varchar(200) NOT NULL,
+            writen_by varchar(30) NOT NULL,
             PRIMARY KEY  (id)
         )");
 

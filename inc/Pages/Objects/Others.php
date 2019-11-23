@@ -3,13 +3,13 @@
 * @package ABC Plugin
 */
 
-namespace Inc\Pages;
+namespace Inc\Pages\Objects;
 
 use \Inc\Api\Callbacks\TemplatesCallbacks;
 use \Inc\Api\Pagination\PageController;
 
 
-class Logerr extends TemplatesCallbacks
+class Others extends TemplatesCallbacks
 {
     public $table_name;
     public $data;
@@ -28,41 +28,28 @@ class Logerr extends TemplatesCallbacks
 
         $this->pageController = new PageController;
         $this->pageController->register();
-        $this->table_name = "abc_logerr";
+        $this->table_name = "abc_others";
         $this->data = array(
-            "id"                    =>  (isset($_POST["id"])?$this->pageController->test_input($_POST["id"]): ""),
-            "start_date"            =>  $this->pageController->test_input($_POST["start_date"]),//current_time( 'mysql' ),
-            "end_date"              =>  $this->pageController->test_input($_POST["end_date"]),
-            "stay_time"             =>  $this->pageController->test_input($_POST["stay_time"]),
-            "windpark"              =>  $this->pageController->test_input($_POST["windpark"]),
-            "turbine_serial_number" =>  $this->pageController->test_input($_POST["turbine_serial_number"]),
-            "event_title"           =>  $this->pageController->test_input($_POST["event_title"]),
-            "working_team"          =>  $this->pageController->test_input($_POST["working_team"]),
-            "description"           =>  $this->pageController->test_input($_POST["description"]),
-            "team_arrive_date"      =>  $this->pageController->test_input($_POST["team_arrive_date"]),
-            "changed_parts"         =>  $this->pageController->test_input($_POST["changed_parts"]),
-            "dispatcher_name"       =>  wp_get_current_user()->user_login,
+            "id"            =>  (isset($_POST["id"])?$this->pageController->test_input($_POST["id"]): ""),
+            "name"          => $this->pageController->test_input($_POST["name"]),
+            "type"          => $this->pageController->test_input($_POST["type"]),
+            "description"   => $this->pageController->test_input($_POST["description"]),
         );
         $this->result_columns = array(
-            "id","start_date","end_date","stay_time","windpark",
-            "turbine_serial_number","event_title","working_team","description",
-            "team_arrive_date","changed_parts",
-            "dispatcher_name");
+            "id","name","type","description"
+        );
         $this->column_titles  = array(
-            "Начало", "Край", "Престой", "Ветропарк", "Турбина",
-            "Събитие", "Екип", "Описание",
-            "Начало на Работа", "Подменени компоненти",
-            "Диспечер"
+            "Име", "Тип","Описание"
         );
         $this->search_word = null;
         $this->search_category=null;
-
-        $this->windpark_names = [];
-        $results = $this->dataApi->readTable("abc_windparks", array("id","name"));
+/* 
+        $this->substations_names = [];
+        $results = $this->dataApi->readTable("abc_others", array("id","name"));
         foreach($results as $result){
             $result = (array) $result;
-            array_push( $this->windpark_names, $result["name"] );
-        }
+            array_push( $this->substations_names, $result["name"] );
+        } */
 
 
         $this->pageController->table_name       = $this->table_name;
@@ -79,7 +66,7 @@ class Logerr extends TemplatesCallbacks
     }
     public function AddNew()
     {
-        $clock = $this->ClockCalendar();
+        //$clock = $this->ClockCalendar();
 
         ob_start();
         echo '<form method="post" action="#">';
@@ -87,70 +74,32 @@ class Logerr extends TemplatesCallbacks
         echo '<tr>';
         $this->TextHeader(array(
             "name"  =>  "",
-            "value" =>  "Добавяне на Log"
+            "value" =>  "Добавяне на Обект"
         ));
         echo '</tr>';
         echo '<tr>';
         $this->TextField(array(
-            "name"      =>  "start_date",
-            "title"     =>  "Начало",
-            "value"     =>  ""
-        ));
-        $this->TextField(array(
-            "name"      =>  "end_date",
-            "title"     =>  "Край",
-            "value"     =>  ""
-        ));
-        echo '</tr>';
-        echo '<tr>';
-        $this->TextField(array(
-            "name"      =>  "stay_time",
-            "title"     =>  "Престой",
+            "name"      =>  "name",
+            "title"     =>  "Име",
             "value"     =>  ""
         ));
         $this->DropDownMenu(array(
-            "name"      =>  "windpark",
-            "title"     =>  "Ветропарк",
+            "name"      =>  "type",
+            "title"     =>  "Тип",
             "value"     =>  "",            
             "option"    =>  "required",
-            "menu_items"=>  $this->windpark_names
+            "menu_items"=>  array(
+                "Кабелна линия",
+                "Измервателно съоръжение",
+                "Обществен Обект",
+                "Промишлен обект"
+                )
         ));
         echo '</tr>';
         echo '<tr>';
-        $this->TextField(array(
-            "name"      =>  "turbine_serial_number",
-            "title"     =>  "Турбина",
-            "value"     =>  ""
-        ));
-        $this->TextField(array(
-            "name"      =>  "event_title",
-            "title"     =>  "Събитие",
-            "value"     =>  ""
-        ));
-        echo '</tr>';
-        echo '<tr>';
-        $this->MultiSelectMenu(array(
-            "name"      =>  "working_team",
-            "title"     =>  "Екип",
-            "value"     =>  "",
-            "menu_items"=>  array("ABC","Vestas","Е-Про")
-        ));
         $this->TextAreaField(array(
             "name"      =>  "description",
             "title"     =>  "Описание",
-            "value"     =>  "",
-            "option"    =>  "required"
-        ));
-        echo '</tr>';
-        echo '<tr>';
-        $this->TextField(array(
-            "name"      =>  "team_arrive_date",
-            "title"     =>  "Начало на работа",
-            "value"     =>  ""
-        ));
-        $this->TextAreaField(array(
-            "name"      =>  "changed_parts",
-            "title"     =>  "Подменени компоненти",
             "value"     =>  ""
         ));
         echo '</tr>';
@@ -244,7 +193,7 @@ class Logerr extends TemplatesCallbacks
         echo '<tr>';
         $this->TextHeader(array(
             "name"  =>  "",
-            "value" =>  "Редакция на Log"
+            "value" =>  "Редактиране на Обект"
         ));
         $this->TextHiddenField(array(
             "name"  =>  "id",
@@ -253,66 +202,23 @@ class Logerr extends TemplatesCallbacks
         echo '</tr>';
         echo '<tr>';
         $this->TextField(array(
-            "name"      =>  "start_date",
-            "title"     =>  "Начало",
-            "value"     =>  $data["start_date"]
-        ));
-        $this->TextField(array(
-            "name"      =>  "end_date",
-            "title"     =>  "Край",
-            "value"     =>  $data["end_date"]
-        ));
-        echo '</tr>';
-        echo '<tr>';
-        $this->TextField(array(
-            "name"      =>  "stay_time",
-            "title"     =>  "Престой",
-            "value"     =>  $data["stay_time"]
+            "name"      =>  "name",
+            "title"     =>  "Име",
+            "value"     =>  $data["name"]
         ));
         $this->DropDownMenu(array(
-            "name"      =>  "windpark",
-            "title"     =>  "Ветропарк",
-            "value"     =>  $data["windpark"],            
+            "name"      =>  "type",
+            "title"     =>  "Тип",
+            "value"     =>  $data["type"],            
             "option"    =>  "required",
-            "menu_items"=>  $this->windpark_names
+            "menu_items"=>  $this->substations_names
         ));
         echo '</tr>';
         echo '<tr>';
-        $this->TextField(array(
-            "name"      =>  "turbine_serial_number",
-            "title"     =>  "Турбина",
-            "value"     =>  $data["turbine_serial_number"]
-        ));
-        $this->TextField(array(
-            "name"      =>  "event_title",
-            "title"     =>  "Събитие",
-            "value"     =>  $data["event_title"]
-        ));
-        echo '</tr>';
-        echo '<tr>';
-        $this->DropDownMenu(array(
-            "name"      =>  "working_team",
-            "title"     =>  "Екип",
-            "value"     =>  $data["working_team"],  
-            "menu_items"=>  array("ABC","Vestas","Е-Про"),
-            "option"    =>  "multiple",
-        ));
         $this->TextAreaField(array(
             "name"      =>  "description",
             "title"     =>  "Описание",
             "value"     =>  $data["description"]
-        ));
-        echo '</tr>';
-        echo '<tr>';
-        $this->TextField(array(
-            "name"      =>  "team_arrive_date",
-            "title"     =>  "Начало на работа",
-            "value"     =>  $data["team_arrive_date"]
-        ));
-        $this->TextAreaField(array(
-            "name"      =>  "changed_parts",
-            "title"     =>  "Подменени компоненти",
-            "value"     =>  $data["changed_parts"]
         ));
         echo '</tr>';
         echo '<tr>';

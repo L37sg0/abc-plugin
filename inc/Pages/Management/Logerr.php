@@ -3,13 +3,13 @@
 * @package ABC Plugin
 */
 
-namespace Inc\Pages;
+namespace Inc\Pages\Management;
 
 use \Inc\Api\Callbacks\TemplatesCallbacks;
 use \Inc\Api\Pagination\PageController;
 
 
-class Turbines extends TemplatesCallbacks
+class Logerr extends TemplatesCallbacks
 {
     public $table_name;
     public $data;
@@ -28,32 +28,31 @@ class Turbines extends TemplatesCallbacks
 
         $this->pageController = new PageController;
         $this->pageController->register();
-        $this->table_name = "abc_turbines";
+        $this->table_name = "abc_logerr";
         $this->data = array(
             "id"                    =>  (isset($_POST["id"])?$this->pageController->test_input($_POST["id"]): ""),
-            "name"                  => $this->pageController->test_input($_POST["name"]),
-            "serial_number"         => $this->pageController->test_input($_POST["serial_number"]),
-            "vendor"                => $this->pageController->test_input($_POST["vendor"]),
-            "model"                 => $this->pageController->test_input($_POST["model"]),
-            "power"                 => $this->pageController->test_input($_POST["power"]),
-            "owner"                 => $this->pageController->test_input($_POST["owner"]),
-            "windpark"              => $this->pageController->test_input($_POST["windpark"]),
-            "gearbox_vendor"        => $this->pageController->test_input($_POST["gearbox_vendor"]),
-            "gearbox_number"        => $this->pageController->test_input($_POST["gearbox_number"]),
-            "hydraulics_vendor"     => $this->pageController->test_input($_POST["hydraulics_vendor"]),
-            "hydraulics_number"     => $this->pageController->test_input($_POST["hydraulics_number"]),
-            "generator_vendor"      => $this->pageController->test_input($_POST["generator_vendor"]),
-            "generator_number"      => $this->pageController->test_input($_POST["generator_number"]),
-            "transformer_vendor"    => $this->pageController->test_input($_POST["transformer_vendor"]),
-            "transformer_number"    => $this->pageController->test_input($_POST["transformer_number"]),
+            "start_date"            =>  $this->pageController->test_input($_POST["start_date"]),//current_time( 'mysql' ),
+            "end_date"              =>  $this->pageController->test_input($_POST["end_date"]),
+            "stay_time"             =>  $this->pageController->test_input($_POST["stay_time"]),
+            "windpark"              =>  $this->pageController->test_input($_POST["windpark"]),
+            "turbine_serial_number" =>  $this->pageController->test_input($_POST["turbine_serial_number"]),
+            "event_title"           =>  $this->pageController->test_input($_POST["event_title"]),
+            "working_team"          =>  $this->pageController->test_input($_POST["working_team"]),
+            "description"           =>  $this->pageController->test_input($_POST["description"]),
+            "team_arrive_date"      =>  $this->pageController->test_input($_POST["team_arrive_date"]),
+            "changed_parts"         =>  $this->pageController->test_input($_POST["changed_parts"]),
+            "dispatcher_name"       =>  wp_get_current_user()->user_login,
         );
         $this->result_columns = array(
-            "id","name","serial_number",
-            "vendor","model","power",
-            "owner","windpark");
+            "id","start_date","end_date","stay_time","windpark",
+            "turbine_serial_number","event_title","working_team","description",
+            "team_arrive_date","changed_parts",
+            "dispatcher_name");
         $this->column_titles  = array(
-            "Име", "Сериен Номер", "Производител",
-            "Модел", "Мощност", "Собственик", "Ветропарк"
+            "Начало", "Край", "Престой", "Ветропарк", "Турбина",
+            "Събитие", "Екип", "Описание",
+            "Начало на Работа", "Подменени компоненти",
+            "Диспечер"
         );
         $this->search_word = null;
         $this->search_category=null;
@@ -88,51 +87,33 @@ class Turbines extends TemplatesCallbacks
         echo '<tr>';
         $this->TextHeader(array(
             "name"  =>  "",
-            "value" =>  "Добавяне на Турбина"
+            "value" =>  "Добавяне на Log"
         ));
         echo '</tr>';
         echo '<tr>';
         $this->TextField(array(
-            "name"      =>  "name",
-            "title"     =>  "Название",
-            "value"     =>  ""
+            "name"      =>  "start_date",
+            "title"     =>  "Начало",
+            "value"     =>  "0000-00-00 00:00:00"
         ));
         $this->TextField(array(
-            "name"      =>  "serial_number",
-            "title"     =>  "Сериен номер",
-            "value"     =>  ""
-        ));
-        echo '</tr>';
-        echo '<tr>';
-        $this->DropDownMenu(array(
-            "name"      =>  "vendor",
-            "title"     =>  "Производител",
-            "value"     =>  "",            
-            "option"    =>  "required",
-            "menu_items"=>  array(
-                "Vestas","Nordtank","Neg Micon",
-                "Power Wind","Micon","Nordex",
-                "HSW","An Bonus" )
-        ));
-        $this->TextField(array(
-            "name"      =>  "model",
-            "title"     =>  "Модел",
-            "value"     =>  ""
+            "name"      =>  "end_date",
+            "title"     =>  "Край",
+            "value"     =>  "0000-00-00 00:00:00"
         ));
         echo '</tr>';
         echo '<tr>';
         $this->TextField(array(
-            "name"      =>  "power",
-            "title"     =>  "Мощност",
-            "value"     =>  ""
-        ));
-        $this->TextField(array(
-            "name"      =>  "owner",
-            "title"     =>  "Собственик",
-            "value"     =>  ""
-        ));
-        echo '</tr>';
-        echo '<tr>';
+            "name"      =>  "stay_time",
+            "title"     =>  "Престой",
+            "value"     =>  "00:00:00"
+        ));/* 
+        $this->TimeResult(array(
+            "name"           =>   "stay_time",
+            "title"          =>   "Престой",
+            "first"          =>   "start_date",
+            "second"         =>   "end_date"
+        )); */
         $this->DropDownMenu(array(
             "name"      =>  "windpark",
             "title"     =>  "Ветропарк",
@@ -143,52 +124,43 @@ class Turbines extends TemplatesCallbacks
         echo '</tr>';
         echo '<tr>';
         $this->TextField(array(
-            "name"      =>  "gearbox_vendor",
-            "title"     =>  "Производител - Ск. Кутия",
+            "name"      =>  "turbine_serial_number",
+            "title"     =>  "Турбина",
             "value"     =>  ""
         ));
         $this->TextField(array(
-            "name"      =>  "gearbox_number",
-            "title"     =>  "Сериен № - Ск. Кутия",
+            "name"      =>  "event_title",
+            "title"     =>  "Събитие",
             "value"     =>  ""
         ));
         echo '</tr>';
         echo '<tr>';
-        $this->TextField(array(
-            "name"      =>  "hydraulics_vendor",
-            "title"     =>  "Производител - Хидравлика",
-            "value"     =>  ""
+        $this->MultiSelectMenu(array(
+            "name"      =>  "working_team",
+            "title"     =>  "Екип",
+            "value"     =>  "",
+            "menu_items"=>  array("ABC","Vestas","Е-Про")
         ));
-        $this->TextField(array(
-            "name"      =>  "hydraulics_number",
-            "title"     =>  "Сериен № - Хидравлика",
-            "value"     =>  ""
-        ));
-        echo '</tr>';
-        echo '<tr>';
-        $this->TextField(array(
-            "name"      =>  "generator_vendor",
-            "title"     =>  "Производител - Генератор",
-            "value"     =>  ""
-        ));
-        $this->TextField(array(
-            "name"      =>  "generator_number",
-            "title"     =>  "Сериен № - Генератор",
-            "value"     =>  ""
+        $this->TextAreaField(array(
+            "name"      =>  "description",
+            "title"     =>  "Описание",
+            "value"     =>  "",
+            "option"    =>  "required"
         ));
         echo '</tr>';
         echo '<tr>';
         $this->TextField(array(
-            "name"      =>  "transformer_vendor",
-            "title"     =>  "Производител - Трансформатор",
-            "value"     =>  ""
+            "name"      =>  "team_arrive_date",
+            "title"     =>  "Начало на работа",
+            "value"     =>  "0000-00-00 00:00:00"
         ));
-        $this->TextField(array(
-            "name"      =>  "transformer_number",
-            "title"     =>  "Сериен № - Трансформатор",
+        $this->TextAreaField(array(
+            "name"      =>  "changed_parts",
+            "title"     =>  "Подменени компоненти",
             "value"     =>  ""
         ));
         echo '</tr>';
+        echo '<tr>';
         $this->SubmitButton(array(
             "name"      =>  "save",
             "title"     =>  "Запази",
@@ -278,7 +250,7 @@ class Turbines extends TemplatesCallbacks
         echo '<tr>';
         $this->TextHeader(array(
             "name"  =>  "",
-            "value" =>  "Редакция на Турбина"
+            "value" =>  "Редакция на Log"
         ));
         $this->TextHiddenField(array(
             "name"  =>  "id",
@@ -287,46 +259,22 @@ class Turbines extends TemplatesCallbacks
         echo '</tr>';
         echo '<tr>';
         $this->TextField(array(
-            "name"      =>  "name",
-            "title"     =>  "Название",
-            "value"     =>  $data["name"]
+            "name"      =>  "start_date",
+            "title"     =>  "Начало",
+            "value"     =>  $data["start_date"]
         ));
         $this->TextField(array(
-            "name"      =>  "serial_number",
-            "title"     =>  "Сериен номер",
-            "value"     =>  $data["serial_number"]
-        ));
-        echo '</tr>';
-        echo '<tr>';
-        $this->DropDownMenu(array(
-            "name"      =>  "vendor",
-            "title"     =>  "Производител",
-            "value"     =>  $data["vendor"],            
-            "option"    =>  "required",
-            "menu_items"=>  array(
-                "Vestas","Nordtank","Neg Micon",
-                "Power Wind","Micon","Nordex",
-                "HSW","An Bonus" )
-        ));
-        $this->TextField(array(
-            "name"      =>  "model",
-            "title"     =>  "Модел",
-            "value"     =>  $data["model"]
+            "name"      =>  "end_date",
+            "title"     =>  "Край",
+            "value"     =>  $data["end_date"]
         ));
         echo '</tr>';
         echo '<tr>';
         $this->TextField(array(
-            "name"      =>  "power",
-            "title"     =>  "Мощност",
-            "value"     =>  $data["power"]
+            "name"      =>  "stay_time",
+            "title"     =>  "Престой",
+            "value"     =>  $data["stay_time"]
         ));
-        $this->TextField(array(
-            "name"      =>  "owner",
-            "title"     =>  "Собственик",
-            "value"     =>  $data["owner"]
-        ));
-        echo '</tr>';
-        echo '<tr>';
         $this->DropDownMenu(array(
             "name"      =>  "windpark",
             "title"     =>  "Ветропарк",
@@ -337,56 +285,46 @@ class Turbines extends TemplatesCallbacks
         echo '</tr>';
         echo '<tr>';
         $this->TextField(array(
-            "name"      =>  "gearbox_vendor",
-            "title"     =>  "Производител - Ск. Кутия",
-            "value"     =>  $data["gearbox_vendor"]
+            "name"      =>  "turbine_serial_number",
+            "title"     =>  "Турбина",
+            "value"     =>  $data["turbine_serial_number"]
         ));
         $this->TextField(array(
-            "name"      =>  "gearbox_number",
-            "title"     =>  "Сериен № - Ск. Кутия",
-            "value"     =>  $data["gearbox_number"]
+            "name"      =>  "event_title",
+            "title"     =>  "Събитие",
+            "value"     =>  $data["event_title"]
+        ));
+        echo '</tr>';
+        echo '<tr>';
+        $this->DropDownMenu(array(
+            "name"      =>  "working_team",
+            "title"     =>  "Екип",
+            "value"     =>  $data["working_team"],  
+            "menu_items"=>  array("ABC","Vestas","Е-Про"),
+            "option"    =>  "multiple",
+        ));
+        $this->TextAreaField(array(
+            "name"      =>  "description",
+            "title"     =>  "Описание",
+            "value"     =>  $data["description"]
         ));
         echo '</tr>';
         echo '<tr>';
         $this->TextField(array(
-            "name"      =>  "hydraulics_vendor",
-            "title"     =>  "Производител - Хидравлика",
-            "value"     =>  $data["hydraulics_vendor"]
+            "name"      =>  "team_arrive_date",
+            "title"     =>  "Начало на работа",
+            "value"     =>  $data["team_arrive_date"]
         ));
-        $this->TextField(array(
-            "name"      =>  "hydraulics_number",
-            "title"     =>  "Сериен № - Хидравлика",
-            "value"     =>  $data["hydraulics_number"]
-        ));
-        echo '</tr>';
-        echo '<tr>';
-        $this->TextField(array(
-            "name"      =>  "generator_vendor",
-            "title"     =>  "Производител - Генератор",
-            "value"     =>  $data["generator_vendor"]
-        ));
-        $this->TextField(array(
-            "name"      =>  "generator_number",
-            "title"     =>  "Сериен № - Генератор",
-            "value"     =>  $data["generator_number"]
-        ));
-        echo '</tr>';
-        echo '<tr>';
-        $this->TextField(array(
-            "name"      =>  "transformer_vendor",
-            "title"     =>  "Производител - Трансформатор",
-            "value"     =>  $data["transformer_vendor"]
-        ));
-        $this->TextField(array(
-            "name"      =>  "transformer_number",
-            "title"     =>  "Сериен № - Трансформатор",
-            "value"     =>  $data["transformer_number"]
+        $this->TextAreaField(array(
+            "name"      =>  "changed_parts",
+            "title"     =>  "Подменени компоненти",
+            "value"     =>  $data["changed_parts"]
         ));
         echo '</tr>';
         echo '<tr>';
         $this->SubmitButton(array(
             "name"      =>  "update",
-            "title"     =>  "Запази",
+            "title"     =>  "Обнови",
             "color"     =>  "primary",
             "icon"      =>  "glyphicon glyphicon-ok-sign"
         ));
