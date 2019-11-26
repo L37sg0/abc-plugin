@@ -70,19 +70,19 @@ class Messages extends TemplatesCallbacks
         ));
         echo '</tr>';
         echo '<tr>';
-        $this->TextField(array(
-            "name"      =>  "date",
-            "title"     =>  "Дата",
-            "value"     =>  current_time( 'mysql' ),
-            "option"    =>  "readonly"
-        ));
-        $this->TextField(array(
+        $this->TextAreaField(array(
             "name"      =>  "message",
             "title"     =>  "Съобщение",
             "value"     =>  ""
         ));
         echo '</tr>';
         echo '<tr>';
+        $this->TextField(array(
+            "name"      =>  "date",
+            "title"     =>  "Дата",
+            "value"     =>  current_time( 'mysql' ),
+            "option"    =>  "readonly"
+        ));
         $this->TextField(array(
             "name"      =>  "writen_by",
             "title"     =>  "Въведено от",
@@ -190,19 +190,19 @@ class Messages extends TemplatesCallbacks
         echo '<tr>';
         echo '</tr>';
         echo '<tr>';
-        $this->TextField(array(
-            "name"      =>  "date",
-            "title"     =>  "Дата",
-            "value"     =>  $data["date"],//current_time( 'mysql' ),
-            "option"    =>  "readonly"
-        ));
-        $this->TextField(array(
+        $this->TextAreaField(array(
             "name"      =>  "message",
             "title"     =>  "Съобщение",
             "value"     =>  $data["message"]
         ));
         echo '</tr>';
         echo '<tr>';
+        $this->TextField(array(
+            "name"      =>  "date",
+            "title"     =>  "Дата",
+            "value"     =>  $data["date"],//current_time( 'mysql' ),
+            "option"    =>  "readonly"
+        ));
         $this->TextField(array(
             "name"      =>  "writen_by",
             "title"     =>  "Въведено от",
