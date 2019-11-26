@@ -55,7 +55,8 @@ class Activate
         $dataApi->createTable('abc_messages',"(
             id mediumint(9) NOT NULL AUTO_INCREMENT,
             date datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
-            message varchar(200) NOT NULL,
+            message varchar(300) NOT NULL,
+            status varchar(10) NOT NULL,
             writen_by varchar(10) DEFAULT '' NOT NULL,
             PRIMARY KEY  (id)
         )");

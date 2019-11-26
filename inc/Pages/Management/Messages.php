@@ -32,14 +32,17 @@ class Messages extends TemplatesCallbacks
         $this->data = array(
             "id"                    =>  (isset($_POST["id"])?$this->pageController->test_input($_POST["id"]): ""),
             "date"                  => $this->pageController->test_input($_POST["date"]),//current_time( 'mysql' ),
-            "message"                 => $this->pageController->test_input($_POST["message"]),
+            "message"               => $this->pageController->test_input($_POST["message"]),
+            "status"                => $this->pageController->test_input($_POST["status"]),
             "writen_by"             => $this->pageController->test_input($_POST["writen_by"]),//wp_get_current_user()->user_login,
         );
         $this->result_columns = array(
-            "id", "date", "message","writen_by"
+            "id", "date", "message",
+            "status","writen_by"
         );
         $this->column_titles  = array(
-            "Дата", "Съобщение", "Добавено от"
+            "Дата", "Съобщение",
+            "Приоритет", "Добавено от"
         );
         $this->search_word = null;
         $this->search_category=null;
@@ -73,7 +76,20 @@ class Messages extends TemplatesCallbacks
         $this->TextAreaField(array(
             "name"      =>  "message",
             "title"     =>  "Съобщение",
-            "value"     =>  ""
+            "value"     =>  "",
+            "option"    =>  "required"
+        ));
+        $this->DropDownMenu(array(
+            "name"      =>  "status",
+            "title"     =>  "Приоритет",
+            "value"     =>  "",            
+            "option"    =>  "required",
+            "menu_items"=>  array(
+                "Висок",
+                "Среден",
+                "Нисък",
+                "Инфо"
+            )
         ));
         echo '</tr>';
         echo '<tr>';
@@ -125,7 +141,24 @@ class Messages extends TemplatesCallbacks
         if ($data) {
             foreach( $data as $result ){
                 $result = (array) $result;
-                echo '<tr>';
+                if($result["status"]){
+                    switch ($result["status"]){
+                        case "Висок":
+                            echo '<tr class="alert alert-danger">';
+                            break;
+                        case "Среден":
+                            echo '<tr class="alert alert-warning">';
+                            break;
+                        case "Нисък":
+                            echo '<tr class="alert alert-success">';
+                            break;
+                        case "Инфо":
+                            echo '<tr class="alert alert-info">';
+                            break;
+                    }
+                }else{
+                    echo '<tr>';
+                }
                 for($i=1;$i<count($result);$i++){
     
                     $this->TextPlane(array(
@@ -193,7 +226,20 @@ class Messages extends TemplatesCallbacks
         $this->TextAreaField(array(
             "name"      =>  "message",
             "title"     =>  "Съобщение",
-            "value"     =>  $data["message"]
+            "value"     =>  $data["message"],
+            "option"    =>  "required"
+        ));
+        $this->DropDownMenu(array(
+            "name"      =>  "status",
+            "title"     =>  "Приоритет",
+            "value"     =>  $data["status"],            
+            "option"    =>  "required",
+            "menu_items"=>  array(
+                "Висок",
+                "Среден",
+                "Нисък",
+                "Инфо"
+            )
         ));
         echo '</tr>';
         echo '<tr>';
