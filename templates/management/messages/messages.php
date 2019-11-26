@@ -14,8 +14,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <div class="col-sm">
         <h1>Съобщения</h1>
-        <h3>Това е дъската за Съобщения. Моля въвеждайте само важна и актуална информация. Изтривайте неактуалните данни. Ограничението е 200 знака.</h3>
-    </div>
+      </div>
   </nav>
 
   <div class="container">
