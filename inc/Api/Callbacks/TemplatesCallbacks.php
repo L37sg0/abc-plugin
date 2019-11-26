@@ -62,6 +62,10 @@ class TemplatesCallbacks extends BaseController
     {
         return require_once( "$this->plugin_path/templates/management/interruptions/interruptions.php" );
     }
+    public function messagesDashboard()
+    {
+        return require_once( "$this->plugin_path/templates/management/messages/messages.php" );
+    }
 
     #============================================
     public function TextField( $args )

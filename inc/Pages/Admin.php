@@ -58,12 +58,12 @@ class Admin extends BaseController
                   'position'  => 110
             ),
             array('page_title'=>'Мениджмънт',
-                  'menu_title'=>'Мениджмънт ',
+                  'menu_title'=>'Мениджмънт',
                   //'capability'=>'manage_options',
                   'capability'=>'read',
                   'menu_slug' =>'abc_management',
-                  'callback'  => array( $this->templatesCallbacks, 'logerrDashboard' ),
-                  'icon_url'  =>'dashicons-sos',
+                  'callback'  => array( $this->templatesCallbacks, 'messagesDashboard' ),
+                  'icon_url'  =>'dashicons-admin-post',
                   'position'  => 112
             ),
         );
@@ -125,7 +125,7 @@ class Admin extends BaseController
                 'capability' => 'manage_options',
                 'menu_slug'  => 'abc_settings',
                 'callback'   => array( $this->callbacks, 'abcSettings' ),
-            ),/* 
+            ),
             array(
                 'parent_slug'=> 'abc_management',
                 'page_title' => 'LogErr',
@@ -134,13 +134,22 @@ class Admin extends BaseController
                 'capability'=>'read',
                 'menu_slug'  => 'abc_logerr',
                 'callback'   => array( $this->templatesCallbacks, 'logerrDashboard' ),
+            ),/* 
+            array(
+                'parent_slug'=> 'abc_management',
+                'page_title' => 'Съобщения',
+                'menu_title' => 'Съобщения',
+                //'capability'=>'manage_options',
+                'capability'=>'read',
+                'menu_slug'  => 'abc_messages',
+                'callback'   => array( $this->templatesCallbacks, 'messagesDashboard' ),
             ), */
             array(
                 'parent_slug'=> 'abc_management',
                 'page_title' => 'Събития',
                 'menu_title' => 'Събития',
-                //'capability'=>'manage_options',
-                'capability'=>'read',
+                'capability'=>'manage_options',
+                //'capability'=>'read',
                 'menu_slug'  => 'abc_events',
                 'callback'   => array( $this->templatesCallbacks, 'eventsDashboard' ),
             ),
@@ -148,8 +157,8 @@ class Admin extends BaseController
                 'parent_slug'=> 'abc_management',
                 'page_title' => 'Данни Реално време',
                 'menu_title' => 'ДРВ',
-                //'capability'=>'manage_options',
-                'capability'=>'read',
+                'capability'=>'manage_options',
+                //'capability'=>'read',
                 'menu_slug'  => 'abc_rtm',
                 'callback'   => array( $this->templatesCallbacks, 'rtmDashboard' ),
             ),
@@ -157,8 +166,8 @@ class Admin extends BaseController
                 'parent_slug'=> 'abc_management',
                 'page_title' => 'Мрежови Прекъсвания',
                 'menu_title' => 'Мрежови Прекъсвания',
-                //'capability'=>'manage_options',
-                'capability'=>'read',
+                'capability'=>'manage_options',
+                //'capability'=>'read',
                 'menu_slug'  => 'abc_interruptions',
                 'callback'   => array( $this->templatesCallbacks, 'interruptionsDashboard' ),
             )

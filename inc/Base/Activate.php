@@ -19,28 +19,28 @@ class Activate
 
         $dataApi->createTable('abc_windparks',"(
             id mediumint(9) NOT NULL AUTO_INCREMENT,
-            name tinytext NOT NULL,
-            owner text NOT NULL,
-            description text NOT NULL,
+            name varchar(20) NOT NULL,
+            owner varchar(30) NOT NULL,
+            description varchar(200) NOT NULL,
             PRIMARY KEY  (id)
         )");
         $dataApi->createTable('abc_turbines',"(
             id mediumint(9) NOT NULL AUTO_INCREMENT,
-            name text NOT NULL,
-            serial_number text NOT NULL,
-            vendor text NOT NULL,
-            model text NOT NULL,
-            power text NOT NULL,
-            owner text NOT NULL,
-            windpark text NOT NULL,
-            gearbox_vendor text NOT NULL,
-            gearbox_number text NOT NULL,
-            hydraulics_vendor text NOT NULL,
-            hydraulics_number text NOT NULL,
-            generator_vendor text NOT NULL,
-            generator_number text NOT NULL,
-            transformer_vendor text NOT NULL,
-            transformer_number text NOT NULL,
+            name varchar(20) NOT NULL,
+            serial_number varchar(20) NOT NULL,
+            vendor varchar(20) NOT NULL,
+            model varchar(20) NOT NULL,
+            power mediumint(2) NOT NULL,
+            owner varchar(30) NOT NULL,
+            windpark varchar(30) NOT NULL,
+            gearbox_vendor varchar(30) NOT NULL,
+            gearbox_number varchar(30) NOT NULL,
+            hydraulics_vendor varchar(30) NOT NULL,
+            hydraulics_number varchar(30) NOT NULL,
+            generator_vendor varchar(30) NOT NULL,
+            generator_number varchar(30) NOT NULL,
+            transformer_vendor varchar(30) NOT NULL,
+            transformer_number varchar(30) NOT NULL,
             PRIMARY KEY  (id)
         )");
         $dataApi->createTable('abc_events',"(
@@ -50,6 +50,13 @@ class Activate
             description tinytext NOT NULL,
             place text NOT NULL,
             writen_by varchar(55) DEFAULT '' NOT NULL,
+            PRIMARY KEY  (id)
+        )");
+        $dataApi->createTable('abc_messages',"(
+            id mediumint(9) NOT NULL AUTO_INCREMENT,
+            date datetime DEFAULT '0000-00-00 00:00:00' NOT NULL,
+            message varchar(200) NOT NULL,
+            writen_by varchar(10) DEFAULT '' NOT NULL,
             PRIMARY KEY  (id)
         )");
         $dataApi->createTable('abc_logerr',"(
