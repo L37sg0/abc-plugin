@@ -14,12 +14,14 @@ class PageController extends BaseController
 {
     public $table_name;
     public $result_columns;
-    public $data;
-    public $number_of_pages;
+   /*  public $data;
+    public $number_of_pages; */
     public $page_number;
     public $perPageLimit;
     public $search_category;
     public $search_word;
+    public $order_columns;
+    public $order_type;
 
     public function register()
     {
@@ -29,10 +31,17 @@ class PageController extends BaseController
         $this->perPageLimit     =   10;
         $this->search_category  =   null;
         $this->search_word      =   null;
+        $this->order_columns    =   array("id");
+        $this->order_type       =   "DESC";//"ASC";
     }
     public function load()
     {
-        $this->data = $this->dataApi->readTable( $this->table_name, $this->result_columns, $this->search_category, $this->search_word );
+        $this->data = $this->dataApi->readTable( 
+            $this->table_name, $this->result_columns,
+            $this->search_category, $this->search_word,
+            $this->order_columns, $this->order_type
+        );
+
         $this->data = array_chunk($this->data, $this->perPageLimit);
         $this->number_of_pages = count($this->data);
         //return $this->data;

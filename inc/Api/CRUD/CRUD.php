@@ -3,107 +3,77 @@
 * @package ABC Plugin
 */
 
-namespace Inc\Pages\Management;
+namespace Inc\Api\CRUD;
 
 use \Inc\Api\Callbacks\TemplatesCallbacks;
 use \Inc\Api\Pagination\PageController;
 
 
-class Messages extends TemplatesCallbacks
+class CRUD extends TemplatesCallbacks
 {
     public $table_name;
     public $result_columns;
     public $column_titles;
-    public $pageController;
-    public $search_word;
+    public $page_number;
+    public $number_of_pages;
+    public $perPageLimit;
     public $search_category;
+    public $search_word;
+    public $order_columns;
+    public $order_type;
 
     public function register()
     {        
 
-        $this->pageController = new PageController;
-        $this->pageController->register();
-        $this->table_name = "abc_messages";
-        $this->data = array(
-            "id"                    =>  (isset($_POST["id"])?$this->pageController->test_input($_POST["id"]): ""),
-            "writen"                => $this->pageController->test_input($_POST["writen"]),//current_time( 'mysql' ),
-            "message"               => $this->pageController->test_input($_POST["message"]),
-            "status"                => $this->pageController->test_input($_POST["status"]),
-            "last_change"           => $this->pageController->test_input($_POST["last_change"]),//wp_get_current_user()->user_login,
-        );
-        $this->result_columns = array(
-            "id", "writen", "message",
-            "status","last_change"
-        );
-        $this->column_titles  = array(
-            "Добавено", "Съобщение",
-            "Приоритет","Последна промяна"
-        );
-        $this->search_word = null;
-        $this->search_category=null;
-
-
-        $this->pageController->table_name       = $this->table_name;
-        $this->pageController->result_columns   = $this->result_columns;
-        $this->pageController->perPageLimit     = 20;
-        $this->pageController->page_number      = 1;
-        $this->pageController->search_category  = null;
-        $this->pageController->search_word      = null;
+        $this->table_name       =   null;
+        $this->result_columns   =   null;
+        $this->column_titles    =   null;
+        $this->page_number      =   1;
+        $this->number_of_pages  =   1;
+        $this->perPageLimit     =   20;
+        $this->search_category  =   null;
+        $this->search_word      =   null;
+        $this->order_columns    =   array("id");
+        $this->order_type       =   "DESC";//"ASC";
         
-        $this->pageController->load();
+        $this->load();
 
-        $this->ShowPages($this->pageController->get_page());
+        $this->Read($this->get_page());
         
     }
-    public function AddNew()
+    public function load()
     {
+        $this->data = $this->dataApi->readTable( 
+            $this->table_name, $this->result_columns,
+            $this->search_category, $this->search_word,
+            $this->order_columns, $this->order_type
+        );
 
+        $this->data = array_chunk($this->data, $this->perPageLimit);
+        $this->number_of_pages = count($this->data);
+    }
+
+    public function get_page()
+    {
+        return $this->data[$this->page_number-1];
+    }
+
+    public function test_input($input) {
+        $input = trim($input);
+        $input = stripslashes($input);
+        $input = htmlspecialchars($input);
+        return $input;
+    }
+    
+    public function Create()
+    {
         ob_start();
         echo '<form method="post" action="#">';
         echo '<table class="table table-hover">';
         echo '<tr>';
-        $this->TextHeader(array(
-            "name"  =>  "",
-            "value" =>  "Добавяне на Съобщение"
-        ));
+        @content;
         echo '</tr>';
         echo '<tr>';
-        $this->TextAreaField(array(
-            "name"      =>  "message",
-            "title"     =>  "Съобщение",
-            "value"     =>  "",
-            "option"    =>  "required"
-        ));
-        $this->DropDownMenu(array(
-            "name"      =>  "status",
-            "title"     =>  "Приоритет",
-            "value"     =>  "",            
-            "option"    =>  "required",
-            "menu_items"=>  array(
-                "Висок",
-                "Среден",
-                "Нисък",
-                "Инфо"
-            )
-        ));
-        echo '</tr>';
-        echo '<tr>';
-        $this->TextField(array(
-            "name"      =>  "writen",
-            "title"     =>  "Добавено",
-            "value"     =>  wp_get_current_user()->user_login .", ". current_time( 'mysql' ),
-            "option"    =>  "readonly"
-        ));
-        echo '</tr>';
-        echo '<tr>';
-        $this->TextField(array(
-            "name"      =>  "last_change",
-            "title"     =>  "Последна промяна",
-            "value"     =>  wp_get_current_user()->user_login .", ". current_time( 'mysql' ),
-            "option"    =>  "readonly"
-        ));
-        echo '<tr>';
-        echo '</tr>';
         $this->SubmitButton(array(
             "name"      =>  "save",
             "title"     =>  "Запази",
@@ -116,11 +86,11 @@ class Messages extends TemplatesCallbacks
         echo '</form>';
     }
 
-    public function ShowPages($data)
+    public function Read($data)
     {
         ob_start();
 
-        $this->ShowPageNavigator();
+        $this->Navigation();
 
         echo '<table id="logs" class="table table-hover table-bordered">';
         echo '<thead><tr>';
@@ -202,60 +172,16 @@ class Messages extends TemplatesCallbacks
         echo '</table>';
         
     }
-    public function EditForm($data)
+
+    public function Update($data)
     {
         ob_start();
         echo '<form method="post" action="#">';
         echo '<table class="table table-hover">';
         echo '<tr>';
-        $this->TextHeader(array(
-            "name"  =>  "",
-            "value" =>  "Редакция на Съобщение"
-        ));
-        $this->TextHiddenField(array(
-            "name"  =>  "id",
-            "value" =>  $data["id"],
-        ));
+        @content($data);
         echo '</tr>';
         echo '<tr>';
-        echo '</tr>';
-        echo '<tr>';
-        $this->TextAreaField(array(
-            "name"      =>  "message",
-            "title"     =>  "Съобщение",
-            "value"     =>  $data["message"],
-            "option"    =>  "required"
-        ));
-        $this->DropDownMenu(array(
-            "name"      =>  "status",
-            "title"     =>  "Приоритет",
-            "value"     =>  $data["status"],            
-            "option"    =>  "required",
-            "menu_items"=>  array(
-                "Висок",
-                "Среден",
-                "Нисък",
-                "Инфо"
-            )
-        ));
-        echo '</tr>';
-        echo '<tr>';
-        $this->TextField(array(
-            "name"      =>  "writen",
-            "title"     =>  "Добавено",
-            "value"     =>  $data["writen"],//current_time( 'mysql' ),
-            "option"    =>  "readonly"
-        ));
-        echo '<tr>';
-        echo '</tr>';
-        $this->TextField(array(
-            "name"      =>  "last_change",
-            "title"     =>  "Последна промяна",
-            "value"     =>  wp_get_current_user()->user_login .", ". current_time( 'mysql' ),
-            "option"    =>  "readonly"
-        ));
-        echo '<tr>';
-        echo '</tr>';
         $this->SubmitButton(array(
             "name"      =>  "update",
             "title"     =>  "Запази",
@@ -267,7 +193,13 @@ class Messages extends TemplatesCallbacks
         echo '</table>';
         echo '</form>';
     }
-    public function ShowPageNavigator()
+
+    public function Delete($row_id)
+    {
+        $this->dataApi->deleteRow( $this->table_name, $row_id );
+    }
+
+    public function Navigation()
     {
         echo '<nav class="navbar navbar-expand-lg navbar-light bg-light">';
         echo '<div class="collapse navbar-collapse" id="navbarSupportedContent">';

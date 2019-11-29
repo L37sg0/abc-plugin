@@ -57,12 +57,16 @@ class DataApi
     }
 
     // read table
-    public function readTable( string $table_name=null, array $result_columns=null, string $search_category=null, string $search_word=null ){
+    public function readTable( 
+        string $table_name=null, array $result_columns=null,
+        string $search_category=null, string $search_word=null,
+        array $order_columns=array("id"), string $order_type="DESC" ){
         global $wpdb;
 
         $table_name = $wpdb->prefix . $table_name;
 
         $result_columns = implode(",",$result_columns);
+        $order_columns = implode(",",$order_columns);
         //echo "<script>console.log('" . $result_columns . "');</script>";
 
         $search_category = $search_category;
@@ -76,13 +80,16 @@ class DataApi
                 SELECT *
                 FROM "          . $table_name .       "
                 WHERE "         . $search_category .  "
-                LIKE '%"        . $search_word .      "%'"
+                LIKE '%"        . $search_word .      "%'
+                ORDER BY "      . $order_columns." ".$order_type."
+                "
             );
         }else{
             $result = $wpdb->get_results(
                 "
                 SELECT id, "    . $result_columns . "
-                FROM "          . $table_name 
+                FROM "          . $table_name     . "
+                ORDER BY "      . $order_columns." ".$order_type
             );
         }
         return $result;

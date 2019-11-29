@@ -63,7 +63,17 @@ class Turbines extends TemplatesCallbacks
         foreach($results as $result){
             $result = (array) $result;
             array_push( $this->windpark_names, $result["name"] );
-        }
+        }/* 
+        $this->windpark_names = [];
+        $results = $this->dataApi->readTable("abc_windparks", array("id","name"));
+        foreach($results as $result){
+            $result = (array) $result;
+            $cell   = array(
+                "id"    =>  $result["id"],
+                "name"  =>  $result["name"]
+            );
+            array_push( $this->windpark_names, $cell );
+        } */
 
 
         $this->pageController->table_name       = $this->table_name;

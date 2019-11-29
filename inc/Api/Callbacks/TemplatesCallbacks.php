@@ -133,7 +133,26 @@ class TemplatesCallbacks extends BaseController
             }
         }
         echo '</select></td>';
-    }
+    }/* 
+    public function DropDownMenu( $args )
+    {
+        $title      =   $args["title"];
+        $name       =   $args["name"];
+        $menu_items =   $args["menu_items"];
+        $value      =   $args["value"];
+        $option     =   $args["option"];
+        if($title){
+            echo '<th><label for="'.$name.'">'.$title.'</th>';
+        }
+        echo '<td><select name="'.$name.'" class="form-control" '.$option.'>';
+        echo '<option value="'.$value.'" selected>'.$value.'</option>';
+        foreach($menu_items as $item){
+            if( $item["id"] != $value ){
+                echo '<option value="'.$item["id"].'">'.$item["name"].'</option>';
+            }
+        }
+        echo '</select></td>';
+    } */
     public function MultiSelectMenu( $args )
     {
         $title      =   $args["title"];
