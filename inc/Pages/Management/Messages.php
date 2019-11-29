@@ -31,18 +31,20 @@ class Messages extends TemplatesCallbacks
         $this->table_name = "abc_messages";
         $this->data = array(
             "id"                    =>  (isset($_POST["id"])?$this->pageController->test_input($_POST["id"]): ""),
-            "date"                  => $this->pageController->test_input($_POST["date"]),//current_time( 'mysql' ),
+            "writen"                  => $this->pageController->test_input($_POST["writen"]),//current_time( 'mysql' ),
             "message"               => $this->pageController->test_input($_POST["message"]),
             "status"                => $this->pageController->test_input($_POST["status"]),
-            "writen_by"             => $this->pageController->test_input($_POST["writen_by"]),//wp_get_current_user()->user_login,
+            //"writen_by"             => $this->pageController->test_input($_POST["writen_by"]),//wp_get_current_user()->user_login,
+            "last_change"           => $this->pageController->test_input($_POST["last_change"]),//wp_get_current_user()->user_login,
         );
         $this->result_columns = array(
-            "id", "date", "message",
-            "status","writen_by"
+            "id", "writen", "message",
+            "status"/* ,"writen_by" */,"last_change"
         );
         $this->column_titles  = array(
-            "Дата", "Съобщение",
-            "Приоритет", "Добавено от"
+            "Добавено", "Съобщение",
+            "Приоритет", /* "Добавено от", */
+            "Последна промяна"
         );
         $this->search_word = null;
         $this->search_category=null;
@@ -94,19 +96,27 @@ class Messages extends TemplatesCallbacks
         echo '</tr>';
         echo '<tr>';
         $this->TextField(array(
-            "name"      =>  "date",
-            "title"     =>  "Дата",
-            "value"     =>  current_time( 'mysql' ),
+            "name"      =>  "writen",
+            "title"     =>  "Добавено",
+            "value"     =>  wp_get_current_user()->user_login .", ". current_time( 'mysql' ),
             "option"    =>  "readonly"
-        ));
+        ));/* 
         $this->TextField(array(
             "name"      =>  "writen_by",
             "title"     =>  "Въведено от",
             "value"     =>  wp_get_current_user()->user_login,
             "option"    =>  "readonly"
-        ));
+        )); */
         echo '</tr>';
         echo '<tr>';
+        $this->TextField(array(
+            "name"      =>  "last_change",
+            "title"     =>  "Последна промяна",
+            "value"     =>  wp_get_current_user()->user_login .", ". current_time( 'mysql' ),
+            "option"    =>  "readonly"
+        ));
+        echo '<tr>';
+        echo '</tr>';
         $this->SubmitButton(array(
             "name"      =>  "save",
             "title"     =>  "Запази",
@@ -244,15 +254,23 @@ class Messages extends TemplatesCallbacks
         echo '</tr>';
         echo '<tr>';
         $this->TextField(array(
-            "name"      =>  "date",
-            "title"     =>  "Дата",
-            "value"     =>  $data["date"],//current_time( 'mysql' ),
+            "name"      =>  "writen",
+            "title"     =>  "Добавено",
+            "value"     =>  $data["writen"],//current_time( 'mysql' ),
             "option"    =>  "readonly"
-        ));
+        ));/* 
         $this->TextField(array(
             "name"      =>  "writen_by",
-            "title"     =>  "Въведено от",
+            "title"     =>  "Добавено от",
             "value"     =>  $data["writen_by"],//wp_get_current_user()->user_login,
+            "option"    =>  "readonly"
+        )); */
+        echo '<tr>';
+        echo '</tr>';
+        $this->TextField(array(
+            "name"      =>  "last_change",
+            "title"     =>  "Последна промяна",
+            "value"     =>  wp_get_current_user()->user_login .", ". current_time( 'mysql' ),
             "option"    =>  "readonly"
         ));
         echo '<tr>';
